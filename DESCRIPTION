@@ -1,7 +1,7 @@
 Package: eyethinkdata
 Type: Package
 Title: Tools for processing behavioural data
-Version: 0.1.0
+Version: 0.1.1
 Author: person("Daniel","C." "Richardson",
   email = "dcr@eyethink.org",
   role = c("aut", "cre"),
@@ -14,8 +14,14 @@ LazyData: true
 URL: https://github.com/dcr-eyethink/eyethinkdata
 BugReports: https://github.com/dcr-eyethink/eyethinkdata/issues
 Imports: 
+    cocor,
+    cowplot,
+    corrplot,
     data.table,
     ggplot2,
+    ggrepel,
+    Hmisc,
+    plyr,
     readxl,
     rstudioapi
 RoxygenNote: 7.2.0
