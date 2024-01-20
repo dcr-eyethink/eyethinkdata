@@ -17,6 +17,6 @@ replacecondcols <- function(condlevels){
 
   coltable <- data.table(colset=gg_color_hue(length(condlevels)),ctest,condlevels)
 
-  coltable[!ctest,condlevels:=colset]
+  coltable[!ctest,condlevels:=colset,by=condlevels]
 
   return(coltable$condlevels)}

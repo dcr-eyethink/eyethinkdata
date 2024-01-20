@@ -2,7 +2,7 @@
 % Please edit documentation in R/mypirate.R
 \name{mypirate}
 \alias{mypirate}
-\title{Outputs a pirate plot (RDI) defualts to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off}
+\title{Outputs a pirate plot (RDI)}
 \usage{
 mypirate(
   data,
@@ -14,7 +14,7 @@ mypirate(
   reorder = F,
   pid = "pid",
   dodgewidth = 0.8,
-  plot_condition = NULL,
+  plot_conditio = NULL,
   cond = NULL,
   cond2 = NULL,
   facetby = NULL,
@@ -64,6 +64,8 @@ mypirate(
 
 \item{pid}{whats the name of col that identifies individuals}
 
+\item{cols}{specify the colours to use}
+
 \item{error_data}{data on error for mean, eg from Bayes analysis, to replace SE}
 
 \item{cflip}{flip to horizontal plot}
@@ -72,8 +74,8 @@ mypirate(
 
 \item{useall}{ignore the use column and plot all rows}
 
-\item{conditions}{instead of passing individually, you can give a vector of up to 3}
+\item{plot_condition}{instead of passing individually, you can give a vector of up to 3}
 }
 \description{
-Outputs a pirate plot (RDI) defualts to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off
+Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off
 }

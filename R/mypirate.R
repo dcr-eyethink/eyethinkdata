@@ -1,6 +1,6 @@
 mypirate <- function(data,colour_condition=NULL,x_condition="variable",
                      facet_condition=NULL,facet_scales="fixed",
-                     dv,reorder=F,pid="pid",dodgewidth=0.8,plot_condition=NULL,
+                     dv,reorder=F,pid="pid",dodgewidth=0.8,plot_conditio=NULL,
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
                      pred_line=F,
@@ -9,20 +9,23 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
                      combine_plots=list(),combine_position="right",elementinc=NULL,
                      ...){
-  #' Outputs a pirate plot (RDI) defualts to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off
+  #' Outputs a pirate plot (RDI)
+  #'
+  #' Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off
   #'
   #' @param data data with one person per line, excluding rows with use=0
   #' @param colour_condition  colour split
   #' @param x_condition x axis split (if not, specified colour condition used for x axis too)
   #' @param facet_condition for faceting
-  #' @param conditions instead of passing individually, you can give a vector of up to 3
+  #' @param plot_condition instead of passing individually, you can give a vector of up to 3
   #' @param dv name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'
   #' @param pid whats the name of col that identifies individuals
+  #' @param cols specify the colours to use
   #' @param error_data data on error for mean, eg from Bayes analysis, to replace SE
   #' @param cflip flip to horizontal plot
   #' @param norm normalise / z-score values for comparison across scales
   #' @param useall ignore the use column and plot all rows
-  #'
+  #' @importFrom ggplot2 ggplot aes
 
   #' @export
 
@@ -118,7 +121,7 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
 
   ######## start the plot!
 
-  p <-  ggplot(data =data[data_type=="obs"], aes(y = dv, x = condx,colour=condcol,fill=condcol))
+  p <-  ggplot2::ggplot(data =data[data_type=="obs"], ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol))
 
 
   if (!is.null(elementinc)){
@@ -126,8 +129,8 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   }
 
   if (bars){
-    p <- p+ stat_summary(fun = "mean",geom = "bar",aes(group=condcol),
-                         width=.8,position=position_dodge(width=dodgewidth),alpha=0.4)
+    p <- p+ ggplot2::stat_summary(fun = "mean",geom = "bar",ggplot2::aes(group=condcol),
+                         width=.8,position=ggplot2::position_dodge(width=dodgewidth),alpha=0.4)
     # if (!is.null(cols)){
     #   p <- p + scale_fill_manual(values=cols) }
   }
@@ -136,24 +139,24 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
     if (splitV & length(levels(data$condcol))<3){
       p <- p+ geom_split_violin(alpha=.8,fill="white",width=svw)
     }else{
-      p <- p +geom_violin(position = position_dodge(width=dodgewidth),alpha=.6,fill="white" )
+      p <- p +ggplot2::geom_violin(position = ggplot2::position_dodge(width=dodgewidth),alpha=.6,fill="white" )
     }}
 
   if (dots){
-    p <- p +     geom_point(alpha=0.3,
-                            position=position_jitterdodge(dodge.width = dodgewidth,
+    p <- p +     ggplot2::geom_point(alpha=0.3,
+                            position=ggplot2::position_jitterdodge(dodge.width = dodgewidth,
                                                           jitter.height = dot_h_jitter))
 
   }
 
   if (line){
-    p <- p +   stat_summary(fun = "mean",geom = "line",size=2,alpha=0.6,
-                            aes(group=condcol),position=position_dodge(width=dodgewidth))
+    p <- p +   ggplot2::stat_summary(fun = "mean",geom = "line",size=2,alpha=0.6,
+                                     ggplot2::aes(group=condcol),position=ggplot2::position_dodge(width=dodgewidth))
   }
 
   if (error_bars){
-    p <- p +        geom_errorbar(stat = "summary",fun.data="mean_se",width=.4,
-                                  position=position_dodge(width=dodgewidth))
+    p <- p +        ggplot2::geom_errorbar(stat = "summary",fun.data="mean_se",width=.4,
+                                  position=ggplot2::position_dodge(width=dodgewidth))
   }
 
 
@@ -162,8 +165,8 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
     if (splitV & length(levels(data$condcol))<3){
       p <- p+geom_split_violin(data=data[data_type=="pred"],alpha=.4,width=svw)
     }else{
-      p <- p+geom_violin(data=data[data_type=="pred"],alpha=.4,width=svw,
-                         position=position_dodge(width=dodgewidth))
+      p <- p+ggplot2::geom_violin(data=data[data_type=="pred"],alpha=.4,width=svw,
+                         position=ggplot2::position_dodge(width=dodgewidth))
     }}
 
 
@@ -171,19 +174,19 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   if (!is.null(pred_means)){
     if(pred_line){
 
-      p <- p+geom_line(data=data[data_type=="pred_means"],size=2)
+      p <- p+ggplot2::geom_line(data=data[data_type=="pred_means"],size=2)
 
     }else{
 
       if(pred_bar){
-        p <- p+geom_crossbar(data=data[data_type=="pred_means"],
+        p <- p+ggplot2::geom_crossbar(data=data[data_type=="pred_means"],
                              aes(ymin=dv,ymax=dv,y=dv),fatten=4,
-                             position=position_dodge(width=1))}
+                             position=ggplot2::position_dodge(width=1))}
     }
     # else calculate observed means
   }else{
-    p <- p +  stat_summary(fun = "mean",geom = "crossbar",fun.min = "mean",fun.max = "mean",width=.6,
-                           position=position_dodge(width=dodgewidth))
+    p <- p +  ggplot2::stat_summary(fun = "mean",geom = "crossbar",fun.min = "mean",fun.max = "mean",width=.6,
+                           position=ggplot2::position_dodge(width=dodgewidth))
   }
 
 
@@ -193,55 +196,55 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
 
     if(pred_line){
       p <- p + ggrepel::geom_label_repel(data=data[data_type=="xlabs"],fill="white", show.legend = FALSE,
-                                         aes(label=lab))
+                                         ggplot2::aes(label=lab))
     }else{
 
       if(x_condition ==colour_condition){
         # label need to go between the x axis categories
-        p <- p + geom_label(data=data[data_type=="xlabs"],inherit.aes = F,fill="white",alpha=.7, label.size = NA,
-                            aes_string(x=1.5,label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))
+        p <- p + ggplot2::geom_label(data=data[data_type=="xlabs"],inherit.aes = F,fill="white",alpha=.7, label.size = NA,
+                                     ggplot2::aes_string(x=1.5,label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))
       }else{
         # they go above
-        p <- p + geom_label(data=data[data_type=="xlabs"],inherit.aes = F,fill="white",alpha=.7, label.size = NA,
-                            aes_string(x="condx",label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))}
+        p <- p + ggplot2::geom_label(data=data[data_type=="xlabs"],inherit.aes = F,fill="white",alpha=.7, label.size = NA,
+                                     ggplot2::aes_string(x="condx",label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))}
     }}
 
 
 
 
-  p <- p+ theme_minimal()+labs(y=dv,x=x_condition, colour=colour_condition,
+  p <- p+ ggplot2::theme_minimal()+ggplot2::labs(y=dv,x=x_condition, colour=colour_condition,
                                fill=colour_condition)
 
   ## use the specified colours, or the color names in data, or default
   if (!is.null(cols)){
-    p <- p + scale_colour_manual(values=cols) + scale_fill_manual(values=cols)
+    p <- p + ggplot2::scale_colour_manual(values=cols) + ggplot2::scale_fill_manual(values=cols)
   }else{
     condcols <- replacecondcols(condlevels = levels(data$condcol))
     if(!is.null(condcols)){
-      p <- p + scale_colour_manual(values=condcols) + scale_fill_manual(values=condcols)}
+      p <- p + ggplot2::scale_colour_manual(values=condcols) + ggplot2::scale_fill_manual(values=condcols)}
   }
 
-  p <- p+theme(legend.position = "top")
+  p <- p+ggplot2::theme(legend.position = "top")
   # get rid of colour legend if its on the x-axis
   if (identical(data$condcol,data$condx) | !legend){
-    p <- p+theme(legend.position = "none")
+    p <- p+ggplot2::theme(legend.position = "none")
   }
 
   if (!is.null(ylim)){
-    p <- p + coord_cartesian(ylim = ylim)
+    p <- p + ggplot2::coord_cartesian(ylim = ylim)
   }
 
   if (!is.null(xlim)){
-    p <- p + coord_cartesian(xlim = xlim)
+    p <- p + ggplot2::coord_cartesian(xlim = xlim)
   }
 
-  if (cflip){p <- p+ coord_flip()}
+  if (cflip){p <- p+ ggplot2::coord_flip()}
 
   if (is.null(w)){w <- 2+length(unique(data$condx))*1.6}
 
   if(!is.null(facet_condition)){
-    p <- p+facet_wrap(condfacet~.,scales = facet_scales)
-    w= w* max(ggplot_build(p)$layout$layout$COL)*.8
+    p <- p+ggplot2::facet_wrap(condfacet~.,scales = facet_scales)
+    w= w* max(ggplot2::ggplot_build(p)$layout$layout$COL)*.8
   }
 
   ## combine other plots?
@@ -257,14 +260,14 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
     }}
 
 
-  p <- p+labs(title=title)
+  p <- p+ggplot2::labs(title=title)
 
   if (is.character(outp)){
 
     if(!title_overide){title <-paste(c(title,dv,
                                        paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ") }
 
-    ggsave(paste0(outp,"/",title,".pdf"),
+    ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)
   }
 
