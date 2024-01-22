@@ -1,12 +1,12 @@
 Package: eyethinkdata
 Type: Package
 Title: Tools for processing behavioural data
-Version: 0.2.0
+Version: 0.2.1
 Author: person("Daniel","C." "Richardson",
   email = "dcr@eyethink.org",
   role = c("aut", "cre"),
   comment = c(ORCID = "0000-0003-0039-9755"))
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: DCR <dcr@eyethink.org>
 Description: A Toolbox for behavioural data. Processes raw downloads from gorilla, preps behavioural dats for analysis and extracts and scores information from questionnaires. Performs basic plotting of RDIs (pirate plots), and correlations 
 License: What license is it under?
 Encoding: UTF-8
@@ -29,3 +29,6 @@ Imports:
     readxl,
     rstudioapi
 RoxygenNote: 7.2.0
+Suggests: 
+    knitr,
+    rmarkdown
