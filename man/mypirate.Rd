@@ -14,7 +14,7 @@ mypirate(
   reorder = F,
   pid = "pid",
   dodgewidth = 0.8,
-  plot_conditio = NULL,
+  plot_condition = NULL,
   cond = NULL,
   cond2 = NULL,
   facetby = NULL,
@@ -26,6 +26,7 @@ mypirate(
   outp = "analysis",
   cols = NULL,
   pred_line = F,
+  error_bar_data = NULL,
   pred = NULL,
   pred_means = NULL,
   pred_bar = T,
@@ -64,17 +65,17 @@ mypirate(
 
 \item{pid}{whats the name of col that identifies individuals}
 
+\item{plot_condition}{instead of passing individually, you can give a vector of up to 3}
+
 \item{cols}{specify the colours to use}
 
-\item{error_data}{data on error for mean, eg from Bayes analysis, to replace SE}
+\item{error_data}{distribution for mean, eg from Bayes analysis, to replace SE}
 
 \item{cflip}{flip to horizontal plot}
 
 \item{norm}{normalise / z-score values for comparison across scales}
 
 \item{useall}{ignore the use column and plot all rows}
-
-\item{plot_condition}{instead of passing individually, you can give a vector of up to 3}
 }
 \description{
 Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off

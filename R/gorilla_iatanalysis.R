@@ -1,7 +1,6 @@
-gorilla_iatanalysis <- function(filename=NULL,gather=TRUE,outputfolder="analysis",e
-                        xclude_pids=NULL,exclude_items=NULL,
-                        datafull=NULL,full=T,
-                        hypoth="",cl = c("#009E73", "#D55E00",... )){
+gorilla_iatanalysis <- function(filename=NULL,gather=TRUE,outputfolder="analysis",
+                                exclude_pids=NULL,exclude_items=NULL,
+                        datafull=NULL,full=T, hypoth="",cl = c("#009E73", "#D55E00"),...){
   #' processes IAT data from gorilla
   #'
   #' Runs a full analysis on IAT data from a gorilla experiment
@@ -90,7 +89,7 @@ gorilla_iatanalysis <- function(filename=NULL,gather=TRUE,outputfolder="analysis
 
   ### pirate plot of participant means
 
-  mp <- do.call(mypirate,resolve.args(...,data=subjmeans,dv="meanRT",cond="condition",outp = outputfolder,cols=cl,bars = T)
+  mp <- do.call(mypirate,resolve.args(...,data=subjmeans,dv="meanRT",cond="condition",outp = outputfolder,cols=cl,bars = T))
 
   n <- dim(ParticipantMeans)[1]
 
@@ -163,3 +162,4 @@ gorilla_iatanalysis <- function(filename=NULL,gather=TRUE,outputfolder="analysis
     return(list(srt=srt,mypirate=mp,n=n, pv=tt$p.value, ParticipantMeans=ParticipantMeans,rawdata=data))
   }
 }
+

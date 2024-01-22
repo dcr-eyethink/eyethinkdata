@@ -1,9 +1,9 @@
 mypirate <- function(data,colour_condition=NULL,x_condition="variable",
                      facet_condition=NULL,facet_scales="fixed",
-                     dv,reorder=F,pid="pid",dodgewidth=0.8,plot_conditio=NULL,
+                     dv,reorder=F,pid="pid",dodgewidth=0.8,plot_condition=NULL,
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
-                     pred_line=F,
+                     pred_line=F,error_bar_data=NULL,
                      pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=1.1,
                      error_data=NULL,cflip=F,norm=F,bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
@@ -21,7 +21,8 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param dv name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'
   #' @param pid whats the name of col that identifies individuals
   #' @param cols specify the colours to use
-  #' @param error_data data on error for mean, eg from Bayes analysis, to replace SE
+  #' @param error_data distribution for mean, eg from Bayes analysis, to replace SE
+  #' @param error_bar_data
   #' @param cflip flip to horizontal plot
   #' @param norm normalise / z-score values for comparison across scales
   #' @param useall ignore the use column and plot all rows
@@ -61,6 +62,10 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   }
   if(!is.null(xlabs)){
     data <-  rbind(data,data.table(data_type="xlabs",xlabs),fill=T)
+  }
+
+  if(!is.null(error_bar_data)){
+    data <-  rbind(data,data.table(data_type="error_bar_data",error_bar_data),fill=T)
   }
 
 
@@ -155,8 +160,19 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   }
 
   if (error_bars){
+
+    if (is.null(error_bar_data)){
+
     p <- p +        ggplot2::geom_errorbar(stat = "summary",fun.data="mean_se",width=.4,
                                   position=ggplot2::position_dodge(width=dodgewidth))
+    }else{
+      ## use given data for error bars
+      p <- p +        ggplot2::geom_errorbar( data=data[data_type=="error_bar_data"],
+                                              ggplot2::aes(ymin=ymin,ymax=ymax),
+                                              width=.4,
+                                             position=ggplot2::position_dodge(width=dodgewidth))
+
+    }
   }
 
 
@@ -191,7 +207,7 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
 
 
 
-  ###### do we have labels (typically MPEs)
+  ###### do we have labels (typically MPEs or pvalues)
   if (!is.null(xlabs) & !is.null(xlabs$dv[1]) ){
 
     if(pred_line){
@@ -264,8 +280,14 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
 
   if (is.character(outp)){
 
-    if(!title_overide){title <-paste(c(title,dv,
+    if(!title_overide){
+      if (colour_condition==x_condition){
+        title <-paste(c(title,dv,
+                        paste0(c(colour_condition,facet_condition),collapse = "-")),collapse = " ")
+      }else{
+      title <-paste(c(title,dv,
                                        paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ") }
+      }
 
     ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)
