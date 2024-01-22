@@ -13,27 +13,27 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
     print("Give me an example data file from folder downloaded from gorilla")
     datafile <- file.choose()}
 
-  td <- data.table(do.call(data_merger,resolve.args(datafile = datafile, ending = ending,
+  td <- data.table::data.table(do.call(data_merger,resolve.args(datafile = datafile, ending = ending,
                                contains = "task",...)))
-  qd <- data.table(do.call(data_merger,resolve.args(datafile = datafile,ending = ending,
+  qd <- data.table::data.table(do.call(data_merger,resolve.args(datafile = datafile,ending = ending,
                                contains = "quest",...)))
 
-  dd <- data.table()
+  dd <- data.table::data.table()
 
   uploads <- NULL
-  etd <- data.table()
+  etd <- data.table::data.table()
   etf <- paste0(dirname(datafile),"/uploads")
   if (file.exists(etf)){
-    uploads <-data.table(filename=list.files(etf,  full.names=F),filepath=list.files(etf,  full.names=T))
+    uploads <-data.table::data.table(filename=list.files(etf,  full.names=F),filepath=list.files(etf,  full.names=T))
     #etd <- data.table(data_merger(ending="xlsx",datafile = dir(etf,full.names = T)[1]))
-    etd <- data.table(data_merger(ending="csv",datafile = dir(etf,full.names = T)[1]))
+    etd <- data.table::data.table(data_merger(ending="csv",datafile = dir(etf,full.names = T)[1]))
     if (dim(etd)[1]>0){
       if ("participant_id" %in% colnames(etd)){
-        etd[,pid:=as.factor(participant_id)]
-        etd[,sid:=spreadsheet_row+screen_index/10]
+        etd[,pid:=as.factor(participant_id),by=participant_id]
+        etd[,sid:=spreadsheet_row+screen_index/10,by=.(spreadsheet_row,screen_index)]
       }else{
-        etd[,pid:=as.factor(Participant.Private.ID)]
-        etd[,sid:=Spreadsheet.Index+Screen.Index/10]
+        etd[,pid:=as.factor(Participant.Private.ID),by=Participant.Private.ID]
+        etd[,sid:=Spreadsheet.Index+Screen.Index/10,by=.(Spreadsheet.Index,Screen.Index)]
       }
 
       ## return list of other uploaded files
@@ -42,10 +42,10 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
 
   if(dim(td)[1]>0){
 
-    td[,pid:=as.factor(Participant.Private.ID)]
-    td[,lid:=as.factor(Participant.Public.ID)]
+    td[,pid:=as.factor(Participant.Private.ID),by=Participant.Private.ID]
+    td[,lid:=as.factor(Participant.Public.ID),by=Participant.Public.ID]
 
-    setcolorder(td,neworder = c("pid","lid"))
+    data.table::setcolorder(td,neworder = c("pid","lid"))
 
     # DUPLICATED DATA NOT IMPLEMENTED
     # if ("Spreadsheet.Row" %in% colnames(td)){
@@ -56,20 +56,20 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
 
   if(dim(qd)[1]>0){
 
-    qd[,pid:=as.factor(Participant.Private.ID)]
-    qd[,lid:=as.factor(Participant.Public.ID)]
+    qd[,pid:=as.factor(Participant.Private.ID),by=Participant.Private.ID]
+    qd[,lid:=as.factor(Participant.Public.ID),by=Participant.Public.ID]
 
-    setcolorder(qd,neworder = c("pid","lid"))
+    data.table::setcolorder(qd,neworder = c("pid","lid"))
 
 
     if("Object.Name" %in% colnames(qd)){
-      qd[!is.na(Object.Name),Question.Key:=Object.Name]
+      qd[!is.na(Object.Name),Question.Key:=Object.Name,by=Object.Name]
     }
 
-    setcolorder(qd,"pid")
+    data.table::setcolorder(qd,"pid")
     ## get rid of - in quantised
     if ("Question.Key" %in% colnames(qd)){
-      qd[,Question.Key:=gsub(Question.Key,pattern = "-",replacement = "_")]}
+      qd[,Question.Key:=gsub(Question.Key,pattern = "-",replacement = "_"),by=Question.Key]}
 
   }
 

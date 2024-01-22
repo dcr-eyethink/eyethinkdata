@@ -6,6 +6,13 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 ## eyethink data tools
 
 This is a toolbox for behavioural data. It processes raw downloads from gorilla, preps behavioural datas for analysis and extracts and scores information from questionnaires. Performs basic plotting of RDIs (pirate plots), and correlations from raw data and ANOVAs and mixed models.
@@ -36,3 +43,5 @@ Remember to give this function a folder that contains other folders that have th
 ```{r}
 knitr::kable( head(data$data_task))
 ```
+
+

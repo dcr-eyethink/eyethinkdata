@@ -1,16 +1,17 @@
-data_collator_gorilla <- function(datafold=NULL,...){
+data_collator_gorilla <- function(datafolder=NULL,...){
   #' Merge and load in data from multiple gorilla downloads
   #'
   #' Asks for a folder that can contain multiple data folders, zipped or un zipped, downloaded from gorilla
 
   #' @export
   #' @return Returns a list of data.tables for each type (task, questionnaire, continuous)
-  #' @param datafold the folder with a collection of gorilla downloads
+  #' @param datafolder the folder with a collection of gorilla downloads
 
-  if (is.null(datafold)){datafold <- rstudioapi::selectDirectory()}
+
+  if (is.null(datafolder)){datafolder <- rstudioapi::selectDirectory()}
 
   ## unzip and remove archive
-  zf <- list.files(datafold,pattern=".zip",full.names = T)
+  zf <- list.files(datafolder,pattern=".zip",full.names = T)
   if (length(zf)>0){
     for (zff in zf){
       newf <- gsub(zff,pattern = ".zip",replacement = "")
@@ -22,7 +23,7 @@ data_collator_gorilla <- function(datafold=NULL,...){
 
 
   ## run through reg data import
-  dirf <- list.dirs(datafold,full.names = T,recursive=F)
+  dirf <- list.dirs(datafolder,full.names = T,recursive=F)
   retdata <- list()
 
   for(dfold in dirf){

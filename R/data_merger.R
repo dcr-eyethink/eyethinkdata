@@ -65,7 +65,7 @@ data_merger <- function(ending="txt",contains="",d=",",h=TRUE,
 
       alldata <- rbind(alldata,newdata)
     }
-    setDT(alldata)
+    data.table::setDT(alldata)
     if (gorilla_clean){
       ## discard some of the gorilla columns to make more manageable
       discard <- c("Post.Processed","Local.Timestamp", "Local.Timezone",
@@ -80,7 +80,7 @@ data_merger <- function(ending="txt",contains="",d=",",h=TRUE,
       suppressWarnings( alldata[, eval(discard) := NULL])
     }
     if ("Reaction.Time" %in% colnames(alldata)){
-      suppressWarnings( alldata[, rt := as.numeric(as.character(Reaction.Time))])}
+      suppressWarnings( alldata$rt <- as.numeric(as.character(alldata$Reaction.Time)))}
 
 
   }

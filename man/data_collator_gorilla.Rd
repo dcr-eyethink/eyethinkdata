@@ -4,10 +4,10 @@
 \alias{data_collator_gorilla}
 \title{Merge and load in data from multiple gorilla downloads}
 \usage{
-data_collator_gorilla(datafold = NULL, ...)
+data_collator_gorilla(datafolder = NULL, ...)
 }
 \arguments{
-\item{datafold}{the folder with a collection of gorilla downloads}
+\item{datafolder}{the folder with a collection of gorilla downloads}
 }
 \value{
 Returns a list of data.tables for each type (task, questionnaire, continuous)
