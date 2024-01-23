@@ -12,7 +12,7 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-URL: https://github.com/dcr-eyethink/eyethinkdata
+URL: https://github.com/dcr-eyethink/eyethinkdata, https://dcr-eyethink.github.io/eyethinkdata/
 BugReports: https://github.com/dcr-eyethink/eyethinkdata/issues
 Imports: 
     afex,

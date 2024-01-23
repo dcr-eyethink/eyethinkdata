@@ -12,6 +12,7 @@ A Toolbox for behavioural data. Processes raw downloads from gorilla, preps beha
 Useful links:
 \itemize{
   \item \url{https://github.com/dcr-eyethink/eyethinkdata}
+  \item \url{https://dcr-eyethink.github.io/eyethinkdata/}
   \item Report bugs at \url{https://github.com/dcr-eyethink/eyethinkdata/issues}
 }
 
