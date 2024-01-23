@@ -6,3 +6,5 @@ inst/doc
 README.Rmd
 README_files
 docs
+/doc/
+/Meta/
