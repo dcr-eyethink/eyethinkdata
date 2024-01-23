@@ -5,39 +5,20 @@
 \title{processes IAT data from gorilla}
 \usage{
 gorilla_iatanalysis(
-  filename = NULL,
-  gather = TRUE,
-  outputfolder = "analysis",
+  data = NULL,
+  outp = "analysis",
   exclude_pids = NULL,
   exclude_items = NULL,
-  datafull = NULL,
-  full = T,
-  hypoth = "",
-  cl = c("#009E73", "#D55E00"),
   ...
 )
 }
 \arguments{
-\item{filename}{data file from gorilla, if blank requests it}
+\item{data}{data list from gorilla import, if missing, I'll ask fora folder of gorilla downloads}
 
-\item{gather}{are there more than 1 experiment versions?}
-
-\item{outputfolder}{foldername, if blank uses working directory}
-
-\item{hypoth}{a string of expected results or notes to add to output}
-
-\item{cl}{line colours for density plots}
-}
-\value{
-full stats and plots, also saved to files
+\item{outp}{output foldername}
 }
 \description{
 Runs a full analysis on IAT data from a gorilla experiment
 that is based on standard template.
-It takes a filename of an individual .csv data file from gorilla
-or if filename is blank, it asks for a csv file.
-If there is data from more than one experiment/version
-then set gather to T and it'll get all neighbouring task files
-outputs into working directory unless outputfolder set.
 You can pass arguments to mypirate that is drawing the main plot
 }

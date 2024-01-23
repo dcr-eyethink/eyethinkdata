@@ -1,0 +1,13 @@
+You ran  28 participants successfully
+
+	Paired t-test
+
+data:  meanRT by condition
+t = -2.8114, df = 27, p-value = 0.009074
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ -177.31684  -27.69433
+sample estimates:
+mean difference 
+      -102.5056 
+

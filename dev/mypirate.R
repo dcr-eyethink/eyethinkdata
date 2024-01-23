@@ -53,8 +53,7 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
 
   ## average over pids before plotting
   if (pid_average & length(dv)==1){
-    data$v <- data[[dv]]
-    data <- data[,.(mean(v,na.rm=T)),by=c("pid",x_condition,colour_condition,facet_condition)]
+    data <- data[,.(mean(get(dv))),by=c("pid",x_condition,colour_condition,facet_condition)]
     data[[dv]] <- data$V1
   }
 
@@ -123,7 +122,7 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   if (!is.null(facet_condition)){data$condfacet <- as.factor(data[[facet_condition]])}
 
   setDT(data)
-  data$dv <- data[[dv]]
+  data$dv <- data[,.(get(dv))]
 
 
   if (reorder){

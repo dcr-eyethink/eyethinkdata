@@ -1,0 +1,55 @@
+
+Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
+
+                        Sum Sq num Df Error SS den Df  F value  Pr(>F)    
+(Intercept)           34517501      1  1727205     26 519.5995 < 2e-16 ***
+firstblock               26906      1  1727205     26   0.4050 0.53007    
+congruency               87704      1   223885     26  10.1851 0.00368 ** 
+firstblock:congruency     8705      1   223885     26   1.0109 0.32396    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Main effects of  congruency 
+ congruency  emmean   SE df lower.CL upper.CL
+ congruent      825 38.0 26      747      903
+ incongruent    913 42.9 26      825     1001
+
+Results are averaged over the levels of: firstblock 
+Confidence level used: 0.95 
+ contrast                estimate   SE df t.ratio p.value
+ congruent - incongruent    -87.6 27.4 26  -3.191  0.0037
+
+Results are averaged over the levels of: firstblock 
+
+
+Main effects of  firstblock 
+ firstblock  emmean   SE df lower.CL upper.CL
+ congruent      893 40.8 26      809      977
+ incongruent    845 64.4 26      712      977
+
+Results are averaged over the levels of: congruency 
+Confidence level used: 0.95 
+ contrast                estimate   SE df t.ratio p.value
+ congruent - incongruent     48.5 76.2 26   0.636  0.5301
+
+Results are averaged over the levels of: congruency 
+
+
+Interactions of  congruency firstblock 
+ congruency  firstblock  emmean   SE df lower.CL upper.CL
+ congruent   congruent      836 40.6 26      752      919
+ incongruent congruent      951 45.9 26      856     1045
+ congruent   incongruent    815 64.2 26      683      947
+ incongruent incongruent    875 72.6 26      726     1024
+
+Confidence level used: 0.95 
+ contrast                                        estimate   SE df t.ratio p.value
+ congruent congruent - incongruent congruent       -115.2 29.3 26  -3.926  0.0030
+ congruent congruent - congruent incongruent         20.9 75.9 26   0.276  0.9925
+ congruent congruent - incongruent incongruent      -39.1 83.1 26  -0.470  0.9650
+ incongruent congruent - congruent incongruent      136.1 78.9 26   1.726  0.3312
+ incongruent congruent - incongruent incongruent     76.1 85.8 26   0.887  0.8117
+ congruent incongruent - incongruent incongruent    -60.0 46.4 26  -1.293  0.5753
+
+P value adjustment: tukey method for comparing a family of 4 estimates 

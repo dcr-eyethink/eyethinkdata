@@ -31,8 +31,8 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
   title <- paste(dvname,"by",paste(conditions,collapse = "+"))
 
   ## output analysis to text
-  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
-  if (is.character(outp)){sink(paste0(outp,"/",title,"_MIXED.txt"), append=FALSE, split=TRUE)}
+  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)
+  sink(paste0(outp,"/",title,"_RESULTS.txt"), append=FALSE, split=TRUE)}
 
   print(summary(mod))
 
@@ -46,8 +46,8 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
     xlabs <- data.table( data.frame(mdc),dv=dvname)
 
     if (length(ct)==2){
-      xlabs[,c1:=tstrsplit(contrast,split =  " ")[2],by=p.value]
-      xlabs[,c2:=tstrsplit(contrast,split =  " ")[5],by=p.value]
+      xlabs[,c1:=data.table::tstrsplit(contrast,split =  " ")[2],by=p.value]
+      xlabs[,c2:=data.table::tstrsplit(contrast,split =  " ")[5],by=p.value]
       xlabs <- xlabs[c1==c2]
       xlabs[[ct[2]]] <- xlabs$c1
 
@@ -93,7 +93,7 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
   clist <- as.list(conditions)
   if (length(conditions)==2){ clist[[3]] <- conditions }
 
-   results <- list()
+   results <- list(model_summary=summary(mod))
   for (ct in  clist){
 
     ant <- data.frame(mod$anova_table)

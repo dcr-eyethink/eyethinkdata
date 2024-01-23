@@ -9,8 +9,8 @@ gorilla, preps behavioural datas for analysis and extracts and scores
 information from questionnaires. Performs basic plotting of RDIs (pirate
 plots), and correlations from raw data and ANOVAs and mixed models.
 
-Usethe code below to walk through the vignette for example of how to use
-functions
+Use the code below to walk through the vignette for example of how to
+use functions
 
 ``` r
 devtools::install_github("dcr-eyethink/eyethinkdata")

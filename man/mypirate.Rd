@@ -10,6 +10,7 @@ mypirate(
   x_condition = "variable",
   facet_condition = NULL,
   facet_scales = "fixed",
+  pid_average = F,
   dv,
   reorder = F,
   pid = "pid",
@@ -60,6 +61,8 @@ mypirate(
 \item{x_condition}{x axis split (if not, specified colour condition used for x axis too)}
 
 \item{facet_condition}{for faceting}
+
+\item{pid_average}{plot an average of each participant's dv over the named conditions}
 
 \item{dv}{name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'}
 
