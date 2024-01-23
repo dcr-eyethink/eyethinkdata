@@ -5,6 +5,7 @@
 inst/doc
 README.Rmd
 README_files
+buildfunctions.R
 docs
 /doc/
 /Meta/
