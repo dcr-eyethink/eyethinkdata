@@ -16,6 +16,12 @@ gorilla_iatanalysis(
 \item{data}{data list from gorilla import, if missing, I'll ask fora folder of gorilla downloads}
 
 \item{outp}{output foldername}
+
+\item{exclude_pids}{get rid of these guys}
+
+\item{exclude_items}{get rid of these guys in items column}
+
+\item{...}{pass to mypirate for plotting}
 }
 \description{
 Runs a full analysis on IAT data from a gorilla experiment

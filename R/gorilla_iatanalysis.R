@@ -8,6 +8,9 @@ gorilla_iatanalysis <- function(data=NULL, outp="analysis",
   #'
   #' @param data data list from gorilla import, if missing, I'll ask fora folder of gorilla downloads
   #' @param outp output foldername
+  #' @param exclude_pids get rid of these guys
+  #' @param exclude_items get rid of these guys in items column
+  #' @param ... pass to mypirate for plotting
 
   #' @export
 

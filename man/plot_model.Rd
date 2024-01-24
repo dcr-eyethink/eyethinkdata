@@ -4,7 +4,14 @@
 \alias{plot_model}
 \title{Plots the output of an anova or mixed model}
 \usage{
-plot_model(mod, outp = "analysis", error_type = "SE", posthocs = T, ...)
+plot_model(
+  mod,
+  outp = "analysis",
+  error_type = "SE",
+  posthocs = T,
+  plot_conditions = NULL,
+  ...
+)
 }
 \arguments{
 \item{mod}{output from an afex model}
@@ -14,6 +21,10 @@ plot_model(mod, outp = "analysis", error_type = "SE", posthocs = T, ...)
 \item{error_type}{Error bars: none, SE or CL}
 
 \item{posthocs}{do you want to show posthocs on plot?}
+
+\item{plot_conditions}{a list of main effects and interactions eg list("cond1", "cond2","cond1:cond2")}
+
+\item{...}{plotting arguments to pass to mypirate}
 }
 \description{
 Plots the main effects and interactionsof an afex anova or mixed model

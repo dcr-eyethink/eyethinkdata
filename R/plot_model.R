@@ -1,4 +1,5 @@
-plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
+plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,
+                       plot_conditions=NULL,...){
   #' Plots the output of an anova or mixed model
   #'
   #' Plots the main effects and interactionsof an afex anova or mixed model
@@ -8,6 +9,8 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
   #' @param outp folder for saving. Set blank if not required
   #' @param error_type Error bars: none, SE or CL
   #' @param posthocs do you want to show posthocs on plot?
+  #' @param plot_conditions a list of main effects and interactions eg list("cond1", "cond1:cond2")
+  #' @param ... plotting arguments to pass to mypirate
   #' @export
 
   #run model
@@ -107,15 +110,29 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
     return(r)
   }
 
-  clist <- as.list(conditions)
-  if (length(conditions)==2){ clist[[3]] <- conditions }
 
-   results <- list(model_summary=summary(mod))
+  results <- list(model_summary=summary(mod))
+
+  # ## parse the plot_conditions into a list of items
+  # ## or just read from the model
+  if (!is.null(plot_conditions)){
+    clist <- list()
+    for (ct in plot_conditions){
+      ci <- strsplit(ct,split = ":")
+      clist <- append(clist,ci)
+    }
+  }else{
+    clist <- as.list(conditions)
+    if (length(conditions)==2){ clist[[3]] <- conditions }
+
+  }
+
+
   for (ct in  clist){
 
     ant <- data.frame(mod$anova_table)
 
-       r <- plotmod(mod=mod,ct=ct,dvname=dvname)
+    r <- plotmod(mod=mod,ct=ct,dvname=dvname)
     results <-  append(results,r )
   }
 
