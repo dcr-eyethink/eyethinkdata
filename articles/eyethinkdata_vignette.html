@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">eyethinkdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,9 +77,6 @@
 
     
     
-<div class="section level2">
-<h2 id="eyethink-data-tools">eyethink data tools<a class="anchor" aria-label="anchor" href="#eyethink-data-tools"></a>
-</h2>
 <p>This is a toolbox for behavioural data. It processes raw downloads
 from gorilla, preps behavioural datas for analysis and extracts and
 scores information from questionnaires. Performs basic plotting of RDIs
@@ -87,33 +84,30 @@ scores information from questionnaires. Performs basic plotting of RDIs
 models.</p>
 <p>Here’s how to get the latest version of the toolbox</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># devtools::install_github("dcr-eyethink/eyethinkdata")</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dcr-eyethink/eyethinkdata" class="external-link">eyethinkdata</a></span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="importing-data-from-gorilla">Importing data from gorilla<a class="anchor" aria-label="anchor" href="#importing-data-from-gorilla"></a>
-</h2>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dcr-eyethink/eyethinkdata"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="importing-data-from-gorilla">Importing data from gorilla<a class="anchor" aria-label="anchor" href="#importing-data-from-gorilla"></a>
+</h3>
 <p>There are several functions all beginning with data_ that read in
 multiple data files and merge them into an R object. The most commonly
 used is data_collator_gorilla(). You pass it the name of a folder that
 contains downloads from gorilla. These downloads can be .zip files or
-unzipped folders that themselves contain gorilla .csv files. They look
-like this</p>
-<div class="figure">
-<img src="datafolder.png" alt=""><p class="caption">folders</p>
-</div>
+unzipped folders that themselves contain gorilla .csv files. For
+example:</p>
+<p><img src="datafolder.png"></p>
 <p>To run the function, tell it the name of the folder that contains the
 downloaded items, or leave it blank and your OS will ask you to choose
 the folder.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_collator_gorilla.html">data_collator_gorilla</a></span><span class="op">(</span><span class="st">"gorilla_data"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dcr-eyethink/eyethinkdata" class="external-link">eyethinkdata</a></span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_collator_gorilla.html">data_collator_gorilla</a></span><span class="op">(</span><span class="st">"gorilla_data"</span><span class="op">)</span></span></code></pre></div>
 <p>Remember to give this function a folder that contains other folders
 that have the raw data in them. So now you have a list called data that
 contains several data.tables.</p>
 <p><strong>data$data_task</strong> contains all of the data from you
 gorilla tasks, the blue blobs in your experiment. This is the raw data
 from gorilla all collated together, with a few other columns added. For
-example, <strong>pid</strong> is the participant identity (anonymised).
+example, <strong>pid</strong> is the participant identity (anonymized).
 <strong>rt</strong> is the reaction time column.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data_task</span><span class="op">)</span>,<span class="op">)</span></span></code></pre></div>
@@ -705,22 +699,25 @@ example, <strong>pid</strong> is the participant identity (anonymised).
 </tr>
 </tbody>
 </table>
-<p>There is another data.table called <strong>data<span class="math inline">\(data_q** which has all the info from your
-experiment questionnaires. Note that when you download the data, choose
-long format. Finally, if you used the mouse or eye tracking plugins,
-that data will be in **data\)</span>data_continuous</strong></p>
+<p>There is another data.table called <strong>data$data_q</strong> which
+has all the info from your experiment questionnaires. Note that when you
+download the data, choose long format. Finally, if you used the mouse or
+eye tracking plugins, that data will be in
+<strong>data$data_continuous</strong></p>
 </div>
-<div class="section level2">
-<h2 id="example-data-analsyis">Example data analsyis<a class="anchor" aria-label="anchor" href="#example-data-analsyis"></a>
-</h2>
+<div class="section level3">
+<h3 id="extracting-data">Extracting data<a class="anchor" aria-label="anchor" href="#extracting-data"></a>
+</h3>
 <p>We’re going to extract, plot and analyse data from an example IAT
 experiment. Your first step in analysing your data will be to pick out
 the rows and columns you want for your experiment. Here’s how I would
 filter for the important data</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">iat_data</span> <span class="op">&lt;-</span>  <span class="va">data</span><span class="op">$</span><span class="va">data_task</span><span class="op">[</span><span class="va">metadata</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"congruent"</span>,<span class="st">"incongruent"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">Attempt</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">display</span><span class="op">==</span><span class="st">"trials"</span>,  <span class="co"># row selection</span></span>
-<span>                                   <span class="fu">.</span><span class="op">(</span><span class="va">pid</span>, trial<span class="op">=</span><span class="va">Trial.Number</span>, congruency<span class="op">=</span><span class="va">metadata</span>,accuracy<span class="op">=</span><span class="va">Correct</span>,<span class="va">rt</span>,                <span class="co"># columns    </span></span>
-<span>                                     item<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">ImageCentre</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">TextCentre</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>                   <span class="co"># stimulus idea</span></span>
+<code class="sourceCode R"><span><span class="va">iat_data</span> <span class="op">&lt;-</span>  <span class="va">data</span><span class="op">$</span><span class="va">data_task</span><span class="op">[</span><span class="va">metadata</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"congruent"</span>,<span class="st">"incongruent"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="co"># row selection</span></span>
+<span>                              <span class="va">Attempt</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">display</span><span class="op">==</span><span class="st">"trials"</span>,  <span class="co"># row selection</span></span>
+<span>                             <span class="fu">.</span><span class="op">(</span><span class="va">pid</span>, trial<span class="op">=</span><span class="va">Trial.Number</span>, <span class="co"># columns  </span></span>
+<span>                               congruency<span class="op">=</span><span class="va">metadata</span>,accuracy<span class="op">=</span><span class="va">Correct</span>,<span class="va">rt</span>,   <span class="co"># columns    </span></span>
+<span>                               item<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">ImageCentre</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">TextCentre</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>          </span>
 <span><span class="co"># figure out what block came first for each person</span></span>
 <span><span class="va">iat_data</span><span class="op">[</span>,<span class="va">firstblock</span><span class="op">:=</span><span class="va">.SD</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">$</span><span class="va">congruency</span>,by<span class="op">=</span><span class="va">pid</span><span class="op">]</span> </span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iat_data</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -791,27 +788,36 @@ filter for the important data</p>
 </tr>
 </tbody>
 </table>
-<p>Now we can plot the data with the generic ploting function, mypirate.
-You name the columns/conditions that you want to plot on the x axis, and
-as a colour contrast.</p>
+</div>
+<div class="section level3">
+<h3 id="plotting-data">Plotting data<a class="anchor" aria-label="anchor" href="#plotting-data"></a>
+</h3>
+<p>Now we can plot the data with the generic plotting function,
+mypirate(). You name the columns/conditions that you want to plot on the
+x axis, and as a colour contrast.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mypirate.html">mypirate</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">rt</span><span class="op">&lt;</span><span class="fl">2000</span><span class="op">]</span>, <span class="co"># trim incorrect trials and outliers</span></span>
 <span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-5-1.png" width="90%"></p>
 <p>Since we have a dot per trial, this is a bit crowded. You can first
-average over people, and also turn elements on and off in mypirate. and
-set options to flip the coordinates</p>
+average over people, and also turn elements on and off in mypirate, and
+set options such as flipping the coordinates</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mypirate.html">mypirate</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">rt</span><span class="op">&lt;</span><span class="fl">2000</span><span class="op">]</span>,</span>
-<span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span>,pid_average <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>         violin <span class="op">=</span> <span class="cn">F</span>,bar<span class="op">=</span><span class="cn">T</span>,cflip <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>  <span class="co"># no dots but draw some bars</span></span></code></pre></div>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span>,</span>
+<span>         pid_average <span class="op">=</span> <span class="cn">T</span>,  <span class="co"># average over participants' conditions</span></span>
+<span>         violin <span class="op">=</span> <span class="cn">F</span>,bar<span class="op">=</span><span class="cn">T</span>,cflip <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>  <span class="co"># no violins but draw some bars and flip axes</span></span></code></pre></div>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
 <p>Or we could connect conditions with lines</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mypirate.html">mypirate</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">rt</span><span class="op">&lt;</span><span class="fl">2000</span><span class="op">]</span>,</span>
 <span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span>,</span>
 <span>         dots<span class="op">=</span><span class="cn">F</span>,line<span class="op">=</span><span class="cn">T</span>,violin<span class="op">=</span><span class="cn">F</span><span class="op">)</span>  <span class="co"># no dots but draw some bars</span></span></code></pre></div>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-7-1.png" width="90%"></p>
+</div>
+<div class="section level3">
+<h3 id="plotting-anova-and-mixed-models">Plotting ANOVA and mixed models<a class="anchor" aria-label="anchor" href="#plotting-anova-and-mixed-models"></a>
+</h3>
 <p>We can analyse the data with afex aov_ex package, and then plot the
 results with plot_model(). This output the ANOVA table and means tables
 for all main effects and interactions, and shows post hoc results
@@ -820,7 +826,7 @@ second.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">anv</span> <span class="op">&lt;-</span> <span class="fu">afex</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/afex/man/aov_car.html" class="external-link">aov_ez</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">rt</span><span class="op">&lt;</span><span class="fl">2000</span><span class="op">]</span>,fun_aggregate <span class="op">=</span> <span class="va">mean</span>,</span>
 <span>                    id<span class="op">=</span><span class="st">"pid"</span>,between<span class="op">=</span><span class="st">"firstblock"</span>,within<span class="op">=</span><span class="st">"congruency"</span>,dv<span class="op">=</span><span class="st">"rt"</span><span class="op">)</span></span>
-<span> <span class="fu"><a href="../reference/plot_model.html">plot_model</a></span><span class="op">(</span><span class="va">anv</span>,outp <span class="op">=</span> <span class="cn">NULL</span>,bars<span class="op">=</span><span class="cn">F</span><span class="op">)</span> <span class="co"># you can pass mypirate parameters to this function as above</span></span></code></pre></div>
+<span> <span class="fu"><a href="../reference/plot_model.html">plot_model</a></span><span class="op">(</span><span class="va">anv</span>,outp <span class="op">=</span> <span class="cn">NULL</span>,bars<span class="op">=</span><span class="cn">F</span><span class="op">)</span> <span class="co"># you can pass mypirate parameters to this function </span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Univariate Type III Repeated-Measures ANOVA Assuming Sphericity</span></span>
 <span><span class="co">## </span></span>
@@ -904,7 +910,7 @@ second.</p>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $plot_congruency</span></span></code></pre>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-1.png" width="90%"></p>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## $means_firstblock</span></span>
 <span><span class="co">##  firstblock  emmean   SE df lower.CL upper.CL</span></span>
@@ -915,7 +921,7 @@ second.</p>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $plot_firstblock</span></span></code></pre>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-2.png" width="90%"></p>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## $means_congruency_firstblock</span></span>
 <span><span class="co">##  congruency  firstblock  emmean   SE df lower.CL upper.CL</span></span>
@@ -927,9 +933,13 @@ second.</p>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $plot_congruency_firstblock</span></span></code></pre>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-3.png" width="700"></p>
-<p>For the IAT there is a function that will do all the processing and
-analyis we’ve done above in one</p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-3.png" width="90%"></p>
+</div>
+<div class="section level3">
+<h3 id="other-functions">Other functions<a class="anchor" aria-label="anchor" href="#other-functions"></a>
+</h3>
+<p>For the IAT there is a function `gorilla_iatanalysis()` that will do
+all the processing and analysis we’ve done above in one step.</p>
 <pre reval="FALSE"><code><span><span class="fu"><a href="../reference/gorilla_iatanalysis.html">gorilla_iatanalysis</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre>
 <p>Other functions in the package will score some standard
 questionnaires, explore and plot correlation. If you want any of these
