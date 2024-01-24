@@ -58,7 +58,7 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
     data[[dv]] <- data$V1
   }
 
-               ## lummp together predicted data, means and labels if we have it
+  ## lummp together predicted data, means and labels if we have it
   ## so that it all gets reshaped together
 
   if(is.null(pred)){data$data_type <- "obs"}else{

@@ -6,96 +6,95 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-## eyethink data tools
 
 This is a toolbox for behavioural data. It processes raw downloads from gorilla, preps behavioural datas for analysis and extracts and scores information from questionnaires. Performs basic plotting of RDIs (pirate plots), and correlations from raw data and ANOVAs and mixed models.
 
 Here's how to get the latest version of the toolbox
-```{r message=FALSE, warning=FALSE}
-# devtools::install_github("dcr-eyethink/eyethinkdata")
-library(eyethinkdata)
+
+```{r eval=FALSE}
+devtools::install_github("dcr-eyethink/eyethinkdata")
 ```
 
+### Importing data from gorilla
 
-## Importing data from gorilla 
+There are several functions all beginning with data\_ that read in multiple data files and merge them into an R object. The most commonly used is data_collator_gorilla(). You pass it the name of a folder that contains downloads from gorilla. These downloads can be .zip files or unzipped folders that themselves contain gorilla .csv files. For example:
 
-There are several functions all beginning with data_ that read in multiple data files and merge them into an R object. The most commonly used is data_collator_gorilla(). You pass it the name of a folder that contains downloads from gorilla. These downloads can be .zip files or unzipped folders that themselves contain gorilla .csv files. They look like this
-
-![folders](datafolder.png)
+![](datafolder.png)
 
 To run the function, tell it the name of the folder that contains the downloaded items, or leave it blank and your OS will ask you to choose the folder.
 
 ```{r}
+library(eyethinkdata)
 data <- data_collator_gorilla("gorilla_data")
 ```
 
-
 Remember to give this function a folder that contains other folders that have the raw data in them. So now you have a list called data that contains several data.tables.
 
-**data$data_task** contains all of the data from you gorilla tasks, the blue blobs in your experiment. This is the raw data from gorilla all collated together, with a few other columns added. For example, **pid** is the participant identity (anonymised). **rt** is the reaction time column. 
+**data\$data_task** contains all of the data from you gorilla tasks, the blue blobs in your experiment. This is the raw data from gorilla all collated together, with a few other columns added. For example, **pid** is the participant identity (anonymized). **rt** is the reaction time column.
 
 ```{r}
 knitr::kable( head(data$data_task),)
 ```
 
-There is another data.table called **data$data_q** which has all the info from your experiment questionnaires. Note that when you download the data, choose long format. Finally, if you used the mouse or eye tracking plugins, that data will be in **data$data_continuous** 
+There is another data.table called **data\$data_q** which has all the info from your experiment questionnaires. Note that when you download the data, choose long format. Finally, if you used the mouse or eye tracking plugins, that data will be in **data\$data_continuous**
 
-
-## Example data analsyis
+### Extracting data
 
 We're going to extract, plot and analyse data from an example IAT experiment. Your first step in analysing your data will be to pick out the rows and columns you want for your experiment. Here's how I would filter for the important data
 
 ```{r}
-iat_data <-  data$data_task[metadata %in% c("congruent","incongruent") & Attempt==1 & display=="trials",  # row selection
-                                   .(pid, trial=Trial.Number, congruency=metadata,accuracy=Correct,rt,                # columns    
-                                     item=paste0(na.omit(ImageCentre),na.omit(TextCentre)))]                   # stimulus idea
+iat_data <-  data$data_task[metadata %in% c("congruent","incongruent") & # row selection
+                              Attempt==1 & display=="trials",  # row selection
+                             .(pid, trial=Trial.Number, # columns  
+                               congruency=metadata,accuracy=Correct,rt,   # columns    
+                               item=paste0(na.omit(ImageCentre),na.omit(TextCentre)))]          
 # figure out what block came first for each person
 iat_data[,firstblock:=.SD[c(1)]$congruency,by=pid] 
 knitr::kable(head(iat_data))
 ```
 
+### Plotting data
 
-Now we can plot the data with the generic ploting function, mypirate. You name the columns/conditions that you want to plot on the x axis, and as a colour contrast.
+Now we can plot the data with the generic plotting function, mypirate(). You name the columns/conditions that you want to plot on the x axis, and as a colour contrast.
 
-```{r}
+```{r out.width = "90%", fig.width =6,fig.height =4 }
 mypirate(data=iat_data[accuracy==1 & rt<2000], # trim incorrect trials and outliers
          colour_condition = "congruency",x_condition = "firstblock",dv = "rt")
 ```
 
+Since we have a dot per trial, this is a bit crowded. You can first average over people, and also turn elements on and off in mypirate, and set options such as flipping the coordinates
 
-Since we have a dot per trial, this is a bit crowded. You can first average over people, and also turn elements on and off in mypirate. and set options to flip the coordinates
-
-```{r}
+```{r out.width = "90%", fig.width =6,fig.height =4 }
 mypirate(data=iat_data[accuracy==1 & rt<2000],
-         colour_condition = "congruency",x_condition = "firstblock",dv = "rt",pid_average = T,
-         violin = F,bar=T,cflip = T)  # no dots but draw some bars
+         colour_condition = "congruency",x_condition = "firstblock",dv = "rt",
+         pid_average = T,  # average over participants' conditions
+         violin = F,bar=T,cflip = T)  # no violins but draw some bars and flip axes
 ```
 
 Or we could connect conditions with lines
 
-```{r}
+```{r out.width = "90%", fig.width =6,fig.height =4 }
 mypirate(data=iat_data[accuracy==1 & rt<2000],
          colour_condition = "congruency",x_condition = "firstblock",dv = "rt",
          dots=F,line=T,violin=F)  # no dots but draw some bars
 ```
 
+### Plotting ANOVA and mixed models
+
 We can analyse the data with afex aov_ex package, and then plot the results with plot_model(). This output the ANOVA table and means tables for all main effects and interactions, and shows post hoc results comparing the effects of the first named condition over levels of the second.
 
-```{r message=FALSE}
+```{r out.width = "90%", fig.width =6,fig.height =4, message=FALSE}
 anv <- afex::aov_ez(data=iat_data[accuracy==1 & rt<2000],fun_aggregate = mean,
                     id="pid",between="firstblock",within="congruency",dv="rt")
- plot_model(anv,outp = NULL,bars=F) # you can pass mypirate parameters to this function as above
+ plot_model(anv,outp = NULL,bars=F) # you can pass mypirate parameters to this function 
 ```
 
-For the IAT there is a function that will do all the processing and analyis we've done above in one 
+### Other functions
 
-```{reval=FALSE}
+For the IAT there is a function \`gorilla_iatanalysis()\` that will do all the processing and analysis we've done above in one step.
+
+``` {reval="FALSE"}
 gorilla_iatanalysis(data)
 ```
 
 Other functions in the package will score some standard questionnaires, explore and plot correlation. If you want any of these documented, raise it as an issue on github!
-
-
-
-
-

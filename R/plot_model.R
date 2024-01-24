@@ -43,22 +43,43 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
     md <- emmeans::emmeans(mod,specs=c(ct))
     mdc <- pairs(emmeans::emmeans(mod,specs=c(ct)))
 
-    xlabs <- data.table( data.frame(mdc),dv=dvname)
 
     if (length(ct)==2){
+
+      ## INTERACTIONS
+
+           cat("\n\nInteractions of ", ct,"\n")
+      xlabs <- data.table( data.frame(mdc),dv=dvname)
       xlabs[,c1:=data.table::tstrsplit(contrast,split =  " ")[2],by=p.value]
       xlabs[,c2:=data.table::tstrsplit(contrast,split =  " ")[5],by=p.value]
       xlabs <- xlabs[c1==c2]
       xlabs[[ct[2]]] <- xlabs$c1
+      xlabs$lab <-  ifelse(xlabs$p<.001,"p<.001",paste0("p=",round(xlabs$p,3)))
 
-      cat("\n\nInteractions of ", ct,"\n")
+      ## get pvalue for title
+      if (paste0(ct,collapse = ":") %in% rownames(mod$anova_table) |
+          (paste0(rev(ct),collapse = ":") %in% rownames(mod$anova_table))) {
+
+        pvalue <- na.omit(c(mod$anova_table[paste0(ct,collapse = ":"),"Pr(>F)"],
+                        mod$anova_table[paste0(rev(ct),collapse = ":"),"Pr(>F)"]))
+        pvalue <-  ifelse(pvalue<.001," (p<.001)",paste0(" (p=",round(pvalue,3),")"))
+      }else{pvalue <- ""}
+
     }else{
+
+     ## MAIN FXs
       cat("\n\nMain effects of ", ct,"\n")
+      xlabs <- NULL
+      if (ct %in% rownames(mod$anova_table))  {
+        pvalue <- mod$anova_table[ct,"Pr(>F)"]
+        pvalue <-  ifelse(pvalue<.001," (p<.001)",paste0(" (p=",round(pvalue,3),")"))
+      }else{pvalue <- ""}
     }
+
 
     print(md)
     print(mdc)
-    xlabs$lab <-  ifelse(xlabs$p<.001,"p<.001",paste0("p=",round(xlabs$p,3)))
+
 
     if (error_type=="none"){
       error_bars=F
@@ -75,10 +96,6 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,...){
     }
       }
 
-    if (paste0(ct,collapse = ":") %in% rownames(mod$anova_table)){
-    pvalue <- mod$anova_table[paste0(ct,collapse = ":"),"Pr(>F)"]
-    pvalue <-  ifelse(pvalue<.001," (p<.001)",paste0(" (p=",round(pvalue,3),")"))
-}else{pvalue <- ""}
     title = paste0(dvname," by ", paste0(ct,collapse=" and "),pvalue)
 
     p <- do.call(mypirate,resolve.args(...,data=mdata,dv=dvname,plot_condition=ct,bars=T,title=title,
