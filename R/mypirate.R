@@ -1,4 +1,4 @@
-mypirate <- function(data,colour_condition=NULL,x_condition="variable",
+pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      facet_condition=NULL,facet_scales="fixed",pid_average=F,
                      dv,reorder=F,pid="pid",dodgewidth=0.8,plot_condition=NULL,
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
@@ -29,8 +29,8 @@ mypirate <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param useall ignore the use column and plot all rows
   #' @importFrom ggplot2 ggplot aes
 
-  #' @export
-
+  #' @export mypirate pirateye
+  #' @alias mypirate
 
 
   setDT(data)
@@ -346,3 +346,4 @@ geom_split_violin <- function(mapping = NULL, data = NULL, stat = "ydensity", po
         params = list(trim = trim, scale = scale, draw_quantiles = draw_quantiles, na.rm = na.rm,
                       rel.scale = rel.scale, ...))
 }
+mypirate <- pirateye

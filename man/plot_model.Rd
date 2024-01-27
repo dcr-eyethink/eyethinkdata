@@ -22,12 +22,12 @@ plot_model(
 
 \item{posthocs}{do you want to show posthocs on plot?}
 
-\item{plot_conditions}{a list of main effects and interactions eg list("cond1", "cond2","cond1:cond2")}
+\item{plot_conditions}{a list of main effects and interactions eg list("cond1", "cond1:cond2")}
 
-\item{...}{plotting arguments to pass to mypirate}
+\item{...}{plotting arguments to pass to pirateye}
 }
 \description{
 Plots the main effects and interactionsof an afex anova or mixed model
 And shows posthocs contrasts for the effects of condition 1 across levels of condition 2
-Will pass on arguments to mypirate
+Will pass on arguments to pirateye
 }

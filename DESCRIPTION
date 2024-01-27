@@ -1,7 +1,7 @@
 Package: eyethinkdata
 Type: Package
 Title: Tools for processing behavioural data
-Version: 0.2.2
+Version: 0.3.0
 Author: person("Daniel","C." "Richardson",
   email = "dcr@eyethink.org",
   role = c("aut", "cre"),
@@ -19,9 +19,7 @@ Imports:
     cocor,
     cowplot,
     corrplot,
-    data.table,
     emmeans,
-    ggplot2,
     ggrepel,
     Hmisc,
     insight,
@@ -33,3 +31,6 @@ RoxygenNote: 7.2.0
 Suggests: 
     knitr,
     rmarkdown
+Depends: 
+    data.table,
+    ggplot2

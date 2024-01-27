@@ -12,6 +12,7 @@ plotscat_split(
   cl = 2,
   condcols = NULL,
   results_title = TRUE,
+  title_text = NULL,
   outp = "",
   bayes_factor = F
 )

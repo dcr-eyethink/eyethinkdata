@@ -4,13 +4,13 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,
   #'
   #' Plots the main effects and interactionsof an afex anova or mixed model
   #' And shows posthocs contrasts for the effects of condition 1 across levels of condition 2
-  #' Will pass on arguments to mypirate
+  #' Will pass on arguments to pirateye
   #' @param mod output from an afex model
   #' @param outp folder for saving. Set blank if not required
   #' @param error_type Error bars: none, SE or CL
   #' @param posthocs do you want to show posthocs on plot?
   #' @param plot_conditions a list of main effects and interactions eg list("cond1", "cond1:cond2")
-  #' @param ... plotting arguments to pass to mypirate
+  #' @param ... plotting arguments to pass to pirateye
   #' @export
 
   #run model
@@ -101,9 +101,9 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,
 
     title = paste0(dvname," by ", paste0(ct,collapse=" and "),pvalue)
 
-    p <- do.call(mypirate,resolve.args(...,data=mdata,dv=dvname,plot_condition=ct,bars=T,title=title,
+    p <- do.call(pirateye,resolve.args(...,data=mdata,dv=dvname,plot_condition=ct,bars=T,title=title,
                                        dots=F,violin=F,xlabs = xlabs,error_bar_data=emd,error_bars=error_bars))
-    #mypirate(mdata,dv=dvname,colour_condition = c,bars=T,dots=F,violin=F,error_bars=F,xlabs = xlabs)
+    #pirateye(mdata,dv=dvname,colour_condition = c,bars=T,dots=F,violin=F,error_bars=F,xlabs = xlabs)
 
     r[[paste0("means_",paste0(ct,collapse="_"))]] <- md
     r[[paste0("plot_",paste0(ct,collapse="_"))]] <- p

@@ -21,13 +21,13 @@ readin_datalist <- function(folder="processed",flist=NULL, data=list(),drp=F,tok
     for (f in flist){
 
       if (drp){
-        nd <- data.table(drop_read_csv(file = paste0(fitem,"/",f) ,
+        nd <- data.table::data.table(drop_read_csv(file = paste0(fitem,"/",f) ,
                                        dtoken = token))
         # print(str(nd))
         data[[gsub(f,pattern=".csv",replacement="")]] <- rbind(data[[gsub(f,pattern=".csv",replacement="")]],
                                                                nd,fill=T)
       }else{
-        nd <- data.table(read.csv(file = paste0(fitem,"/",f)))
+        nd <- data.table::data.table(read.csv(file = paste0(fitem,"/",f)))
         # print(str(nd))
         data[[gsub(f,pattern=".csv",replacement="")]] <- rbind(data[[gsub(f,pattern=".csv",replacement="")]],
                                                                nd,fill=T)

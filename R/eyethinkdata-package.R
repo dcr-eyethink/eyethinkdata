@@ -13,6 +13,9 @@
 #' @importFrom data.table data.table
 #' @importFrom data.table setDT
 #' @importFrom data.table setcolorder
+#' @importFrom data.table data.table
+#' @importFrom data.table dcast
+#' @importFrom data.table melt
 ## usethis namespace: end
 NULL
 

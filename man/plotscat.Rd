@@ -13,6 +13,7 @@ plotscat(
   condcols = NULL,
   cleand = FALSE,
   results_title = TRUE,
+  title_text = NULL,
   outp = "analysis",
   w = 6,
   h = 6,
@@ -28,6 +29,10 @@ plotscat(
 \item{y}{name of y column}
 
 \item{z}{name of column, either numeric DV or a factor for splitting groups}
+
+\item{results_title}{do you want all the stats in the title?}
+
+\item{title_text}{optional text for title}
 
 \item{outp}{name of folder to save plot in, set to blank if no save needed}
 
