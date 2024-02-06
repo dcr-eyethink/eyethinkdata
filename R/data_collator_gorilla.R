@@ -13,6 +13,8 @@ data_collator_gorilla <- function(datafolder=NULL,...){
 
   if (is.null(datafolder)){datafolder <- rstudioapi::selectDirectory()}
 
+  if (!dir.exists(datafolder)){stop(paste0("I can't find ",datafolder))}
+
   ## unzip and remove archive
   zf <- list.files(datafolder,pattern=".zip",full.names = T)
   if (length(zf)>0){
@@ -43,6 +45,17 @@ data_collator_gorilla <- function(datafolder=NULL,...){
     }
 
   }
+
+  retdata$data_qtype <- NULL
+  data_qtype <- "none"
+  if (!is.null(retdata$data_q)){
+    if ( "Question.Key" %in% colnames(retdata$data_q) |  "Object.Name" %in% colnames(retdata$data_q)){
+      data_qtype <- "long"
+    }else{
+      data_qtype <- "wide"
+    }}
+
+  retdata$data_qtype <- data_qtype
 
   return(retdata)
 

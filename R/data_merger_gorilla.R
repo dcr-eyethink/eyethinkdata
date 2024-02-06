@@ -21,6 +21,14 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
   qd <- data.table::data.table(do.call(data_merger,resolve.args(datafile = datafile,ending = ending,
                                contains = "quest",gorilla_checkwideq=T,...)))
 
+  data_qtype <- "none"
+  if (!is.null(qd)){
+  if ( "Question.Key" %in% colnames(qd) |  "Object.Name" %in% colnames(qd)){
+    data_qtype <- "long"
+  }else{
+    data_qtype <- "wide"
+  }}
+
   dd <- data.table::data.table()
 
   uploads <- NULL
@@ -77,5 +85,6 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
   }
 
   return(list(data_task=td,
-              data_q=qd,data_continuous=etd,uploads=uploads))
+              data_q=qd,data_qtype=data_qtype,
+              data_continuous=etd,uploads=uploads))
 }

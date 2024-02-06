@@ -57,7 +57,7 @@ data_merger <- function(ending="txt",contains="",d=",",h=TRUE,
         alldata <- newdata
       }else{
 
-          if(gorilla_checkwideq & ( !"Question.Key" %in% colnames(newdata) |
+          if(gorilla_checkwideq & ( !"Question.Key" %in% colnames(newdata) &
                                     !"Object.Name" %in% colnames(newdata))){
           #  we have a wide question data set
 

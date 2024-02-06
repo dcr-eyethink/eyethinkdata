@@ -8,7 +8,7 @@ pid_merge <- function(...,link="pid"){
 
   for (n in 1:length(data)){
     for (l in link){
-      data[[n]][[l]] <- as.character(data[[n]][[l]])
+      data[[n]][[l]] <- as.factor(data[[n]][[l]])
     }
   }
 
