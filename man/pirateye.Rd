@@ -32,7 +32,7 @@ pirateye(
   pred_means = NULL,
   pred_bar = T,
   xlabs = NULL,
-  xlabpos = 1.1,
+  xlabpos = 0.7,
   error_data = NULL,
   cflip = F,
   norm = F,
@@ -72,6 +72,8 @@ pirateye(
 
 \item{cols}{specify the colours to use}
 
+\item{xlabpos}{How high vertically should they be, as proportion of plot height}
+
 \item{error_data}{distribution for mean, eg from Bayes analysis, to replace SE}
 
 \item{cflip}{flip to horizontal plot}
@@ -79,6 +81,8 @@ pirateye(
 \item{norm}{normalise / z-score values for comparison across scales}
 
 \item{useall}{ignore the use column and plot all rows}
+
+\item{xlab}{Do we have labels to go across x axis, such as post hoc pvalues or MPEs}
 }
 \description{
 Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off

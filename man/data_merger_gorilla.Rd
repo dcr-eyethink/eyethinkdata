@@ -16,5 +16,8 @@ A list of two or three data tables of gorilla data.
 }
 \description{
 It asks for one of the files in the un zipped DATA folder and
-loads in the task and the questionnaire data seperately
+loads in the task and the questionnaire data separately
+It will try and figure out if your questionnaire data is wide or long
+and collate it accordingly
+Note that the functions for processing questionnaire data in this package assume long
 }

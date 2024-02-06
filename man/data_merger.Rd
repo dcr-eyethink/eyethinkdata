@@ -11,6 +11,7 @@ data_merger(
   h = TRUE,
   datafile = NULL,
   gorilla_clean = FALSE,
+  gorilla_checkwideq = F,
   datafolder = NULL
 )
 }
@@ -32,5 +33,5 @@ A data table of all datafiles ending in \code{ending} containing \code{contains}
 }
 \description{
 It asks for one of the files in the DATA folder and merges
-all the files in there strung together in one dataframe
+all the files in there strung together in one data table
 }

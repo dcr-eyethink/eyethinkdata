@@ -1,7 +1,7 @@
 Package: eyethinkdata
 Type: Package
 Title: Tools for processing behavioural data
-Version: 0.3.0
+Version: 0.3.1
 Author: person("Daniel","C." "Richardson",
   email = "dcr@eyethink.org",
   role = c("aut", "cre"),
@@ -32,5 +32,5 @@ Suggests:
     knitr,
     rmarkdown
 Depends: 
-    data.table,
-    ggplot2
+    ggplot2,
+    data.table

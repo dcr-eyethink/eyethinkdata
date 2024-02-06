@@ -4,7 +4,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
                      pred_line=F,error_bar_data=NULL,
-                     pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=1.1,
+                     pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=0.7,
                      error_data=NULL,cflip=F,norm=F,bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
                      combine_plots=list(),combine_position="right",elementinc=NULL,
@@ -24,6 +24,8 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param cols specify the colours to use
   #' @param error_data distribution for mean, eg from Bayes analysis, to replace SE
   #' @param error_bar_data
+  #' @param xlab Do we have labels to go across x axis, such as post hoc pvalues or MPEs
+  #' @param xlabpos How high vertically should they be, as proportion of plot height
   #' @param cflip flip to horizontal plot
   #' @param norm normalise / z-score values for comparison across scales
   #' @param useall ignore the use column and plot all rows
@@ -217,21 +219,25 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
 
 
   ###### do we have labels (typically MPEs or pvalues)
-  if (!is.null(xlabs) & !is.null(xlabs$dv[1]) ){
+ #  if (!is.null(xlabs) & !is.null(xlabs$dv[1]) ){
 
+    if (!is.null(xlabs) ){
     if(pred_line){
       p <- p + ggrepel::geom_label_repel(data=data[data_type=="xlabs"],fill="white", show.legend = FALSE,
                                          ggplot2::aes(label=lab))
     }else{
-
+      yl <- layer_scales(p)$y$get_limits()
+      xlabposy <-diff(yl)*xlabpos+yl[1]
       if(x_condition ==colour_condition){
         # label need to go between the x axis categories
         p <- p + ggplot2::geom_label(data=data[data_type=="xlabs"],inherit.aes = F,fill="white",alpha=.7, label.size = NA,
-                                     ggplot2::aes_string(x=1.5,label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))
+                                     ggplot2::aes(x=1.5,label=lab,y=xlabposy))
+       #                              ggplot2::aes_string(x=1.5,label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))
       }else{
         # they go above
         p <- p + ggplot2::geom_label(data=data[data_type=="xlabs"],inherit.aes = F,fill="white",alpha=.7, label.size = NA,
-                                     ggplot2::aes_string(x="condx",label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))}
+                                     ggplot2::aes(x=condx,label=lab,y=xlabposy))}
+        #                             ggplot2::aes_string(x="condx",label="lab",y=xlabpos*mean(data[[dv]],na.rm = T)))}
     }}
 
 
@@ -250,6 +256,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   }
 
   p <- p+ggplot2::theme(legend.position = "top")
+
   # get rid of colour legend if its on the x-axis
   if (identical(data$condcol,data$condx) | !legend){
     p <- p+ggplot2::theme(legend.position = "none")
@@ -265,7 +272,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
 
   if (cflip){p <- p+ ggplot2::coord_flip()}
 
-  if (is.null(w)){w <- 2+length(unique(data$condx))*1.6}
+  if (is.null(w)){w <- 2+length(unique(data$condx))*.5}
 
   if(!is.null(facet_condition)){
     p <- p+ggplot2::facet_wrap(condfacet~.,scales = facet_scales)
@@ -290,13 +297,13 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   if (is.character(outp)){
 
     if(!title_overide){
+      if(!is.null(colour_condition) & ! is.null(x_condition)){
       if (colour_condition==x_condition){
         title <-paste(c(title,dv,
                         paste0(c(colour_condition,facet_condition),collapse = "-")),collapse = " ")
       }else{
-      title <-paste(c(title,dv,
-                                       paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ") }
-      }
+      title <-paste(c(title,dv,paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ") }
+      }}
 
     ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)

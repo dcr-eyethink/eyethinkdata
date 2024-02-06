@@ -2,7 +2,10 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
   #' Merge and load in data from a gorilla download
   #'
   #' It asks for one of the files in the un zipped DATA folder and
-  #' loads in the task and the questionnaire data seperately
+  #' loads in the task and the questionnaire data separately
+  #' It will try and figure out if your questionnaire data is wide or long
+  #' and collate it accordingly
+  #' Note that the functions for processing questionnaire data in this package assume long
 
   #' @param ending string at the end of the filename, ie filetype.
   #' @param datafile example file. if this is supplied then don't ask user
@@ -16,7 +19,7 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
   td <- data.table::data.table(do.call(data_merger,resolve.args(datafile = datafile, ending = ending,
                                contains = "task",...)))
   qd <- data.table::data.table(do.call(data_merger,resolve.args(datafile = datafile,ending = ending,
-                               contains = "quest",...)))
+                               contains = "quest",gorilla_checkwideq=T,...)))
 
   dd <- data.table::data.table()
 
