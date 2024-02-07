@@ -1,4 +1,4 @@
-gorilla_q_keyed <- function(data,keyout=FALSE,qlist,
+gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
                             items=F,key_folder=NULL){
   #' Processes a gorilla QB1 questionnaire using a survey key
   #'
@@ -42,7 +42,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist,
   q_full_return <- data.table(pid=(unique(qdata[!is.na(pid) & Task.Name %in% qlist]$pid)))
 
 
-  for (tk in unique(qlist)){
+  for (tk in qlist){
     qkey <- NULL
     qt <- qdata[Task.Name==tk]
 
@@ -57,7 +57,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist,
     }
 
 
-    if (file.exists(tkf)){
+    if (file.exists(tkf) & !keyout){
       qkey <- data.table(read.csv(tkf))
     }else{
         #  there is no key
@@ -70,16 +70,31 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist,
 
           sname <- gsub("[^::A-Z::]","",tk)
           if(sname==""){sname <- tk}
-          kw <-  data.table(Task.Name=tk,
-                            Question.Key=unique(qt[!grep("quantised",Question.Key)]$Question.Key),
+
+          qt <- qt[!Question.Key=="BEGIN QUESTIONNAIRE" & !Question.Key=="END QUESTIONNAIRE" &
+                     ! Question.Key  %like% "quantised" & !Question.Key=="Consent" ]
+
+          if(dim(qt)[1]>0){
+          qt[,order:=1:.N,by=.(pid)]
+
+          qkitems <- qt[,.(Question.Key=unique(Question.Key)),by=order]
+
+          # do we only have one order or lots
+          if (!length(unique(qkitems$Question.Key) )==dim(qkitems)[1]){
+          # we have lots so sort alphabetically
+          #  qkitems <- data.table(order=NA,Question.Key=sort(unique(qkitems$Question.Key)))
+            # we have lotss
+            qkitems <- data.table(order=NA,
+                                  Question.Key=qkitems$Question.Key[!duplicated(qkitems$Question.Key)])
+            }
+
+          kw <-  data.table(Task.Name=tk,qkitems,
                             sum=1,rev=8,scaleName=sname,Subscore="",qual=0)
 
 
-
-          kw <- kw[!Question.Key=="BEGIN QUESTIONNAIRE" & !Question.Key=="END QUESTIONNAIRE"]
-          setkey(kw,Question.Key)
           write.csv(kw,tkf)
-          return(kw)
+          print(kw)
+          }
         }
       }
 
@@ -129,8 +144,12 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist,
         print(qcount)
       }
 
-      q_scalescore <- data.table(dcast(qt[!is.na(r),sum(r),by=.(pid,scaleName)],
+      if(dim(qt)[1]>0){
+        q_scalescore <- data.table(dcast(qt[!is.na(r),sum(r),by=.(pid,scaleName)],
                        formula = pid~scaleName,value.var = "V1"))
+      }else{
+        q_scalescore <- data.table()
+                       }
 
       q_return <- pid_merge(q_return,q_scalescore)
 
@@ -171,7 +190,10 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist,
   }
 
   # now gone through all the tasks
-  return(q_full_return)
+  if (dim(q_full_return)[2]>1){
+    return(q_full_return)
+  }
+
 }
 
 q_duplicate <- function(qdata){

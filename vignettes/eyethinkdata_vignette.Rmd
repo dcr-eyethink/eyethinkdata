@@ -113,7 +113,7 @@ A more powerful function lets you use a key to score a survey, which is useful i
 gorilla_q_keyed(data,qlist= "Interpersonal Reactivity Index (Davies, 1983)",keyout = T)
 ```
 
-You can then edit it in excel or any text editor, and save it as .csv file.There is a row for every different survey item in the gorilla questionnaire, and each row is identified by what you wrote in the 'key' box when making the survey in gorilla. You can change the numbers in the columns sum, ScaleNam, Subscore and qual, to score/summarize your survey.
+You can then edit it in excel or any text editor, and save it as .csv file.There is a row for every different survey item in the gorilla questionnaire, and each row is identified by Question.Key - what you wrote in the 'key' box when making the survey in gorilla. The order tells you how they appeared in gorilla (NA if they were randomised). You can change the numbers in the columns sum, ScaleNam, Subscore and qual, to score/summarize your survey.
 
 Here's what the columns mean:
 *sum* - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score

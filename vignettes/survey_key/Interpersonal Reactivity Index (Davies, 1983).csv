@@ -1,15 +1,15 @@
-"","Task.Name","Question.Key","sum","rev","scaleName","Subscore","qual"
-"1","Interpersonal Reactivity Index (Davies, 1983)"," EC_1",1,8,"IRID","",0
-"2","Interpersonal Reactivity Index (Davies, 1983)","EC_2",1,8,"IRID","",0
-"3","Interpersonal Reactivity Index (Davies, 1983)","EC_3",1,8,"IRID","",0
-"4","Interpersonal Reactivity Index (Davies, 1983)","EC_4",1,8,"IRID","",0
-"5","Interpersonal Reactivity Index (Davies, 1983)","EC_5",1,8,"IRID","",0
-"6","Interpersonal Reactivity Index (Davies, 1983)","EC_6",1,8,"IRID","",0
-"7","Interpersonal Reactivity Index (Davies, 1983)","EC_7",1,8,"IRID","",0
-"8","Interpersonal Reactivity Index (Davies, 1983)","PT_1",1,8,"IRID","",0
-"9","Interpersonal Reactivity Index (Davies, 1983)","PT_2",1,8,"IRID","",0
-"10","Interpersonal Reactivity Index (Davies, 1983)","PT_3",1,8,"IRID","",0
-"11","Interpersonal Reactivity Index (Davies, 1983)","PT_4",1,8,"IRID","",0
-"12","Interpersonal Reactivity Index (Davies, 1983)","PT_5",1,8,"IRID","",0
-"13","Interpersonal Reactivity Index (Davies, 1983)","PT_6",1,8,"IRID","",0
-"14","Interpersonal Reactivity Index (Davies, 1983)","PT_7",1,8,"IRID","",0
+"","Task.Name","order","Question.Key","sum","rev","scaleName","Subscore","qual"
+"1","Interpersonal Reactivity Index (Davies, 1983)",1," EC_1",1,8,"IRID","",0
+"2","Interpersonal Reactivity Index (Davies, 1983)",2,"PT_1",1,8,"IRID","",0
+"3","Interpersonal Reactivity Index (Davies, 1983)",3,"EC_2",1,8,"IRID","",0
+"4","Interpersonal Reactivity Index (Davies, 1983)",4,"PT_2",1,8,"IRID","",0
+"5","Interpersonal Reactivity Index (Davies, 1983)",5,"EC_3",1,8,"IRID","",0
+"6","Interpersonal Reactivity Index (Davies, 1983)",6,"PT_3",1,8,"IRID","",0
+"7","Interpersonal Reactivity Index (Davies, 1983)",7,"EC_4",1,8,"IRID","",0
+"8","Interpersonal Reactivity Index (Davies, 1983)",8,"PT_4",1,8,"IRID","",0
+"9","Interpersonal Reactivity Index (Davies, 1983)",9,"EC_5",1,8,"IRID","",0
+"10","Interpersonal Reactivity Index (Davies, 1983)",10,"EC_6",1,8,"IRID","",0
+"11","Interpersonal Reactivity Index (Davies, 1983)",11,"PT_5",1,8,"IRID","",0
+"12","Interpersonal Reactivity Index (Davies, 1983)",12,"EC_7",1,8,"IRID","",0
+"13","Interpersonal Reactivity Index (Davies, 1983)",13,"PT_6",1,8,"IRID","",0
+"14","Interpersonal Reactivity Index (Davies, 1983)",14,"PT_7",1,8,"IRID","",0

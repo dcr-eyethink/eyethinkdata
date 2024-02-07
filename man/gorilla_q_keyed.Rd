@@ -4,7 +4,13 @@
 \alias{gorilla_q_keyed}
 \title{Processes a gorilla QB1 questionnaire using a survey key}
 \usage{
-gorilla_q_keyed(data, keyout = FALSE, qlist, items = F, key_folder = NULL)
+gorilla_q_keyed(
+  data,
+  keyout = FALSE,
+  qlist = NULL,
+  items = F,
+  key_folder = NULL
+)
 }
 \arguments{
 \item{data}{data list or just the data_q}
