@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">eyethinkdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -998,28 +998,49 @@ directory in a folder called ‘survey_key’. This is what it looks
 like.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/gorilla_q_keyed.html">gorilla_q_keyed</a></span><span class="op">(</span><span class="va">data</span>,qlist<span class="op">=</span> <span class="st">"Interpersonal Reactivity Index (Davies, 1983)"</span>,keyout <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## There is no key for: Interpersonal Reactivity Index (Davies, 1983) </span></span>
+<span><span class="co">## ... so I put a key for Interpersonal Reactivity Index (Davies, 1983) in working directory for you to edit</span></span>
+<span><span class="co">##                                         Task.Name order Question.Key   sum</span></span>
+<span><span class="co">##                                            &lt;char&gt; &lt;int&gt;       &lt;char&gt; &lt;num&gt;</span></span>
+<span><span class="co">##  1: Interpersonal Reactivity Index (Davies, 1983)     1         EC_1     1</span></span>
+<span><span class="co">##  2: Interpersonal Reactivity Index (Davies, 1983)     2         PT_1     1</span></span>
+<span><span class="co">##  3: Interpersonal Reactivity Index (Davies, 1983)     3         EC_2     1</span></span>
+<span><span class="co">##  4: Interpersonal Reactivity Index (Davies, 1983)     4         PT_2     1</span></span>
+<span><span class="co">##  5: Interpersonal Reactivity Index (Davies, 1983)     5         EC_3     1</span></span>
+<span><span class="co">##  6: Interpersonal Reactivity Index (Davies, 1983)     6         PT_3     1</span></span>
+<span><span class="co">##  7: Interpersonal Reactivity Index (Davies, 1983)     7         EC_4     1</span></span>
+<span><span class="co">##  8: Interpersonal Reactivity Index (Davies, 1983)     8         PT_4     1</span></span>
+<span><span class="co">##  9: Interpersonal Reactivity Index (Davies, 1983)     9         EC_5     1</span></span>
+<span><span class="co">## 10: Interpersonal Reactivity Index (Davies, 1983)    10         EC_6     1</span></span>
+<span><span class="co">## 11: Interpersonal Reactivity Index (Davies, 1983)    11         PT_5     1</span></span>
+<span><span class="co">## 12: Interpersonal Reactivity Index (Davies, 1983)    12         EC_7     1</span></span>
+<span><span class="co">## 13: Interpersonal Reactivity Index (Davies, 1983)    13         PT_6     1</span></span>
+<span><span class="co">## 14: Interpersonal Reactivity Index (Davies, 1983)    14         PT_7     1</span></span>
+<span><span class="co">##       rev scaleName Subscore  qual</span></span>
+<span><span class="co">##     &lt;num&gt;    &lt;char&gt;   &lt;char&gt; &lt;num&gt;</span></span>
+<span><span class="co">##  1:     8      IRID              0</span></span>
+<span><span class="co">##  2:     8      IRID              0</span></span>
+<span><span class="co">##  3:     8      IRID              0</span></span>
+<span><span class="co">##  4:     8      IRID              0</span></span>
+<span><span class="co">##  5:     8      IRID              0</span></span>
+<span><span class="co">##  6:     8      IRID              0</span></span>
+<span><span class="co">##  7:     8      IRID              0</span></span>
+<span><span class="co">##  8:     8      IRID              0</span></span>
+<span><span class="co">##  9:     8      IRID              0</span></span>
+<span><span class="co">## 10:     8      IRID              0</span></span>
+<span><span class="co">## 11:     8      IRID              0</span></span>
+<span><span class="co">## 12:     8      IRID              0</span></span>
+<span><span class="co">## 13:     8      IRID              0</span></span>
+<span><span class="co">## 14:     8      IRID              0</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: Unknown argument 'all.X' has been passed.</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: Unknown argument 'all.Y' has been passed.</span></span></code></pre>
-<pre><code><span><span class="co">## Key: &lt;pid&gt;</span></span>
-<span><span class="co">##          pid  IRID</span></span>
-<span><span class="co">##       &lt;fctr&gt; &lt;num&gt;</span></span>
-<span><span class="co">##   1: 4193722    42</span></span>
-<span><span class="co">##   2: 4193708    43</span></span>
-<span><span class="co">##   3: 4193719    43</span></span>
-<span><span class="co">##   4: 4217240    35</span></span>
-<span><span class="co">##   5: 4228549    51</span></span>
-<span><span class="co">##  ---              </span></span>
-<span><span class="co">## 126: 4263634    32</span></span>
-<span><span class="co">## 127: 4263630    41</span></span>
-<span><span class="co">## 128: 4249143    47</span></span>
-<span><span class="co">## 129: 4249146    41</span></span>
-<span><span class="co">## 130: 4228894    51</span></span></code></pre>
 <p>You can then edit it in excel or any text editor, and save it as .csv
 file.There is a row for every different survey item in the gorilla
-questionnaire, and each row is identified by what you wrote in the ‘key’
-box when making the survey in gorilla. You can change the numbers in the
-columns sum, ScaleNam, Subscore and qual, to score/summarize your
-survey.</p>
+questionnaire, and each row is identified by Question.Key - what you
+wrote in the ‘key’ box when making the survey in gorilla. The order
+tells you how they appeared in gorilla (NA if they were randomised). You
+can change the numbers in the columns sum, ScaleNam, Subscore and qual,
+to score/summarize your survey.</p>
 <p>Here’s what the columns mean: <em>sum</em> - how this item
 contributes to scoring: set to 1 to add up, 0 to ignore and -1 for
 reverse score <em>rev</em> - if it is to be reversed scored, then
