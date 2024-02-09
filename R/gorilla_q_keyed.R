@@ -19,7 +19,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
   #' ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
   #' Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
   #' qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
-
+  #' ignore - If the response matches this answer, then don't use it in the scale calculation. This is used, eg, for scales where 1-7 is the answer you want to code, but people can also enter 8 for 'not applicable'.
 
   #' @param keyout generate a new key from the data
   #' @param data data list or just the data_q
@@ -89,7 +89,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
             }
 
           kw <-  data.table(Task.Name=tk,qkitems,
-                            sum=1,rev=8,scaleName=sname,Subscore="",qual=0)
+                            sum=1,rev=8,scaleName=sname,Subscore="",qual=0,ignore=NA)
 
 
           write.csv(kw,tkf)
@@ -119,11 +119,19 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
 
       qual_return <- data.table()
 
+      ## all those flagged as 1 or 2 in qual taken out
       if ("qual" %in% colnames(qt)){
-        if(dim(qt[qual==1])[1]>0){
-          qual_return <- data.table(dcast(qt[qual==1],pid~scaleName+Question.Key,value.var = "Response"))
-          qt <- qt[qual==0 | is.na(qual)]}
+        if(dim((qt[(qual==1 | qual==2) & quant=="value"])  )[1]>0){
+          qual_return <- dcast(qt[(qual==1 | qual==2) & quant=="value"],
+                               pid~scaleName+Question.Key,value.var = "Response")
+          # NOT IMPLEMENTED - if qual is 2 give both qual and quant value
+          # qual_return <- dcast(qt[(qual==1 | qual==2) ],
+          #                      pid~scaleName+Question.Key+quant,value.var = "Response")
+          qt <- qt[!(qual==1 | qual==2)] }
       }
+
+
+
 
       quant_return <- data.table()
       q_quant <- qt[(sum==0 | is.na(sum)) & quant=="value"]
@@ -137,6 +145,11 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
       qt[,r:=as.numeric(as.character(Response))]
       qt[sum==-1,r:=rev-r]
 
+      ## if got ignore col, then delete responses that = this
+      if ("ignore" %in% colnames(qt)){
+        qt[ignore==r,r:=NA]
+        }
+
       qcount <- qt[!is.na(Response),.(N=.N),by=pid]
       qcount <- qcount[N<dim(qkey[!sum==0])[1]]
       if (dim(qcount)[1]>0){
@@ -145,8 +158,11 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
       }
 
       if(dim(qt)[1]>0){
-        q_scalescore <- data.table(dcast(qt[!is.na(r),sum(r),by=.(pid,scaleName)],
-                       formula = pid~scaleName,value.var = "V1"))
+        # q_scalescore <- data.table(dcast(qt[!is.na(r),sum(r),by=.(pid,scaleName)],
+        #                formula = pid~scaleName,value.var = "V1"))
+        q_scalescore <- dcast(qt[!is.na(r)],fun.aggregate = sum,
+                                         formula = pid~scaleName,value.var = "r" )
+
       }else{
         q_scalescore <- data.table()
                        }
@@ -164,8 +180,12 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
           ## do subscores
           qtsub[,scalesub:=paste0(scaleName,"_",Subscore)]
 
-          q_return <- pid_merge(q_return,data.table(dcast(qtsub[!is.na(r),sum(r),by=.(pid,scalesub)],
-                                                 formula = pid~scalesub,value.var = "V1")))
+          # q_return <- pid_merge(q_return,data.table(dcast(qtsub[!is.na(r),sum(r),by=.(pid,scalesub)],
+          #                                       formula = pid~scalesub,value.var = "V1")))
+
+          q_return <- pid_merge(q_return,dcast(qtsub[!is.na(r)],
+          formula = pid~scalesub,value.var = "r",fun.aggregate = sum))
+
         }}
 
       # return quant
@@ -186,7 +206,10 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
     }
 
     # end of one task
-    q_full_return <- merge(q_full_return,q_return,by.x="pid",by.y="pid",all.X=T,all.Y=T)
+   # q_full_return <- merge(q_full_return,q_return,by.x="pid",by.y="pid",all.X=T,all.Y=T)
+
+    q_full_return <- pid_merge(q_full_return,q_return)
+
   }
 
   # now gone through all the tasks

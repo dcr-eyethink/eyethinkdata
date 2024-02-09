@@ -116,11 +116,12 @@ gorilla_q_keyed(data,qlist= "Interpersonal Reactivity Index (Davies, 1983)",keyo
 You can then edit it in excel or any text editor, and save it as .csv file.There is a row for every different survey item in the gorilla questionnaire, and each row is identified by Question.Key - what you wrote in the 'key' box when making the survey in gorilla. The order tells you how they appeared in gorilla (NA if they were randomised). You can change the numbers in the columns sum, ScaleNam, Subscore and qual, to score/summarize your survey.
 
 Here's what the columns mean:
-*sum* - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score
+*sum* - how this item contributes to scoring: set to 1 to add up, -1 for reverse score. If you enter 0 then the answer won't be used to compute score, but instead this answer will be reported by itself in its own column
 *rev* - if it is to be reversed scored, then subtract the answer from this number. eg assuming a 7 point scale, I've set this to 8 as default.
 *ScaleName* - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
 *Subscore*  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
-*qual* - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
+*qual* - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column. If this is 
+*ignore* - If the response matches this answer, then don't use it in the scale calculation. This is used, eg for scales where 1-7 is the answer, but people can also enter 8 for 'not applicable'.
 
 Here's a filled out version for our Interpersonal Reactivity Scale key
 

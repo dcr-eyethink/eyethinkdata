@@ -38,4 +38,5 @@ rev - if it is to be reversed scored, then subtract the answer from this number.
 ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
 Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
 qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
+ignore - If the response matches this answer, then don't use it in the scale calculation. This is used, eg, for scales where 1-7 is the answer you want to code, but people can also enter 8 for 'not applicable'.
 }
