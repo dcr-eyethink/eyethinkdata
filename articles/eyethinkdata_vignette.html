@@ -1016,24 +1016,22 @@ like.</p>
 <span><span class="co">## 12: Interpersonal Reactivity Index (Davies, 1983)    12         EC_7     1</span></span>
 <span><span class="co">## 13: Interpersonal Reactivity Index (Davies, 1983)    13         PT_6     1</span></span>
 <span><span class="co">## 14: Interpersonal Reactivity Index (Davies, 1983)    14         PT_7     1</span></span>
-<span><span class="co">##       rev scaleName Subscore  qual</span></span>
-<span><span class="co">##     &lt;num&gt;    &lt;char&gt;   &lt;char&gt; &lt;num&gt;</span></span>
-<span><span class="co">##  1:     8      IRID              0</span></span>
-<span><span class="co">##  2:     8      IRID              0</span></span>
-<span><span class="co">##  3:     8      IRID              0</span></span>
-<span><span class="co">##  4:     8      IRID              0</span></span>
-<span><span class="co">##  5:     8      IRID              0</span></span>
-<span><span class="co">##  6:     8      IRID              0</span></span>
-<span><span class="co">##  7:     8      IRID              0</span></span>
-<span><span class="co">##  8:     8      IRID              0</span></span>
-<span><span class="co">##  9:     8      IRID              0</span></span>
-<span><span class="co">## 10:     8      IRID              0</span></span>
-<span><span class="co">## 11:     8      IRID              0</span></span>
-<span><span class="co">## 12:     8      IRID              0</span></span>
-<span><span class="co">## 13:     8      IRID              0</span></span>
-<span><span class="co">## 14:     8      IRID              0</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Unknown argument 'all.X' has been passed.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Unknown argument 'all.Y' has been passed.</span></span></code></pre>
+<span><span class="co">##       rev scaleName Subscore  qual ignore</span></span>
+<span><span class="co">##     &lt;num&gt;    &lt;char&gt;   &lt;char&gt; &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span><span class="co">##  1:     8      IRID              0     NA</span></span>
+<span><span class="co">##  2:     8      IRID              0     NA</span></span>
+<span><span class="co">##  3:     8      IRID              0     NA</span></span>
+<span><span class="co">##  4:     8      IRID              0     NA</span></span>
+<span><span class="co">##  5:     8      IRID              0     NA</span></span>
+<span><span class="co">##  6:     8      IRID              0     NA</span></span>
+<span><span class="co">##  7:     8      IRID              0     NA</span></span>
+<span><span class="co">##  8:     8      IRID              0     NA</span></span>
+<span><span class="co">##  9:     8      IRID              0     NA</span></span>
+<span><span class="co">## 10:     8      IRID              0     NA</span></span>
+<span><span class="co">## 11:     8      IRID              0     NA</span></span>
+<span><span class="co">## 12:     8      IRID              0     NA</span></span>
+<span><span class="co">## 13:     8      IRID              0     NA</span></span>
+<span><span class="co">## 14:     8      IRID              0     NA</span></span></code></pre>
 <p>You can then edit it in excel or any text editor, and save it as .csv
 file.There is a row for every different survey item in the gorilla
 questionnaire, and each row is identified by Question.Key - what you
@@ -1042,20 +1040,25 @@ tells you how they appeared in gorilla (NA if they were randomised). You
 can change the numbers in the columns sum, ScaleNam, Subscore and qual,
 to score/summarize your survey.</p>
 <p>Here’s what the columns mean: <em>sum</em> - how this item
-contributes to scoring: set to 1 to add up, 0 to ignore and -1 for
-reverse score <em>rev</em> - if it is to be reversed scored, then
-subtract the answer from this number. eg assuming a 7 point scale, I’ve
-set this to 8 as default. <em>ScaleName</em> - you will end up with one
-row per person and a variable with this name (eg IQ) summarizing all
-items. You can have one or many different scales in the same
-questionnaire and key <em>Subscore</em> - you can break the scales down
-further into subscales. Name it here and it will also appear on output
-as a scored column (eg IQ_verbal) <em>qual</em> - If this item is a non
-numeric or qualitative response (eg a text box) then put a 1 here. It
-won’t be summarized but till also be reported in output in a column</p>
+contributes to scoring: set to 1 to add up, -1 for reverse score. If you
+enter 0 then the answer won’t be used to compute score, but instead this
+answer will be reported by itself in its own column <em>rev</em> - if it
+is to be reversed scored, then subtract the answer from this number. eg
+assuming a 7 point scale, I’ve set this to 8 as default.
+<em>ScaleName</em> - you will end up with one row per person and a
+variable with this name (eg IQ) summarizing all items. You can have one
+or many different scales in the same questionnaire and key
+<em>Subscore</em> - you can break the scales down further into
+subscales. Name it here and it will also appear on output as a scored
+column (eg IQ_verbal) <em>qual</em> - If this item is a non numeric or
+qualitative response (eg a text box) then put a 1 here. It won’t be
+summarized but till also be reported in output in a column. If this is
+<em>ignore</em> - If the response matches this answer, then don’t use it
+in the scale calculation. This is used, eg for scales where 1-7 is the
+answer, but people can also enter 8 for ‘not applicable’.</p>
 <p>Here’s a filled out version for our Interpersonal Reactivity Scale
 key</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"survey_key complete/Interpersonal Reactivity Index (Davies, 1983).csv"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                        Task.Name Question.Key sum rev scaleName</span></span>
 <span><span class="co">## 1  Interpersonal Reactivity Index (Davies, 1983)         EC_1   1   6      ECPT</span></span>
@@ -1089,10 +1092,8 @@ key</p>
 <span><span class="co">## 14       PT    0</span></span></code></pre>
 <p>Now you can parse and score the questionnaire using the same
 function.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/gorilla_q_keyed.html">gorilla_q_keyed</a></span><span class="op">(</span><span class="va">data</span>,qlist<span class="op">=</span> <span class="st">"Interpersonal Reactivity Index (Davies, 1983)"</span>,key_folder <span class="op">=</span> <span class="st">"survey_key complete"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Unknown argument 'all.X' has been passed.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Unknown argument 'all.Y' has been passed.</span></span></code></pre>
 <pre><code><span><span class="co">## Key: &lt;pid&gt;</span></span>
 <span><span class="co">##          pid  ECPT ECPT_EC ECPT_PT</span></span>
 <span><span class="co">##       &lt;fctr&gt; &lt;num&gt;   &lt;num&gt;   &lt;num&gt;</span></span>
@@ -1120,7 +1121,7 @@ use this to add trial data to participant data, or vice versa by passing
 two data sets to the function. Below I’ve parsed the demongraphic data
 from the IAT, and added to it mean reaction times per condition for each
 participant.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pid_merge.html">pid_merge</a></span><span class="op">(</span>  <span class="fu"><a href="../reference/gorilla_q_parse.html">gorilla_q_parse</a></span><span class="op">(</span><span class="va">data</span>,qlist <span class="op">=</span> <span class="st">"basic demographics"</span>,strip <span class="op">=</span> <span class="st">"quant"</span> <span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html" class="external-link">dcast</a></span><span class="op">(</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span>,<span class="va">pid</span><span class="op">~</span><span class="va">congruency</span>,value.var <span class="op">=</span> <span class="st">"rt"</span>,fun.aggregate <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          pid    Sex   age congruent incongruent</span></span>
