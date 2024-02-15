@@ -27,7 +27,10 @@ readin_datalist <- function(folder="processed",flist=NULL, data=list(),drp=F,tok
         data[[gsub(f,pattern=".csv",replacement="")]] <- rbind(data[[gsub(f,pattern=".csv",replacement="")]],
                                                                nd,fill=T)
       }else{
-        nd <- data.table::data.table(read.csv(file = paste0(fitem,"/",f)))
+        #nd <- data.table::data.table(read.csv(file = paste0(fitem,"/",f)))
+
+        nd <- data.table::fread(file = paste0(fitem,"/",f))
+
         # print(str(nd))
         data[[gsub(f,pattern=".csv",replacement="")]] <- rbind(data[[gsub(f,pattern=".csv",replacement="")]],
                                                                nd,fill=T)

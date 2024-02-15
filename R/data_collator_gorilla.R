@@ -11,7 +11,9 @@ data_collator_gorilla <- function(datafolder=NULL,...){
   #' @param datafolder the folder with a collection of gorilla downloads
 
 
-  if (is.null(datafolder)){datafolder <- rstudioapi::selectDirectory()}
+  if (is.null(datafolder)){
+    rstudioapi::showDialog(message = "Select a folder of gorrila zip data files or unzipped data folders",title = "datafolder location?")
+    datafolder <- rstudioapi::selectDirectory()}
 
   if (!dir.exists(datafolder)){stop(paste0("I can't find ",datafolder))}
 
