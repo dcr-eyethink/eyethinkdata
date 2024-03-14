@@ -26,6 +26,8 @@ exclorr  <- function(data,var1,var2,bayes_factor=F,
   data <- data.frame(data)
   var1 <- gsub(var1,pattern = " ",replacement = ".")
   var2 <- gsub(var2,pattern = " ",replacement = ".")
+  var1 <- gsub(var1,pattern = "-",replacement = ".")
+  var2 <- gsub(var2,pattern = "-",replacement = ".")
   corrdata=data[c(var1,var2)]
 
   corrs <- Hmisc::rcorr(as.matrix((corrdata)))
