@@ -4,7 +4,21 @@
 \alias{saveout_datalist}
 \title{saves out data tables in a list to a folder containing .csv files}
 \usage{
-saveout_datalist(data, folder = "processed")
+saveout_datalist(
+  data,
+  folder = "processed",
+  filter_col = NULL,
+  filter_value = NULL
+)
+}
+\arguments{
+\item{data}{list of data.tables}
+
+\item{folder}{to save into}
+
+\item{filter_col}{save out a subset of data, based on this column}
+
+\item{filter_value}{using this value as filter}
 }
 \description{
 saves out data tables in a list to a folder containing .csv files
