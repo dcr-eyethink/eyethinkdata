@@ -10,11 +10,12 @@ saveout_datalist <- function(data,folder="processed",
   for (i in 1:length(data)){
 
 
-      if (!is.null(filter_col)  & !is.null(filter_value) & filter_col %in% colnames(data[[i]]) ){
+      if (!is.null(filter_col)  & !is.null(filter_value) ){
+        if(  filter_col %in% colnames(data[[i]]) ){
 
         data[[i]] <- data[[i]][ data[[i]][[filter_col]] %in% filter_value]
 
-      }
+      }}
 
 
 
