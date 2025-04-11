@@ -7,6 +7,7 @@ pid_merge <- function(...,link="pid"){
 
 
   for (n in 1:length(data)){
+    setDT(data[[n]])
     for (l in link){
       data[[n]][[l]] <- as.factor(data[[n]][[l]])
     }

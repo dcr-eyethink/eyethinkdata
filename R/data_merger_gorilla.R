@@ -68,9 +68,14 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
   if(dim(qd)[1]>0){
 
     qd[,pid:=as.factor(Participant.Private.ID),by=Participant.Private.ID]
+    if ("Participant.Public.ID" %in% colnames(qd)){
     qd[,lid:=as.factor(Participant.Public.ID),by=Participant.Public.ID]
+      data.table::setcolorder(qd,neworder = c("pid","lid"))
+    }else{
+      data.table::setcolorder(qd,neworder = c("pid"))
+    }
 
-    data.table::setcolorder(qd,neworder = c("pid","lid"))
+
 
 
     if("Object.Name" %in% colnames(qd)){

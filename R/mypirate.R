@@ -165,7 +165,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   }
 
   if (line){
-    p <- p +   ggplot2::stat_summary(fun = "mean",geom = "line",size=2,alpha=0.6,
+    p <- p +   ggplot2::stat_summary(fun = "mean",geom = "line",linewidth=2,alpha=0.6,
                                      ggplot2::aes(group=condcol),position=ggplot2::position_dodge(width=dodgewidth))
   }
 
@@ -201,7 +201,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   if (!is.null(pred_means)){
     if(pred_line){
 
-      p <- p+ggplot2::geom_line(data=data[data_type=="pred_means"],size=2)
+      p <- p+ggplot2::geom_line(data=data[data_type=="pred_means"],linewidth=2)
 
     }else{
 

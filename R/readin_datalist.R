@@ -7,12 +7,14 @@ readin_datalist <- function(folder="processed",flist=NULL, data=list(),drp=F,tok
   #' @param token dropbox token
   #' @export
 
+    if (!file.exists(folder)){
+     cat("Show me a folder of processed data\n")
+      folder <- rstudioapi::selectDirectory()
+   }
+
   for (fitem in folder){
 
-    #  if (!file.exists(fitem)){
-    #   cat("Show me a folder of processed data\n")
-    #    fitem <- rstudioapi::selectDirectory()
-    # }
+
 
     if(length(flist)==0){flist <- list.files(fitem)}
     #flist <- list.files(fitem)
