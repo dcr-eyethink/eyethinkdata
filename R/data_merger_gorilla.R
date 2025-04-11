@@ -54,9 +54,12 @@ data_merger_gorilla <- function(datafile=NULL,ending="csv",...){
   if(dim(td)[1]>0){
 
     td[,pid:=as.factor(Participant.Private.ID),by=Participant.Private.ID]
-    td[,lid:=as.factor(Participant.Public.ID),by=Participant.Public.ID]
 
-    data.table::setcolorder(td,neworder = c("pid","lid"))
+    if ("Participant.Public.ID" %in% colnames(td)){
+    td[,lid:=as.factor(Participant.Public.ID),by=Participant.Public.ID]
+    data.table::setcolorder(td,neworder = c("pid","lid"))}else{
+      data.table::setcolorder(td,neworder = c("pid"))
+    }
 
     # DUPLICATED DATA NOT IMPLEMENTED
     # if ("Spreadsheet.Row" %in% colnames(td)){
