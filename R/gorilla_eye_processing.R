@@ -1,84 +1,82 @@
-gorilla_eye_processing <-  function (data,td=NULL,link=c("pid","sid"),
-                                     zone="gorilla",conf_threshold=0.5){
-  #' Takes all data from gorilla import,
-  #' filters for named displays and returns simplified data,
+gorilla_eye_processing <-  function (data,td=NULL,
+                                     conf_threshold=0.5){
+  #' TASK BUILDER 2 version:  Takes all data from gorilla import,
+  #' gets eye movement data and labels with zone info
   #' @param data   compiled  data from a gorilla import
   #' @param td if trail data already generated, will add eye info to this
   #' @return eye data with simplified data
   #' @export
 
+## ADD IN CALIBRATION INFO AND RETURN IN pd
+
 
   if (inherits(data, "list")){
     ed <- data$data_continuous
+    if("td" %in% names(data)){
+      td <- data$td
+    }
   }else{ed <- data}
 
+if ("time_elapsed" %in% colnames(ed)){
+  ed[,t:=time_elapsed]}else{
+if ("Elapsed" %in% colnames(ed)){
+    ed[,t:=Elapsed]
+  }else{
+      # have no time sign
+      stop("I don't have a time code")
+    }}
 
-  ed[,t:=time_elapsed]
 
-  for (fn in unique(ed$filename)){
-    d <- ed[filename==fn]
-    zones <-  d[type=="zone" & !zone_name %in% c("screen"),
-                .(zone_name,zone_x_normalised,zone_y_normalised,
-                  zone_width_normalised,zone_height_normalised)]
+  zd <- ed[Type=="zone"]
 
-    for (zn in zones$zone_name){
-      ed[filename==fn,paste0(zn,"_fix"):= 0]
-      ed[filename==fn & x_pred_normalised <= (zones[zone_name==zn]$zone_x_normalised+zones[zone_name==zn]$zone_width_normalised) &
-           x_pred_normalised >= (zones[zone_name==zn]$zone_x_normalised) &
-           y_pred_normalised <= (zones[zone_name==zn]$zone_y_normalised+zones[zone_name==zn]$zone_height_normalised) &
-           y_pred_normalised >= (zones[zone_name==zn]$zone_y_normalised),
-         paste0(zn,"_fix"):= 1]
-    }
+  ed <- copy( ed[Type=="prediction",.(pid,sid,tid=Trial.Number,t,x=Predicted.Gaze.X.Normalised,y= Predicted.Gaze.Y.Normalised)] )
+  ed[,duration:=t-shift(t,type = "lag"),by=.(pid,tid)]
+
+
+## figure out zone coordinates
+
+ zd <-  zd[,.(pid,sid,tid=Trial.Number,zone=Zone.Name,
+        zxmin=Zone.X.Normalised,zxmax=Zone.X.Normalised+Zone.W.Normalised,
+        zymax=Zone.Y.Normalised,zymin=Zone.Y.Normalised-Zone.H.Normalised)
+        ]
+
+  zone_names <- unique(zd$zone)
+
+   ## identify if eye is in each zone
+  for (z in zone_names){
+   ed <-  pid_merge(ed,zd[zone==z],link = c("pid","tid","sid"))
+   ed[,zone_hit:=ifelse(x>=zxmin & x<= zxmax & y>=zymin & y<=zymax,1,0)]
+   setnames(ed,"zone_hit",z)
+   ed[,c( "zone","zxmin", "zxmax","zymax","zymin" ):=NULL]
   }
 
-  zones <- ed[type=="zone",.(pid,sid,filename,zone_name,
-                             left=zone_x_normalised,right=zone_x_normalised+zone_width_normalised,
-                             bottom=zone_y_normalised,top=zone_y_normalised+zone_height_normalised )]
 
-  zone_names <-  grep(colnames(ed),pattern = "_fix",value = T)
-
-  datacols <- c("pid","sid","filename","t",
-                "x_pred_normalised","y_pred_normalised",
-                "convergence","face_conf",
-                zone_names)
-
-  ed <-  ed[type=="prediction",..datacols]
-
-
-  setnames(ed,old=c("x_pred_normalised","y_pred_normalised"),new=c("x","y"))
-
-  ed[,duration:=t-shift(t,type = "lag"),by=filename]
-
-  ## summarize each pid x trial
-  ## with total time, average confidence
-  ## for each zone
-  ##    total time
-  ##    percent time
-  ##    onset time
-
-  ted <- ed[,.(converge_mean=mean(convergence,na.rm=T),
-               faceconf_mean=mean(face_conf,na.rm=T)),.(pid,sid,filename)]
+  teye <- ed[,.(tid=unique(tid)),.(pid,sid)]
 
   for (zn in zone_names){
-    zn_ed <-   ed[get(zn)==1 & face_conf>=conf_threshold ,
+    zn_ed <-   ed[get(zn)==1  ,
                   .(ftot=sum(duration,na.rm = T),
                     ftot_prop=sum(duration,na.rm = T)/max(t,na.rm = T),
                     fons=min(t,na.rm = T)),
-                  by=.(pid,sid,filename)]
+                  by=.(pid,sid,tid)]
     zn_ed[is.na(ftot),ftot:=0]
     zn_ed[is.na(ftot_prop),ftot_prop:=0]
     setnames(zn_ed,old=c("ftot","ftot_prop","fons"),
              new=paste0(zn,c("_ftot","_ftot_prop","_fons")))
-    ted <- zn_ed[ted,on=.(pid,sid,filename)]
+    teye <- zn_ed[teye,on=.(pid,sid,tid)]
   }
 
   if(!is.null(td)) {
-    td <- ted[td,on=link]
-    ed <-  td[ed,on=link]
+    ed <- pid_merge(ed,td,link = c("pid","sid","tid"))
+    td <- pid_merge(td,teye,link = c("pid","sid","tid"))
   }else{
-    td <- ted
+    td <- teye
   }
 
-  return(list(trial_data=td,eye_data=ed,zone_data= zones))
+  data$td <- td
+  data$ed <- ed
+  data$zd <- zd
+
+  return(data)
 
 }

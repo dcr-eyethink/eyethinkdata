@@ -15,9 +15,9 @@ gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat
 
 
   if(is.null(linecolour)){
-    p <- ggplot2::ggplot(data=data,ggplot2::aes(x=x,y=y))
+    p <- ggplot2::ggplot(data=data$ed,ggplot2::aes(x=x,y=y))
   }else{
-    p <- ggplot2::ggplot(data=data,ggplot2::aes_string(x="x",y="y",colour=linecolour))
+    p <- ggplot2::ggplot(data=data$ed,ggplot2::aes_string(x="x",y="y",colour=linecolour))
   }
 
 
@@ -38,12 +38,14 @@ gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat
     if(pt=="heat"){
       pout <- p + ggplot2::geom_bin2d()+
         ggplot2::scale_fill_gradient2(low="blue",mid="red", high="yellow")+
-        ggplot2::theme(legend.position="none")}
+        ggplot2::theme(legend.position="none")
+      }
     else{
 
       if(is.null(linecolour)){
-        pout <- p +ggplot2::geom_path(alpha=0.5,size=1,colour="green")}else{
-          p <- p +ggplot2::geom_path(alpha=0.5,size=1)
+        pout <- p +ggplot2::geom_path(alpha=0.5,size=1,colour="green")
+        }else{
+          pout <- p +ggplot2::geom_path(alpha=0.5,size=1)
         }
     }
 
