@@ -1,105 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/404.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/articles/eyethinkdata_vignette.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/index.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/clip_c_elements.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_collator_gorilla.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_merger.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_merger_gorilla.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/exclorr.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/exp_pid_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/eyethinkdata-package.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_processing.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_iatanalysis.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_bmis.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_checkbox.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_keyed.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_parse.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_performance_engagement.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_rankscore.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_tipi.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/lab_assignment_files.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/mergey.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/pid_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/pirateye.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plot_model.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plotscat.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plotscat_split.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/readin_datalist.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/replacecondcols.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/saveout_datalist.html</loc>
-  </url>
-  <url>
-    <loc>https://dcr-eyethink.github.io/eyethinkdata/reference/singlecor.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/404.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/articles/eyethinkdata_vignette.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/articles/index.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/authors.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/index.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/clip_c_elements.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_collator_gorilla.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_merger.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_merger_gorilla.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/exclorr.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/exp_pid_merge.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/eyethinkdata-package.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/filtered_datalist.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_plot.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_processing.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_iatanalysis.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_bmis.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_checkbox.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_keyed.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_parse.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_performance_engagement.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_rankscore.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_tipi.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/index.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/lab_assignment_files.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/mergey.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/pid_merge.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/pirateye.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plot_model.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plotscat.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plotscat_split.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/readin_datalist.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/replacecondcols.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/saveout_datalist.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/singlecor.html</loc></url>
 </urlset>
+
