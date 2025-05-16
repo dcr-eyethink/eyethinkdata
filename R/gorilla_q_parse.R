@@ -20,6 +20,10 @@ gorilla_q_parse <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL){
   qdata <-  qdata[Task.Name %in% qlist]
   qdata <-  qdata[!Question.Key=="END QUESTIONNAIRE"]
 
+  if ("Key" %in% colnames(qdata)){
+    qdata[,Question.Key:=paste0(Question.Key,"_",Key)]
+  }
+
   qdata <- q_duplicate(qdata)
 
   q_return <- data.table(pid=unique(qdata$pid))
@@ -44,6 +48,8 @@ gorilla_q_parse <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL){
 
       ## get rid of quantized if redundant
       qcols <- grep(cols,pattern = "_quantised",value = T)
+
+      oc <-
 
       for (qc in qcols){
         qcq <- gsub(qc,pattern =  "_quantised",replacement = "")
@@ -73,6 +79,8 @@ gorilla_q_parse <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL){
   if (!is.null(pd)){
     q_return <- pid_merge(pd,q_return)
   }
+
+
 
   return(q_return)
 }

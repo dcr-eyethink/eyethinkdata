@@ -1,5 +1,5 @@
 gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat","path"),
-                              outp="analysis",title="plot",linecolour=NULL){
+                              outp="analysis",title="plot",contrast=NULL){
   #' Takes one trial (or trial type) of data and optional image file an makes heat map
   #'
   #' Generates plots from imported gorilla data that has been processed by gorilla_eye_processing
@@ -14,10 +14,10 @@ gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat
   if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
 
 
-  if(is.null(linecolour)){
-    p <- ggplot2::ggplot(data=data$ed,ggplot2::aes(x=x,y=y))
+  if(is.null(contrast)){
+    p <- ggplot2::ggplot(data=data$ed[,,.SDcols=c("t","x","y")],ggplot2::aes(x=x,y=y))
   }else{
-    p <- ggplot2::ggplot(data=data$ed,ggplot2::aes_string(x="x",y="y",colour=linecolour))
+    p <- ggplot2::ggplot(data=data$ed[,.(t,x,y,contrast=get(contrast))],ggplot2::aes(x=x,y=y,colour=contrast))
   }
 
 
@@ -42,7 +42,7 @@ gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat
       }
     else{
 
-      if(is.null(linecolour)){
+      if(is.null(contrast)){
         pout <- p +ggplot2::geom_path(alpha=0.5,size=1,colour="green")
         }else{
           pout <- p +ggplot2::geom_path(alpha=0.5,size=1)

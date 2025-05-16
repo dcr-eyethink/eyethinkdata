@@ -11,7 +11,7 @@ gorilla_eye_plot(
   plot_types = c("heat", "path"),
   outp = "analysis",
   title = "plot",
-  linecolour = NULL
+  contrast = NULL
 )
 }
 \arguments{

@@ -1,7 +1,7 @@
 Package: eyethinkdata
 Type: Package
 Title: Tools for processing behavioural data
-Version: 0.3.3
+Version: 0.3.4
 Author: person("Daniel","C." "Richardson",
   email = "dcr@eyethink.org",
   role = c("aut", "cre"),

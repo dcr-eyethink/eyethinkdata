@@ -3,11 +3,11 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      dv,reorder=F,pid="pid",dodgewidth=0.8,plot_condition=NULL,
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
-                     pred_line=F,error_bar_data=NULL,
+                     pred_line=F,error_bar_data=NULL,ypercent=F,
                      pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=0.7,
                      error_data=NULL,cflip=F,norm=F,bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
-                     combine_plots=list(),combine_position="right",elementinc=NULL,
+                     combine_plots=list(),combine_position="right",elementinc=NULL,type=NULL,
                      ...){
   #' Outputs a pirate plot (RDI)
   #'
@@ -21,14 +21,16 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param plot_condition instead of passing individually, you can give a vector of up to 3
   #' @param dv name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'
   #' @param pid whats the name of col that identifies individuals
-  #' @param cols specify the colours to use
+  #' @param cols specify the colours to use, can be a set of colours, or of condition_level to colour
   #' @param error_data distribution for mean, eg from Bayes analysis, to replace SE
   #' @param error_bar_data
   #' @param xlab Do we have labels to go across x axis, such as post hoc pvalues or MPEs
   #' @param xlabpos How high vertically should they be, as proportion of plot height
+  #' @param ypercent Convert y scale to %
   #' @param cflip flip to horizontal plot
   #' @param norm normalise / z-score values for comparison across scales
   #' @param useall ignore the use column and plot all rows
+  #' @param type shortcuts: m=just error bars, b=just bars
   #' @importFrom ggplot2 ggplot aes
 
   #' @export mypirate pirateye
@@ -36,6 +38,20 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
 
 
   setDT(data)
+
+  ## set types
+if (!is.null(type)){
+  if (type=="m"){
+    violin=F
+    dots=F
+  }
+  if (type=="b"){
+    violin=F
+    dots=F
+    bars=T
+  }
+}
+
 
   if (!is.null(plot_condition)){
     colour_condition <- plot_condition[1]
@@ -248,7 +264,8 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
 
   ## use the specified colours, or the color names in data, or default
   if (!is.null(cols)){
-    p <- p + ggplot2::scale_colour_manual(values=cols) + ggplot2::scale_fill_manual(values=cols)
+ #   p <- p + ggplot2::scale_colour_manual(values=cols) + ggplot2::scale_fill_manual(values=cols)
+    p <- p + ggplot2::scale_colour_manual(values=cols, aesthetics = c("colour", "fill"))
   }else{
     condcols <- replacecondcols(condlevels = levels(data$condcol))
     if(!is.null(condcols)){
@@ -264,6 +281,10 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
 
   if (!is.null(ylim)){
     p <- p + ggplot2::coord_cartesian(ylim = ylim)
+  }
+
+  if (ypercent){
+    p <- p + scale_y_continuous(labels = scales::percent)
   }
 
   if (!is.null(xlim)){

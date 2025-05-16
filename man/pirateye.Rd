@@ -28,6 +28,7 @@ pirateye(
   cols = NULL,
   pred_line = F,
   error_bar_data = NULL,
+  ypercent = F,
   pred = NULL,
   pred_means = NULL,
   pred_bar = T,
@@ -50,6 +51,7 @@ pirateye(
   combine_plots = list(),
   combine_position = "right",
   elementinc = NULL,
+  type = NULL,
   ...
 )
 }
@@ -70,7 +72,9 @@ pirateye(
 
 \item{plot_condition}{instead of passing individually, you can give a vector of up to 3}
 
-\item{cols}{specify the colours to use}
+\item{cols}{specify the colours to use, can be a set of colours, or of condition_level to colour}
+
+\item{ypercent}{Convert y scale to %}
 
 \item{xlabpos}{How high vertically should they be, as proportion of plot height}
 
@@ -81,6 +85,8 @@ pirateye(
 \item{norm}{normalise / z-score values for comparison across scales}
 
 \item{useall}{ignore the use column and plot all rows}
+
+\item{type}{shortcuts: m=just error bars, b=just bars}
 
 \item{xlab}{Do we have labels to go across x axis, such as post hoc pvalues or MPEs}
 }
