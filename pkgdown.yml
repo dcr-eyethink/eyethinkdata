@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   eyethinkdata_vignette: eyethinkdata_vignette.html
-last_built: 2025-04-16T12:08Z
+last_built: 2025-05-16T15:11Z
 urls:
   reference: https://dcr-eyethink.github.io/eyethinkdata/reference
   article: https://dcr-eyethink.github.io/eyethinkdata/articles
