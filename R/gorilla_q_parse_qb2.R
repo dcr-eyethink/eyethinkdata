@@ -37,7 +37,17 @@ gorilla_q_parse_qb2 <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL)
 
     if (dim(qdata[!is.na(Response)& Task.Name==tn])[1]>0){
 
-      q <- dcast(qdata[Response.Type=="response"],pid~Question.Key+Key,value.var = "Response")
+      qdata[Response.Type=="response",rn:=1:.N,by=.(pid,Question.Key,Key,Response)]
+
+
+      if (dim(qdata[rn>1])[1]>0){
+        cat("\nWe had these duplicate answers. I will take the first answers\n\n")
+        print(qdata[pid %in% qdata[rn>1]$pid & Response.Type=="response",
+              .(pid,Question.Key,Key,Response,rn)])
+      }
+
+      q <- dcast(qdata[Response.Type=="response" & rn==1],pid~Question.Key+Key,
+                 value.var = "Response")
 
       ## if they are all numbers, turn to numbers
       cols=colnames(q)[-1]
