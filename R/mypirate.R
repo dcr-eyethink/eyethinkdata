@@ -1,9 +1,12 @@
 pirateye <- function(data,colour_condition=NULL,x_condition="variable",
-                     facet_condition=NULL,facet_scales="fixed",pid_average=F,
+                     facet_condition=NULL,facet_scales="fixed",facet_row=NULL,
+                     pid_average=F,
                      dv,reorder=F,pid="pid",dodgewidth=0.8,plot_condition=NULL,
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
                      pred_line=F,error_bar_data=NULL,ypercent=F,
+                     x_axis=NULL,y_axis=NULL,
+                     error_dim=F,
                      pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=0.7,
                      error_data=NULL,cflip=F,norm=F,bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
@@ -23,6 +26,8 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param pid whats the name of col that identifies individuals
   #' @param cols specify the colours to use, can be a set of colours, or of condition_level to colour
   #' @param error_data distribution for mean, eg from Bayes analysis, to replace SE
+  #' @param x_axis titles
+  #' @param y_axis titles
   #' @param error_bar_data
   #' @param xlab Do we have labels to go across x axis, such as post hoc pvalues or MPEs
   #' @param xlabpos How high vertically should they be, as proportion of plot height
@@ -76,7 +81,7 @@ if (!is.null(type)){
     data[[dv]] <- data$V1
   }
 
-  ## lummp together predicted data, means and labels if we have it
+  ## lump together predicted data, means and labels if we have it
   ## so that it all gets reshaped together
 
   if(is.null(pred)){data$data_type <- "obs"}else{
@@ -133,12 +138,16 @@ if (!is.null(type)){
     if (line | pred_line){
       data$condcol <- as.factor(x_condition)
     }else{
-      ## there's no colour condiiotn given, so take the x_condition
+      ## there's no colour condition given, so take the x_condition
       data$condcol <- as.factor(data[[x_condition]])
     } }else{
       data$condcol <- as.factor(data[[colour_condition]])}
 
-  if (!is.null(facet_condition)){data$condfacet <- as.factor(data[[facet_condition]])}
+  if (!is.null(facet_condition)){
+    data$condfacet <- as.factor(data[[facet_condition]])
+  }else{
+    data$condfacet <- 0
+    }
 
   setDT(data)
   data$dv <- data[[dv]]
@@ -149,10 +158,29 @@ if (!is.null(type)){
     data$condcol <- reorder(data$condcol,data$dv,mean,na.rm=T)
   }
 
-
   ######## start the plot!
 
-  p <-  ggplot2::ggplot(data =data[data_type=="obs"], ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol))
+  if (error_dim){
+
+    data[,errordim:=ifelse(error_dim_value>mean(dv,na.rm=T)+sd(dv,na.rm=T)/sqrt(length(dv)) |
+                           error_dim_value<mean(dv,na.rm=T)-sd(dv,na.rm=T)/sqrt(length(dv)),
+                           1,0.2),
+                           by=.(condcol,condx,condfacet)]
+
+    p <-  ggplot2::ggplot(data =data[data_type=="obs"],
+                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
+                                       alpha=errordim))
+  }else{
+
+    p <-  ggplot2::ggplot(data =data[data_type=="obs"],
+                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol))
+
+  }
+
+
+
+
+
 
 
   if (!is.null(elementinc)){
@@ -198,7 +226,6 @@ if (!is.null(type)){
                                               ggplot2::aes(ymin=ymin,ymax=ymax),
                                               width=.4,
                                              position=ggplot2::position_dodge(width=dodgewidth))
-
     }
   }
 
@@ -275,7 +302,7 @@ if (!is.null(type)){
   p <- p+ggplot2::theme(legend.position = "top")
 
   # get rid of colour legend if its on the x-axis
-  if (identical(data$condcol,data$condx) | !legend){
+  if (identical(as.character(data$condcol),as.character(data$condx))  | !legend){
     p <- p+ggplot2::theme(legend.position = "none")
   }
 
@@ -291,12 +318,19 @@ if (!is.null(type)){
     p <- p + ggplot2::coord_cartesian(xlim = xlim)
   }
 
+  if (!is.null(x_axis)){
+    p <- p + ggplot2::xlab(label = x_axis)
+  }
+  if (!is.null(y_axis)){
+    p <- p + ggplot2::ylab(label = y_axis)
+  }
+
   if (cflip){p <- p+ ggplot2::coord_flip()}
 
   if (is.null(w)){w <- 2+length(unique(data$condx))*.5}
 
   if(!is.null(facet_condition)){
-    p <- p+ggplot2::facet_wrap(condfacet~.,scales = facet_scales)
+    p <- p+ggplot2::facet_wrap(condfacet~.,scales = facet_scales,nrow = facet_row)
     w= w* max(ggplot2::ggplot_build(p)$layout$layout$COL)*.8
   }
 
