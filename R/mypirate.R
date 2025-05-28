@@ -6,7 +6,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
                      pred_line=F,error_bar_data=NULL,ypercent=F,
                      x_axis=NULL,y_axis=NULL,
-                     error_dim=F,
+                     error_dim=F,error_dim_value=0,
                      pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=0.7,
                      error_data=NULL,cflip=F,norm=F,bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
@@ -164,16 +164,17 @@ if (!is.null(type)){
 
     data[,errordim:=ifelse(error_dim_value>mean(dv,na.rm=T)+sd(dv,na.rm=T)/sqrt(length(dv)) |
                            error_dim_value<mean(dv,na.rm=T)-sd(dv,na.rm=T)/sqrt(length(dv)),
-                           1,0.2),
+                           1,0.1),
                            by=.(condcol,condx,condfacet)]
 
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
                           ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
                                        alpha=errordim))
   }else{
+    data[,errordim:=0.4]
 
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
-                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol))
+                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,alpha=errordim))
 
   }
 
@@ -188,8 +189,8 @@ if (!is.null(type)){
   }
 
   if (bars){
-    p <- p+ ggplot2::stat_summary(fun = "mean",geom = "bar",ggplot2::aes(group=condcol),
-                         width=.8,position=ggplot2::position_dodge(width=dodgewidth),alpha=0.4)
+    p <- p+ ggplot2::stat_summary(fun = "mean",geom = "bar",ggplot2::aes(group=condcol,alpha=errordim*0.4),
+                         width=.8,position=ggplot2::position_dodge(width=dodgewidth))
     # if (!is.null(cols)){
     #   p <- p + scale_fill_manual(values=cols) }
   }
@@ -202,15 +203,16 @@ if (!is.null(type)){
     }}
 
   if (dots){
-    p <- p +     ggplot2::geom_point(alpha=0.3,
+    p <- p +     ggplot2::geom_point(aes(alpha=errordim*0.3),
                             position=ggplot2::position_jitterdodge(dodge.width = dodgewidth,
                                                           jitter.height = dot_h_jitter))
 
   }
 
   if (line){
-    p <- p +   ggplot2::stat_summary(fun = "mean",geom = "line",linewidth=2,alpha=0.6,
-                                     ggplot2::aes(group=condcol),position=ggplot2::position_dodge(width=dodgewidth))
+    p <- p +   ggplot2::stat_summary(fun = "mean",geom = "line",linewidth=2,
+                                     ggplot2::aes(group=condcol,alpha=errordim*0.6),
+                                     position=ggplot2::position_dodge(width=dodgewidth))
   }
 
   if (error_bars){
@@ -219,6 +221,7 @@ if (!is.null(type)){
 
 
     p <- p +        ggplot2::stat_summary(fun.data = ggplot2::mean_se,  geom = "errorbar",
+                                          alpha=.8,
                                           width=.4,position=ggplot2::position_dodge(width=dodgewidth))
     }else{
       ## use given data for error bars
@@ -255,7 +258,7 @@ if (!is.null(type)){
     }
     # else calculate observed means
   }else{
-    p <- p +  ggplot2::stat_summary(fun = "mean",geom = "crossbar",fun.min = "mean",fun.max = "mean",width=.6,
+    p <- p +  ggplot2::stat_summary(fun = "mean",geom = "crossbar",fun.min = "mean",fun.max = "mean",width=.6,alpha=.8,
                            position=ggplot2::position_dodge(width=dodgewidth))
   }
 
