@@ -168,10 +168,17 @@ if (!is.null(type)){
                            by=.(condcol,condx,condfacet)]
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
                           ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
-                                       alpha=errordim))+scale_alpha_discrete(range = c(.4, 0.1))
+                                       alpha=errordim))+scale_alpha_discrete(range = c(.4, 0.05))
+
+    #pargs <- as.list(match.call())
+    pargs <- as.list(environment())
+    pargs$error_dim <- F
+    do.call(pirateye,args=pargs)
+
+
 
   }else{
-    data[,errordim:="full"]
+    data[,errordim:=FALSE]
 
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
                           ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,alpha=.4))
@@ -355,6 +362,8 @@ if (!is.null(type)){
 
   if (is.character(outp)){
 
+
+
     if(!title_overide){
       if(!is.null(colour_condition) & ! is.null(x_condition)){
       if (colour_condition==x_condition){
@@ -363,6 +372,8 @@ if (!is.null(type)){
       }else{
       title <-paste(c(title,dv,paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ") }
       }}
+
+    if (error_dim){title <- paste(title," DIMMED")}
 
     ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)
