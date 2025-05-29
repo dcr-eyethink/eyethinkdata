@@ -164,22 +164,23 @@ if (!is.null(type)){
 
     data[,errordim:=ifelse(error_dim_value>mean(dv,na.rm=T)+sd(dv,na.rm=T)/sqrt(length(dv)) |
                            error_dim_value<mean(dv,na.rm=T)-sd(dv,na.rm=T)/sqrt(length(dv)),
-                           1,0.1),
+                           FALSE,TRUE),
                            by=.(condcol,condx,condfacet)]
 
-    p <-  ggplot2::ggplot(data =data[data_type=="obs"],
-                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
-                                       alpha=errordim))
+
   }else{
-    data[,errordim:=0.4]
+    data[,errordim:="full"]
 
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
-                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,alpha=errordim))
+                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,alpha=errordim))+
+      scale_alpha(range = c("full"=.4, "dim"=0.1))
 
   }
 
 
-
+  p <-  ggplot2::ggplot(data =data[data_type=="obs"],
+                        ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
+                                     alpha=errordim))+scale_alpha_discrete(range = c(.4, 0.1))
 
 
 
@@ -189,7 +190,7 @@ if (!is.null(type)){
   }
 
   if (bars){
-    p <- p+ ggplot2::stat_summary(fun = "mean",geom = "bar",ggplot2::aes(group=condcol,alpha=errordim*0.4),
+    p <- p+ ggplot2::stat_summary(fun = "mean",geom = "bar",ggplot2::aes(group=condcol),
                          width=.8,position=ggplot2::position_dodge(width=dodgewidth))
     # if (!is.null(cols)){
     #   p <- p + scale_fill_manual(values=cols) }
