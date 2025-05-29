@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   eyethinkdata_vignette: eyethinkdata_vignette.html
-last_built: 2025-05-28T23:33Z
+last_built: 2025-05-29T12:06Z
 urls:
   reference: https://dcr-eyethink.github.io/eyethinkdata/reference
   article: https://dcr-eyethink.github.io/eyethinkdata/articles
