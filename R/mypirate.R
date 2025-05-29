@@ -166,21 +166,21 @@ if (!is.null(type)){
                            error_dim_value<mean(dv,na.rm=T)-sd(dv,na.rm=T)/sqrt(length(dv)),
                            FALSE,TRUE),
                            by=.(condcol,condx,condfacet)]
-
+    p <-  ggplot2::ggplot(data =data[data_type=="obs"],
+                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
+                                       alpha=errordim))+scale_alpha_discrete(range = c(.4, 0.1))
 
   }else{
     data[,errordim:="full"]
 
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
-                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,alpha=errordim))+
-      scale_alpha(range = c("full"=.4, "dim"=0.1))
+                          ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,alpha=.4))
+
 
   }
 
 
-  p <-  ggplot2::ggplot(data =data[data_type=="obs"],
-                        ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
-                                     alpha=errordim))+scale_alpha_discrete(range = c(.4, 0.1))
+
 
 
 
