@@ -10,6 +10,7 @@ pirateye(
   x_condition = "variable",
   facet_condition = NULL,
   facet_scales = "fixed",
+  facet_row = NULL,
   pid_average = F,
   dv,
   reorder = F,
@@ -29,6 +30,10 @@ pirateye(
   pred_line = F,
   error_bar_data = NULL,
   ypercent = F,
+  x_axis = NULL,
+  y_axis = NULL,
+  error_dim = F,
+  error_dim_value = 0,
   pred = NULL,
   pred_means = NULL,
   pred_bar = T,
@@ -75,6 +80,10 @@ pirateye(
 \item{cols}{specify the colours to use, can be a set of colours, or of condition_level to colour}
 
 \item{ypercent}{Convert y scale to %}
+
+\item{x_axis}{titles}
+
+\item{y_axis}{titles}
 
 \item{xlabpos}{How high vertically should they be, as proportion of plot height}
 

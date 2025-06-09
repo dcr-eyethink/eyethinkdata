@@ -168,7 +168,7 @@ if (!is.null(type)){
                            by=.(condcol,condx,condfacet)]
     p <-  ggplot2::ggplot(data =data[data_type=="obs"],
                           ggplot2::aes(y = dv, x = condx,colour=condcol,fill=condcol,
-                                       alpha=errordim))+scale_alpha_discrete(range = c(.4, 0.05))
+                                       alpha=errordim))+scale_alpha_discrete(range = c(.6, 0.05))
 
     #pargs <- as.list(match.call())
     pargs <- as.list(environment())
