@@ -1,7 +1,7 @@
 pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      facet_condition=NULL,facet_scales="fixed",facet_row=NULL,
-                     pid_average=F,
-                     dv,reorder=F,pid="pid",dodgewidth=0.8,plot_condition=NULL,
+                     pid_average=F,norm_pid="no",
+                     dv,reorder="no",pid="pid",dodgewidth=0.8,plot_condition=NULL,
                      cond=NULL,cond2=NULL,facetby=NULL,ylim=NULL,xlim=NULL,
                      w=NULL,h=6,title=NULL,outp="analysis",cols=NULL,
                      pred_line=F,error_bar_data=NULL,ypercent=F,
@@ -28,12 +28,14 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param error_data distribution for mean, eg from Bayes analysis, to replace SE
   #' @param x_axis titles
   #' @param y_axis titles
-  #' @param error_bar_data
+  #' @param redorder can be "increasing" or "decreasing", default "no"
+  #' @param error_bar_data error bar data
   #' @param xlab Do we have labels to go across x axis, such as post hoc pvalues or MPEs
   #' @param xlabpos How high vertically should they be, as proportion of plot height
   #' @param ypercent Convert y scale to %
   #' @param cflip flip to horizontal plot
-  #' @param norm normalise / z-score values for comparison across scales
+  #' @param norm normalise / z-score values for comparison across scales when multiple dvs
+  #' @param norm_pid, normalise / z score for each participant, either "no","z" or "iq"
   #' @param useall ignore the use column and plot all rows
   #' @param type shortcuts: m=just error bars, b=just bars
   #' @importFrom ggplot2 ggplot aes
@@ -151,11 +153,26 @@ if (!is.null(type)){
 
   setDT(data)
   data$dv <- data[[dv]]
+  data$pid <- data[[pid]]
+
+  if (norm_pid=="z" | norm_pid=="iq"){
+    #data[,dv:=(dv-mean(.SD$dv,na.rm=T))/sd(.SD$dv,na.rm=T),by=pid]
+    data[,dv_scaled:=scale(dv),by=pid]
+    if (norm_pid=="iq"){
+      data[,dv_scaled:=dv_scaled*15+100]
+    }
+    setnames(data,old = c("dv","dv_scaled"),new=c("dv_raw","dv"))
+  }
 
 
-  if (reorder){
+
+  if (reorder=="increasing"){
     data$condx <- reorder(data$condx,data$dv,mean,na.rm=T)
     data$condcol <- reorder(data$condcol,data$dv,mean,na.rm=T)
+  }
+  if (reorder=="decreasing"){
+    data$condx <- reorder(data$condx,-data$dv,mean,na.rm=T)
+    data$condcol <- reorder(data$condcol,-data$dv,mean,na.rm=T)
   }
 
   ######## start the plot!
@@ -188,7 +205,9 @@ if (!is.null(type)){
 
 
 
-
+  if (norm_pid=="iq"){
+    p <- p+geom_hline(yintercept = 100, size=2, alpha=.2)
+  }
 
 
 
@@ -321,6 +340,12 @@ if (!is.null(type)){
     p <- p + ggplot2::coord_cartesian(ylim = ylim)
   }
 
+  if ( is.null(ylim) & norm_pid=="iq") {
+    p <- p + ggplot2::coord_cartesian(ylim =  c( 100- ( 100- min(ggplot2::ggplot_build(p)$data[[3]]$ymin) ) * 1.2,
+                                                 (max(ggplot2::ggplot_build(p)$data[[3]]$ymax) - 100 ) * 1.2 + 100))
+                                      }
+
+
   if (ypercent){
     p <- p + scale_y_continuous(labels = scales::percent)
   }
@@ -360,6 +385,10 @@ if (!is.null(type)){
 
   p <- p+ggplot2::labs(title=title)
 
+  ## this is a bit of a hack. Alpha started popping up in legend, so am just globally turning it off
+
+  p <- p + guides(alpha = "none")
+
   if (is.character(outp)){
 
 
@@ -374,6 +403,10 @@ if (!is.null(type)){
       }}
 
     if (error_dim){title <- paste(title," DIMMED")}
+
+
+
+
 
     ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)

@@ -12,8 +12,9 @@ pirateye(
   facet_scales = "fixed",
   facet_row = NULL,
   pid_average = F,
+  norm_pid = "no",
   dv,
-  reorder = F,
+  reorder = "no",
   pid = "pid",
   dodgewidth = 0.8,
   plot_condition = NULL,
@@ -71,6 +72,8 @@ pirateye(
 
 \item{pid_average}{plot an average of each participant's dv over the named conditions}
 
+\item{norm_pid, }{normalise / z score for each participant, either "no","z" or "iq"}
+
 \item{dv}{name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'}
 
 \item{pid}{whats the name of col that identifies individuals}
@@ -78,6 +81,8 @@ pirateye(
 \item{plot_condition}{instead of passing individually, you can give a vector of up to 3}
 
 \item{cols}{specify the colours to use, can be a set of colours, or of condition_level to colour}
+
+\item{error_bar_data}{error bar data}
 
 \item{ypercent}{Convert y scale to %}
 
@@ -91,11 +96,13 @@ pirateye(
 
 \item{cflip}{flip to horizontal plot}
 
-\item{norm}{normalise / z-score values for comparison across scales}
+\item{norm}{normalise / z-score values for comparison across scales when multiple dvs}
 
 \item{useall}{ignore the use column and plot all rows}
 
 \item{type}{shortcuts: m=just error bars, b=just bars}
+
+\item{redorder}{can be "increasing" or "decreasing", default "no"}
 
 \item{xlab}{Do we have labels to go across x axis, such as post hoc pvalues or MPEs}
 }
