@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eyethinkdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -799,7 +799,7 @@ x axis, and as a colour contrast.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pirateye.html">pirateye</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">rt</span><span class="op">&lt;</span><span class="fl">2000</span><span class="op">]</span>, <span class="co"># trim incorrect trials and outliers</span></span>
 <span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-5-1.png" width="90%"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="90%"></p>
 <p>Since we have a dot per trial, this is a bit crowded. You can first
 average over people, and also turn elements on and off in pirateye, and
 set options such as flipping the coordinates</p>
@@ -808,13 +808,13 @@ set options such as flipping the coordinates</p>
 <span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span>,</span>
 <span>         pid_average <span class="op">=</span> <span class="cn">T</span>,  <span class="co"># average over participants' conditions</span></span>
 <span>         violin <span class="op">=</span> <span class="cn">F</span>,bar<span class="op">=</span><span class="cn">T</span>,cflip <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>  <span class="co"># no violins but draw some bars and flip axes</span></span></code></pre></div>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="90%"></p>
 <p>Or we could connect conditions with lines</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pirateye.html">pirateye</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">rt</span><span class="op">&lt;</span><span class="fl">2000</span><span class="op">]</span>,</span>
 <span>         colour_condition <span class="op">=</span> <span class="st">"congruency"</span>,x_condition <span class="op">=</span> <span class="st">"firstblock"</span>,dv <span class="op">=</span> <span class="st">"rt"</span>,</span>
 <span>         dots<span class="op">=</span><span class="cn">F</span>,line<span class="op">=</span><span class="cn">T</span>,violin<span class="op">=</span><span class="cn">F</span><span class="op">)</span>  <span class="co"># no dots but draw some bars</span></span></code></pre></div>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-7-1.png" width="90%"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="90%"></p>
 </div>
 <div class="section level3">
 <h3 id="plotting-anova-and-mixed-models">Plotting ANOVA and mixed models<a class="anchor" aria-label="anchor" href="#plotting-anova-and-mixed-models"></a>
@@ -911,7 +911,7 @@ second.</p>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $plot_congruency</span></span></code></pre>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-1.png" width="90%"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="90%"></p>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## $means_firstblock</span></span>
 <span><span class="co">##  firstblock  emmean   SE df lower.CL upper.CL</span></span>
@@ -922,7 +922,7 @@ second.</p>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $plot_firstblock</span></span></code></pre>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-2.png" width="90%"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-2.png" class="r-plt" alt="" width="90%"></p>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## $means_congruency_firstblock</span></span>
 <span><span class="co">##  congruency  firstblock  emmean   SE df lower.CL upper.CL</span></span>
@@ -934,7 +934,7 @@ second.</p>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $plot_congruency_firstblock</span></span></code></pre>
-<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-3.png" width="90%"></p>
+<p><img src="eyethinkdata_vignette_files/figure-html/unnamed-chunk-8-3.png" class="r-plt" alt="" width="90%"></p>
 <p>Finally, for the IAT there is a function `gorilla_iatanalysis()` that
 will do all the processing and analysis of task data we’ve done above in
 one step.</p>
@@ -1110,7 +1110,7 @@ from the IAT, and added to it mean reaction times per condition for each
 participant.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pid_merge.html">pid_merge</a></span><span class="op">(</span>  <span class="fu"><a href="../reference/gorilla_q_parse.html">gorilla_q_parse</a></span><span class="op">(</span><span class="va">data</span>,qlist <span class="op">=</span> <span class="st">"basic demographics"</span>,strip <span class="op">=</span> <span class="st">"quant"</span> <span class="op">)</span>,</span>
-<span>            <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html" class="external-link">dcast</a></span><span class="op">(</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span>,<span class="va">pid</span><span class="op">~</span><span class="va">congruency</span>,value.var <span class="op">=</span> <span class="st">"rt"</span>,fun.aggregate <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/dcast.data.table.html" class="external-link">dcast</a></span><span class="op">(</span><span class="va">iat_data</span><span class="op">[</span><span class="va">accuracy</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span>,<span class="va">pid</span><span class="op">~</span><span class="va">congruency</span>,value.var <span class="op">=</span> <span class="st">"rt"</span>,fun.aggregate <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          pid    Sex   age congruent incongruent</span></span>
 <span><span class="co">##       &lt;fctr&gt; &lt;char&gt; &lt;num&gt;     &lt;num&gt;       &lt;num&gt;</span></span>
 <span><span class="co">##  1:  3735601   Male    58 1640.5217   1203.3750</span></span>
@@ -1151,7 +1151,7 @@ this vignette.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

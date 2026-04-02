@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eyethinkdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,8 +49,9 @@
 <span>  facet_scales <span class="op">=</span> <span class="st">"fixed"</span>,</span>
 <span>  facet_row <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pid_average <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  norm_pid <span class="op">=</span> <span class="st">"no"</span>,</span>
 <span>  <span class="va">dv</span>,</span>
-<span>  reorder <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  reorder <span class="op">=</span> <span class="st">"no"</span>,</span>
 <span>  pid <span class="op">=</span> <span class="st">"pid"</span>,</span>
 <span>  dodgewidth <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  plot_condition <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -122,6 +123,10 @@
 <dd><p>plot an average of each participant's dv over the named conditions</p></dd>
 
 
+<dt id="arg-norm-pid-">norm_pid, <a class="anchor" aria-label="anchor" href="#arg-norm-pid-"></a></dt>
+<dd><p>normalise / z score for each participant, either "no","z" or "iq"</p></dd>
+
+
 <dt id="arg-dv">dv<a class="anchor" aria-label="anchor" href="#arg-dv"></a></dt>
 <dd><p>name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'</p></dd>
 
@@ -138,6 +143,10 @@
 <dd><p>specify the colours to use, can be a set of colours, or of condition_level to colour</p></dd>
 
 
+<dt id="arg-error-bar-data">error_bar_data<a class="anchor" aria-label="anchor" href="#arg-error-bar-data"></a></dt>
+<dd><p>error bar data</p></dd>
+
+
 <dt id="arg-ypercent">ypercent<a class="anchor" aria-label="anchor" href="#arg-ypercent"></a></dt>
 <dd><p>Convert y scale to <!-- %} --></p>
 <p>x_axistitles</p>
@@ -145,9 +154,10 @@
 <p>xlabposHow high vertically should they be, as proportion of plot height</p>
 <p>error_datadistribution for mean, eg from Bayes analysis, to replace SE</p>
 <p>cflipflip to horizontal plot</p>
-<p>normnormalise / z-score values for comparison across scales</p>
+<p>normnormalise / z-score values for comparison across scales when multiple dvs</p>
 <p>useallignore the use column and plot all rows</p>
 <p>typeshortcuts: m=just error bars, b=just bars</p>
+<p>redordercan be "increasing" or "decreasing", default "no"</p>
 <p>xlabDo we have labels to go across x axis, such as post hoc pvalues or MPEs</p></dd>
 
 </dl><p>Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off</p>
@@ -162,7 +172,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
