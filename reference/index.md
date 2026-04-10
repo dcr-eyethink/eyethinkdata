@@ -31,6 +31,8 @@
   : Scores checkbox items
 - [`gorilla_q_keyed()`](https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_keyed.md)
   : Processes a gorilla QB1 questionnaire using a survey key
+- [`gorilla_q_keyed_qb2()`](https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_keyed_qb2.md)
+  : Processes a gorilla QB1 questionnaire using a survey key
 - [`gorilla_q_parse()`](https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_parse.md)
   : Get subject entered, unscored data like age and gender from gorilla.
   Will give you the qual or quantised versions
