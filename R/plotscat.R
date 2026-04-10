@@ -150,6 +150,7 @@ plotscat_split <- function(data,x,y,z,cl=2,condcols=NULL,results_title=TRUE,titl
 
     data <- setDT(data)
 data[[z]] <- as.factor(data[[z]] )
+data <- droplevels(data)
     ## assuming data is wide, one row per subject
 
     ## plot x y
