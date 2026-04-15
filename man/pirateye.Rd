@@ -43,6 +43,9 @@ pirateye(
   error_data = NULL,
   cflip = F,
   norm = F,
+  norm_iq = F,
+  norm_by = "none",
+  norm_scale = "z",
   bars = F,
   violin = T,
   dots = T,
@@ -58,6 +61,7 @@ pirateye(
   combine_position = "right",
   elementinc = NULL,
   type = NULL,
+  saveoutdata = F,
   ...
 )
 }
@@ -72,7 +76,7 @@ pirateye(
 
 \item{pid_average}{plot an average of each participant's dv over the named conditions}
 
-\item{norm_pid, }{normalise / z score for each participant, either "no","z" or "iq"}
+\item{norm_pid, }{DEPRECATED use norm_by and norm_scale (normalise / z score for each participant, either "no","z" or "iq")}
 
 \item{dv}{name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'}
 
@@ -96,11 +100,19 @@ pirateye(
 
 \item{cflip}{flip to horizontal plot}
 
-\item{norm}{normalise / z-score values for comparison across scales when multiple dvs}
+\item{norm}{DEPRECATED use norm_by and norm_scale (normalise / z-score values for comparison across scales when multiple dvs)}
+
+\item{norm_iq}{DEPRECATED use norm_by and norm_scale}
+
+\item{norm_by}{normalise "pid" across each individual (to see within cond diffs) or across "dv" measures to compare, or "none"}
+
+\item{norm_scale}{"z" score, default, or use "iq" scale}
 
 \item{useall}{ignore the use column and plot all rows}
 
 \item{type}{shortcuts: m=just error bars, b=just bars}
+
+\item{saveoutdata}{save the plot data to a sav file for sharing}
 
 \item{redorder}{can be "increasing" or "decreasing", default "no"}
 

@@ -8,9 +8,12 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      x_axis=NULL,y_axis=NULL,
                      error_dim=F,error_dim_value=0,
                      pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=0.7,
-                     error_data=NULL,cflip=F,norm=F,bars=F,violin=T,dots=T,splitV=F,svw=1,
+                     error_data=NULL,cflip=F,
+                     norm=F,norm_iq=F,norm_by="none",norm_scale="z",
+                     bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
                      combine_plots=list(),combine_position="right",elementinc=NULL,type=NULL,
+                     saveoutdata=F,
                      ...){
   #' Outputs a pirate plot (RDI)
   #'
@@ -34,10 +37,14 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param xlabpos How high vertically should they be, as proportion of plot height
   #' @param ypercent Convert y scale to %
   #' @param cflip flip to horizontal plot
-  #' @param norm normalise / z-score values for comparison across scales when multiple dvs
-  #' @param norm_pid, normalise / z score for each participant, either "no","z" or "iq"
+  #' @param norm DEPRECATED use norm_by and norm_scale (normalise / z-score values for comparison across scales when multiple dvs)
+  #' @param norm_pid, DEPRECATED use norm_by and norm_scale (normalise / z score for each participant, either "no","z" or "iq")
+  #' @param norm_iq DEPRECATED use norm_by and norm_scale
+  #' @param norm_by normalise "pid" across each individual (to see within cond diffs) or across "dv" measures to compare, or "none"
+  #' @param norm_scale "z" score, default, or use "iq" scale
   #' @param useall ignore the use column and plot all rows
   #' @param type shortcuts: m=just error bars, b=just bars
+  #' @param saveoutdata save the plot data to a sav file for sharing
   #' @importFrom ggplot2 ggplot aes
 
   #' @export mypirate pirateye
@@ -66,13 +73,21 @@ if (!is.null(type)){
     if (length(plot_condition)>2){facet_condition <- plot_condition[3]}
   }
 
-  # for backcompatiblity
+  ##### for backcompatiblity
   if (!is.null(cond)){
     # this is an old call
     x_condition <- cond
     if (is.null(cond2)){colour_condition <- cond}else{  colour_condition <- cond2}
-    facet_condition <- facetby
-  }
+    facet_condition <- facetby}
+  if (norm){norm_by <- "dv"}
+  if (norm_iq){norm_scale <- "iq"}
+  if (norm_pid=="z"){
+    norm_by <- "pid"
+    norm_scale <- "z"}
+  if (norm_pid=="ip"){
+    norm_by <- "pid"
+    norm_scale <- "iq"}
+  ##### for backcompatiblity end
 
   if  (!useall) { if ("use" %in% colnames(data)){data <- data[use==1]} }
 
@@ -116,23 +131,26 @@ if (!is.null(type)){
         if (!facet_condition=="variable" ){colour_condition <- "variable"}}
     }
 
-    if (norm){
-      data[,value_norm:=scale(value),by=variable]
-      setnames(data,old=c("value","value_norm"),new = c("value_raw","value"))
-    }}else{
+
+    }else{
       ## there's only one dv
       ## if x_condition was not specified, so default it to colour
       if (x_condition=="variable"){x_condition <- colour_condition}
     }
 
 
+  ################ scaling by dv
+
+    if (norm_by=="dv"){
+    data[,value_norm:=scale(value),by=variable]
+    if (norm_scale=="iq"){data[,value_norm:=value_norm*15+100]
+    }
+    setnames(data,old=c("value","value_norm"),new = c("value_raw","value"))
+  }
+
   try(setnames(data,"dv","dvcol"),silent = T)
 
-  ##
 
-
-
-  # data$condx <- as.factor(data[[x_condition]])
   data$condx <- data[[x_condition]]
 
 
@@ -155,16 +173,16 @@ if (!is.null(type)){
   data$dv <- data[[dv]]
   data$pid <- data[[pid]]
 
-  if (norm_pid=="z" | norm_pid=="iq"){
-    #data[,dv:=(dv-mean(.SD$dv,na.rm=T))/sd(.SD$dv,na.rm=T),by=pid]
+################ scaling by pid
+
+  if (norm_by=="pid"){
     data[,dv_scaled:=scale(dv),by=pid]
-    if (norm_pid=="iq"){
-      data[,dv_scaled:=dv_scaled*15+100]
+    if (norm_scale=="iq"){data[,dv_scaled:=dv_scaled*15+100]
     }
     setnames(data,old = c("dv","dv_scaled"),new=c("dv_raw","dv"))
   }
 
-
+  ############### reordering
 
   if (reorder=="increasing"){
     data$condx <- reorder(data$condx,data$dv,mean,na.rm=T)
@@ -205,7 +223,7 @@ if (!is.null(type)){
 
 
 
-  if (norm_pid=="iq"){
+  if (norm_pid=="iq" | norm_iq==T){
     p <- p+geom_hline(yintercept = 100, size=2, alpha=.2)
   }
 
@@ -336,14 +354,7 @@ if (!is.null(type)){
     p <- p+ggplot2::theme(legend.position = "none")
   }
 
-  if (!is.null(ylim)){
-    p <- p + ggplot2::coord_cartesian(ylim = ylim)
-  }
 
-  if ( is.null(ylim) & norm_pid=="iq") {
-    p <- p + ggplot2::coord_cartesian(ylim =  c( 100- ( 100- min(ggplot2::ggplot_build(p)$data[[3]]$ymin) ) * 1.2,
-                                                 (max(ggplot2::ggplot_build(p)$data[[3]]$ymax) - 100 ) * 1.2 + 100))
-                                      }
 
 
   if (ypercent){
@@ -361,7 +372,31 @@ if (!is.null(type)){
     p <- p + ggplot2::ylab(label = y_axis)
   }
 
+  ## calc lims?
+  if ( is.null(ylim) & (norm_pid=="iq" | norm_iq==T | norm_scale=="iq")) {
+    # which layer is the error bars?
+    if (error_bars){
+      lim_layer <- grep(pattern=T,x= sapply(p$layers, function(layer) {
+      inherits(layer$geom, "GeomErrorbar")
+    }))}else{lim_layer <- 2}
+
+    ylim <-  c( 100- ( 100- min(ggplot2::ggplot_build(p)$data[[lim_layer]]$ymin) ) * 1.2,
+                (max(ggplot2::ggplot_build(p)$data[[lim_layer]]$ymax) - 100 ) * 1.2 + 100)
+  }
+
+######## sort out ylims and flipping
+
+  if(is.null(ylim)){
   if (cflip){p <- p+ ggplot2::coord_flip()}
+  }else{
+  if (cflip)
+    {p <- p+ ggplot2::coord_flip(ylim = ylim)
+    }else{
+    p <- p + ggplot2::coord_cartesian(ylim = ylim)}
+}
+
+
+
 
   if (is.null(w)){w <- 2+length(unique(data$condx))*.5}
 
@@ -404,12 +439,13 @@ if (!is.null(type)){
 
     if (error_dim){title <- paste(title," DIMMED")}
 
-
-
-
-
     ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)
+
+    if (saveoutdata){
+      write.csv(x = p$data,file = paste0(outp,"/",title,"_data.csv"))
+    }
+
   }
 
   return(p)
