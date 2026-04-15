@@ -80,6 +80,9 @@
 <span>  error_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cflip <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>  norm <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  norm_iq <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  norm_by <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  norm_scale <span class="op">=</span> <span class="st">"z"</span>,</span>
 <span>  bars <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>  violin <span class="op">=</span> <span class="cn">T</span>,</span>
 <span>  dots <span class="op">=</span> <span class="cn">T</span>,</span>
@@ -95,6 +98,7 @@
 <span>  combine_position <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>  elementinc <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  saveoutdata <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -124,7 +128,7 @@
 
 
 <dt id="arg-norm-pid-">norm_pid, <a class="anchor" aria-label="anchor" href="#arg-norm-pid-"></a></dt>
-<dd><p>normalise / z score for each participant, either "no","z" or "iq"</p></dd>
+<dd><p>DEPRECATED use norm_by and norm_scale (normalise / z score for each participant, either "no","z" or "iq")</p></dd>
 
 
 <dt id="arg-dv">dv<a class="anchor" aria-label="anchor" href="#arg-dv"></a></dt>
@@ -154,9 +158,13 @@
 <p>xlabposHow high vertically should they be, as proportion of plot height</p>
 <p>error_datadistribution for mean, eg from Bayes analysis, to replace SE</p>
 <p>cflipflip to horizontal plot</p>
-<p>normnormalise / z-score values for comparison across scales when multiple dvs</p>
+<p>normDEPRECATED use norm_by and norm_scale (normalise / z-score values for comparison across scales when multiple dvs)</p>
+<p>norm_iqDEPRECATED use norm_by and norm_scale</p>
+<p>norm_bynormalise "pid" across each individual (to see within cond diffs) or across "dv" measures to compare, or "none"</p>
+<p>norm_scale"z" score, default, or use "iq" scale</p>
 <p>useallignore the use column and plot all rows</p>
 <p>typeshortcuts: m=just error bars, b=just bars</p>
+<p>saveoutdatasave the plot data to a sav file for sharing</p>
 <p>redordercan be "increasing" or "decreasing", default "no"</p>
 <p>xlabDo we have labels to go across x axis, such as post hoc pvalues or MPEs</p></dd>
 

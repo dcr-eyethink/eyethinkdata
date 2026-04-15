@@ -42,6 +42,9 @@ pirateye(
   error_data = NULL,
   cflip = F,
   norm = F,
+  norm_iq = F,
+  norm_by = "none",
+  norm_scale = "z",
   bars = F,
   violin = T,
   dots = T,
@@ -57,6 +60,7 @@ pirateye(
   combine_position = "right",
   elementinc = NULL,
   type = NULL,
+  saveoutdata = F,
   ...
 )
 ```
@@ -85,7 +89,8 @@ pirateye(
 
 - norm_pid, :
 
-  normalise / z score for each participant, either "no","z" or "iq"
+  DEPRECATED use norm_by and norm_scale (normalise / z score for each
+  participant, either "no","z" or "iq")
 
 - dv:
 
@@ -125,12 +130,21 @@ pirateye(
 
   cflipflip to horizontal plot
 
-  normnormalise / z-score values for comparison across scales when
-  multiple dvs
+  normDEPRECATED use norm_by and norm_scale (normalise / z-score values
+  for comparison across scales when multiple dvs)
+
+  norm_iqDEPRECATED use norm_by and norm_scale
+
+  norm_bynormalise "pid" across each individual (to see within cond
+  diffs) or across "dv" measures to compare, or "none"
+
+  norm_scale"z" score, default, or use "iq" scale
 
   useallignore the use column and plot all rows
 
   typeshortcuts: m=just error bars, b=just bars
+
+  saveoutdatasave the plot data to a sav file for sharing
 
   redordercan be "increasing" or "decreasing", default "no"
 
