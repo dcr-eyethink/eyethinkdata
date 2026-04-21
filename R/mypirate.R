@@ -7,7 +7,8 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      pred_line=F,error_bar_data=NULL,ypercent=F,
                      x_axis=NULL,y_axis=NULL,
                      error_dim=F,error_dim_value=0,
-                     pred=NULL,pred_means=NULL,pred_bar=T,xlabs=NULL,xlabpos=0.7,
+                     pred=NULL,pred_means=NULL,pred_bar=T,
+                     xlabs=NULL,xlabpos=0.7,col_pc_change=F,
                      error_data=NULL,cflip=F,
                      norm=F,norm_iq=F,norm_by="none",norm_scale="z",
                      bars=F,violin=T,dots=T,splitV=F,svw=1,
@@ -33,7 +34,8 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param y_axis titles
   #' @param redorder can be "increasing" or "decreasing", default "no"
   #' @param error_bar_data error bar data
-  #' @param xlab Do we have labels to go across x axis, such as post hoc pvalues or MPEs
+  #' @param col_pc_change calculate the % change from 1st to 2nd colour conds, and put across x axis
+  #' @param xlabs Do we have labels to go across x axis, such as post hoc pvalues or MPEs
   #' @param xlabpos How high vertically should they be, as proportion of plot height
   #' @param ypercent Convert y scale to %
   #' @param cflip flip to horizontal plot
@@ -44,7 +46,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
   #' @param norm_scale "z" score, default, or use "iq" scale
   #' @param useall ignore the use column and plot all rows
   #' @param type shortcuts: m=just error bars, b=just bars
-  #' @param saveoutdata save the plot data to a sav file for sharing
+  #' @param saveoutdata save the plot data to a csv file for sharing
   #' @importFrom ggplot2 ggplot aes
 
   #' @export mypirate pirateye
@@ -108,9 +110,6 @@ if (!is.null(type)){
   if(!is.null(pred_means)){
     data <-  rbind(data,data.table(data_type="pred_means",pred_means),fill=T)
   }
-  if(!is.null(xlabs)){
-    data <-  rbind(data,data.table(data_type="xlabs",xlabs),fill=T)
-  }
 
   if(!is.null(error_bar_data)){
     data <-  rbind(data,data.table(data_type="error_bar_data",error_bar_data),fill=T)
@@ -124,11 +123,14 @@ if (!is.null(type)){
   if (length(dv)>1){
     ##  dv is a set of values, then we need to melt
     data <-   melt.data.table(data,measure.vars = dv)
+    if (is.null(title)){title <- paste0(substr(dv,1,3),collapse = "_") }
+
     dv <- "value"
 
     if(!x_condition=="variable" ){
       if (is.null(facet_condition)){ colour_condition <- "variable"}else{
         if (!facet_condition=="variable" ){colour_condition <- "variable"}}
+
     }
 
 
@@ -193,6 +195,18 @@ if (!is.null(type)){
     data$condcol <- reorder(data$condcol,-data$dv,mean,na.rm=T)
   }
 
+  ###############  % change calc, or use given xlabs
+
+  if(col_pc_change){
+   ccomp <-  sort(unique(data$condcol)[1:2])
+   xlabs <- data[,.(lab=sprintf("%.1f%%", 100*(mean(.SD[condcol==ccomp[2]]$dv,na.rm=T)-
+              mean(.SD[condcol==ccomp[1]]$dv,na.rm=T))/mean(.SD[condcol==ccomp[1]]$dv,na.rm=T))),by=condx]
+  }
+  if(!is.null(xlabs)){
+    data <-  rbind(data,data.table(data_type="xlabs",xlabs),fill=T)
+  }
+
+
   ######## start the plot!
 
   if (error_dim){
@@ -223,7 +237,7 @@ if (!is.null(type)){
 
 
 
-  if (norm_pid=="iq" | norm_iq==T){
+  if (norm_pid=="iq" | norm_iq==T | norm_scale=="iq"){
     p <- p+geom_hline(yintercept = 100, size=2, alpha=.2)
   }
 
@@ -372,17 +386,21 @@ if (!is.null(type)){
     p <- p + ggplot2::ylab(label = y_axis)
   }
 
+
   ## calc lims?
   if ( is.null(ylim) & (norm_pid=="iq" | norm_iq==T | norm_scale=="iq")) {
     # which layer is the error bars?
     if (error_bars){
       lim_layer <- grep(pattern=T,x= sapply(p$layers, function(layer) {
       inherits(layer$geom, "GeomErrorbar")
-    }))}else{lim_layer <- 2}
-
-    ylim <-  c( 100- ( 100- min(ggplot2::ggplot_build(p)$data[[lim_layer]]$ymin) ) * 1.2,
-                (max(ggplot2::ggplot_build(p)$data[[lim_layer]]$ymax) - 100 ) * 1.2 + 100)
-  }
+      }))
+      ylim <-  c( 100- ( 100- min(ggplot2::ggplot_build(p)$data[[lim_layer]]$ymin) ) * 1.2,
+                  (max(ggplot2::ggplot_build(p)$data[[lim_layer]]$ymax) - 100 ) * 1.2 + 100)
+    }else{
+        lim_layer <- 2
+        ylim <-  c( 100- ( 100- min(ggplot2::ggplot_build(p)$data[[lim_layer]]$y) ) * 1.2,
+                    (max(ggplot2::ggplot_build(p)$data[[lim_layer]]$y) - 100 ) * 1.2 + 100)
+        } }
 
 ######## sort out ylims and flipping
 
@@ -442,8 +460,13 @@ if (!is.null(type)){
     ggplot2::ggsave(paste0(outp,"/",title,".pdf"),
            width = w, height = h, , limitsize = FALSE)
 
+    ## save out the data that was used to make the plot in standardized form
+
     if (saveoutdata){
-      write.csv(x = p$data,file = paste0(outp,"/",title,"_data.csv"))
+      write.csv(file = paste0(outp,"/",title,"_data.csv"),
+                x=p$data[,.SD,.SDcols = (intersect(colnames(p$data),
+                                                   c("pid","data_type" , "variable" ,  "condx" ,
+                                                     "condcol" ,"condfacet"  ,"value_raw",  "dv" )))])
     }
 
   }
