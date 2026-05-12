@@ -59,6 +59,12 @@ data_collator_gorilla <- function(datafolder=NULL,...){
 
   retdata$data_qtype <- data_qtype
 
+  retdata$task_names <- unique( retdata$data_task$Task.Name)
+ cat("\nTask names:\n",retdata$task_names,"\n")
+
+ retdata$q_names <- unique( retdata$data_q$Task.Name)
+ cat("\nQ names:\n\n",retdata$q_names,"\n")
+
   return(retdata)
 
 }
