@@ -1,6 +1,6 @@
-gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
+gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,keylist=NULL,
                             items=F,key_folder=NULL){
-  #' Processes a gorilla QB1 questionnaire using a survey key
+  #' Processes a gorilla QB2 questionnaire using a survey key
   #'
   #' The first time this is run, set keyout to TRUE to generate a key
   #' The key to the survey should either be in a central key_folder,
@@ -16,13 +16,16 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
   #' Here's what the columns mean:
   #' sum - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score
   #' rev - if it is to be reversed scored, then subtract the answer from this number. eg assuming a 7 point scale, I've set this to 8.
+  #' adj - make adjustment to the scale (sometimes needed, eg if anchored at 0)
   #' ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
   #' Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
-  #' qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
+  #' qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but will also be reported in output in a column
   #' ignore - If the response matches this answer, then don't use it in the scale calculation. This is used, eg, for scales where 1-7 is the answer you want to code, but people can also enter 8 for 'not applicable'.
 
-  #' @param keyout generate a new key from the data
   #' @param data data list or just the data_q
+  #' @param keyout generate a new key from the data
+  #' @param qlist the q task names to process
+  #' @param keylist the list of keys to use (if not names in qlist)
   #' @param key_folder location of a central folder where you keep survey keys
   #' @export
 
@@ -42,18 +45,29 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
   q_full_return <- data.table(pid=(unique(qdata[!is.na(pid) & Task.Name %in% qlist]$pid)))
 
 
-  for (tk in qlist){
+  #for (tk in qlist){
+    for (i in 1:length(qlist)){
+
+    tk <- qlist[i]
+    if(is.null(keylist)){
+      keyname <- tk
+    }else{
+      keyname <- keylist[i]
+    }
+
     qkey <- NULL
     qt <- qdata[Task.Name==tk]
 
+    qt[,Question.Key:=Key]
+
     q_return <- data.table(pid=(unique(qt[!is.na(pid)]$pid)))
 
-    tk <-  gsub(tk,pattern = "/",replacement = "_")
+    keyname <-  gsub(keyname,pattern = "/",replacement = "_")
 
     if (is.null(key_folder)){
-      tkf <- paste0("survey_key/",tk,".csv")
+      tkf <- paste0("survey_key/",keyname,".csv")
     }else{
-      tkf <- paste0(key_folder,"/",tk,".csv")
+      tkf <- paste0(key_folder,"/",keyname,".csv")
     }
 
 
@@ -72,12 +86,14 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
           if(sname==""){sname <- tk}
 
           qt <- qt[!Question.Key=="BEGIN QUESTIONNAIRE" & !Question.Key=="END QUESTIONNAIRE" &
-                     ! Question.Key  %like% "quantised" & !Question.Key=="Consent" ]
+                     ! Question.Key  %like% "quantised" & !Question.Key=="Consent" &!Question.Key=="NA"]
 
           if(dim(qt)[1]>0){
           qt[,order:=1:.N,by=.(pid)]
 
           qkitems <- qt[,.(Question.Key=unique(Question.Key)),by=order]
+
+          qkitems[,Question.Key:=gsub(x=Question.Key,pattern = "-value",replacement = "")]
 
           # do we only have one order or lots
           if (!length(unique(qkitems$Question.Key) )==dim(qkitems)[1]){
@@ -89,7 +105,7 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
             }
 
           kw <-  data.table(Task.Name=tk,qkitems,
-                            sum=1,rev=8,scaleName=sname,Subscore="",qual=0,ignore=NA)
+                            sum=1,rev=8,adj=0,scaleName=sname,Subscore="",qual=0,ignore=NA)
 
 
           write.csv(kw,tkf)
@@ -103,7 +119,7 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
     if (!is.null(qkey)){
       # process away
 
-      qt <- q_duplicate(qt)
+      #qt <- q_duplicate(qt)
       qt <- qt[!is.na(Question.Key)]
       qt <- qt[Response.Type=="response"]
       ## take out those that we just want returned
@@ -113,7 +129,7 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
       qt[,quant:="value"]
       qt[grep("quantised",Question.Key),quant:="quant"]
       qt[grep("quantised",Question.Key),
-         Question.Key:=gsub(Question.Key,pattern = "_quantised",replacement = "")]
+         Question.Key:=gsub(Question.Key,pattern = "-quantised",replacement = "")]
 
 
       qt <- pid_merge(qt,qkey,link=c("Task.Name","Question.Key"))
@@ -134,17 +150,18 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
 
 
 
-      quant_return <- data.table()
-      q_quant <- qt[(sum==0 | is.na(sum)) & quant=="value"]
-      if(dim(q_quant)[1]>0){
-        quant_return <- data.table(dcast(q_quant[!is.na(Response)],formula = pid~scaleName,
-                                     value.var = "Response"))
+      # quant_return <- data.table()
+      # q_quant <- qt[(sum==0 | is.na(sum)) & quant=="value"]
+      # if(dim(q_quant)[1]>0){
+      #   quant_return <- data.table(dcast(q_quant[!is.na(Response)],formula = pid~scaleName,
+      #                                value.var = "Response"))
+      #
+      # }
 
-      }
-
-      qt <- qt[!sum==0 & quant=="value"]
+      qt <- qt[!sum==0 & quant=="quant"]
       qt[,r:=as.numeric(as.character(Response))]
       qt[sum==-1,r:=rev-r]
+      qt[!adj==0,r:=r+adj]
 
       ## if got ignore col, then delete responses that = this
       if ("ignore" %in% colnames(qt)){
@@ -170,7 +187,9 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
 
       q_return <- pid_merge(q_return,q_scalescore)
 
-      qt[,itemid:=paste0(scaleName,"_",Question.Key)]
+     # qt[,itemid:=paste0(scaleName,"_",Question.Key)]
+      qt[,itemid:=Question.Key]
+
 
       ## are there subscales?
       if ("Subscore" %in% colnames(qt)){
@@ -190,9 +209,9 @@ gorilla_q_keyed_qb2 <- function(data,keyout=FALSE,qlist=NULL,
         }}
 
       # return quant
-      if(dim(quant_return)[1]>0){
-        q_return <-  pid_merge(q_return,quant_return)
-      }
+      # if(dim(quant_return)[1]>0){
+      #   q_return <-  pid_merge(q_return,quant_return)
+      # }
 
       ## return qual items
       if(dim(qual_return)[1]>0){

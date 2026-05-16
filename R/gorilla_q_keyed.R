@@ -16,6 +16,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
   #' Here's what the columns mean:
   #' sum - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score
   #' rev - if it is to be reversed scored, then subtract the answer from this number. eg assuming a 7 point scale, I've set this to 8.
+  #' adj - make adjustment to the scale (sometimes needed, eg if anchored at 0)
   #' ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
   #' Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
   #' qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
@@ -89,7 +90,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
             }
 
           kw <-  data.table(Task.Name=tk,qkitems,
-                            sum=1,rev=8,scaleName=sname,Subscore="",qual=0,ignore=NA)
+                            sum=1,rev=8,adj=0,scaleName=sname,Subscore="",qual=0,ignore=NA)
 
 
           write.csv(kw,tkf)
@@ -144,6 +145,7 @@ gorilla_q_keyed <- function(data,keyout=FALSE,qlist=NULL,
       qt <- qt[!sum==0 & quant=="quant"]
       qt[,r:=as.numeric(as.character(Response))]
       qt[sum==-1,r:=rev-r]
+      qt[!adj==0,r:=r+adj]
 
       ## if got ignore col, then delete responses that = this
       if ("ignore" %in% colnames(qt)){
