@@ -2,12 +2,13 @@
 % Please edit documentation in R/gorilla_q_keyed_qb2.R
 \name{gorilla_q_keyed_qb2}
 \alias{gorilla_q_keyed_qb2}
-\title{Processes a gorilla QB1 questionnaire using a survey key}
+\title{Processes a gorilla QB2 questionnaire using a survey key}
 \usage{
 gorilla_q_keyed_qb2(
   data,
   keyout = FALSE,
   qlist = NULL,
+  keylist = NULL,
   items = F,
   key_folder = NULL
 )
@@ -16,6 +17,10 @@ gorilla_q_keyed_qb2(
 \item{data}{data list or just the data_q}
 
 \item{keyout}{generate a new key from the data}
+
+\item{qlist}{the q task names to process}
+
+\item{keylist}{the list of keys to use (if not names in qlist)}
 
 \item{key_folder}{location of a central folder where you keep survey keys}
 }
@@ -35,8 +40,9 @@ and additionally other columns for subscales or text answers.
 Here's what the columns mean:
 sum - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score
 rev - if it is to be reversed scored, then subtract the answer from this number. eg assuming a 7 point scale, I've set this to 8.
+adj - make adjustment to the scale (sometimes needed, eg if anchored at 0)
 ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
 Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
-qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
+qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but will also be reported in output in a column
 ignore - If the response matches this answer, then don't use it in the scale calculation. This is used, eg, for scales where 1-7 is the answer you want to code, but people can also enter 8 for 'not applicable'.
 }

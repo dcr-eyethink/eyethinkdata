@@ -46,8 +46,14 @@ gorilla_q_parse_qb2 <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL)
               .(pid,Question.Key,Key,Response,rn)])
       }
 
+
+
       q <- dcast(qdata[Response.Type=="response" & rn==1],pid~Question.Key+Key,
                  value.var = "Response")
+
+      # take out 'other' responese
+      q[,eval(colnames(q)[grep(x=colnames(q),pattern = "___other")]):=NULL]
+
 
       ## if they are all numbers, turn to numbers
       cols=colnames(q)[-1]
@@ -55,37 +61,46 @@ gorilla_q_parse_qb2 <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL)
 
 
     }
-    q_return <-  q[q_return,on="pid"]
+    #q_return <-  q[q_return,on="pid"]
+    q_return <-  pid_merge(q_return,q)
   }
-#
-#   if (!is.null(strip)){
-#     quantcols <-  grep(x=colnames(q_return),"_quantised",value = T)
-#     qualcols <- grep(x=colnames(q_return),"_value",value = T)
-#
-#     if(strip=="qual"){
-#       q_return <- q_return[,colnames(q_return)[!colnames(q_return) %in% qualcols],with=F]
-#       setnames(q_return,old=colnames(q_return),new=gsub(x=colnames(q_return),pattern = "_quantised",replacement = ""))
-#
-#     }elseif(strip=="qual"){
-#       q_return <- q_return[,colnames(q_return)[!colnames(q_return) %in% quantcols],with=F]
-#       setnames(q_return,old=colnames(q_return),new=gsub(x=colnames(q_return),pattern = "_value",replacement = ""))
-#     }
-#   }
+
+  if (!is.null(strip)){
+    quantcols <-  c(grep(x=colnames(q_return),"_quantised",value = T),
+                    grep(x=colnames(q_return),"-quantised",value = T))
+   # qualcols <- grep(x=colnames(q_return),"_value",value = T)
+
+    qualcols <- c(setdiff(colnames(q_return),c("pid",quantcols)))
+
+    if(strip=="qual"){
+      q_return <- q_return[,colnames(q_return)[!colnames(q_return) %in% qualcols],with=F]
+      setnames(q_return,old=colnames(q_return),new=gsub(x=colnames(q_return),pattern = "_quantised",replacement = ""))
+      setnames(q_return,old=colnames(q_return),new=gsub(x=colnames(q_return),pattern = "-quantised",replacement = ""))
+    }
+
+    if(strip=="quant"){
+      q_return <- q_return[,colnames(q_return)[!colnames(q_return) %in% quantcols],with=F]
+     # setnames(q_return,old=colnames(q_return),new=gsub(x=colnames(q_return),pattern = "_value",replacement = ""))
+    }
+  }
 
   setnames(q_return,old=colnames(q_return),new=gsub(x=colnames(q_return),pattern = "_value",replacement = ""))
 
+  q_return_full <- copy(q_return)
+
   # get rid of other columns
-  ocol <- grep(x=colnames(q_return),pattern = "_other",value = T)
-  if (!length(ocol)==0){
-  vcol <- gsub(x=ocol,pattern="_other",replacement="")
-  q_return[!is.na(get(ocol)),c(vcol):=get(ocol)]
-  q_return[,c(ocol):=NULL]
-}
+#   ocol <- grep(x=colnames(q_return_full),pattern = "_other",value = T)
+#   if (!length(ocol)==0){
+#   vcol <- gsub(x=ocol,pattern="_other",replacement="")
+#   q_return_full[!is.na(get(ocol)),c(vcol):=get(ocol)]
+#   q_return_full[,c(ocol):=NULL]
+# }
+
   if (!is.null(pd)){
-    q_return <- pid_merge(pd,q_return)
+    q_return_full <- pid_merge(pd,q_return_full)
   }
 
 
 
-  return(q_return)
+  return(q_return_full)
 }
