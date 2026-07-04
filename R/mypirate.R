@@ -14,7 +14,7 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      bars=F,violin=T,dots=T,splitV=F,svw=1,
                      dot_h_jitter=0,line=F,error_bars=T,useall=F,legend=T,title_overide=F,
                      combine_plots=list(),combine_position="right",elementinc=NULL,type=NULL,
-                     saveoutdata=F,
+                     saveoutdata=F,display_values=F,
                      ...){
   #' Outputs a pirate plot (RDI)
   #'
@@ -322,6 +322,18 @@ if (!is.null(type)){
   }
 
 
+  ### put the means onto plot as well
+  if (display_values){
+    p <- p +  ggplot2::stat_summary(  fun = mean,
+                                      geom = "label",
+                                      aes(label = after_stat(round(y, 2))),
+                                      vjust = -0.5,
+                                      fill = scales::alpha("white", 0.6),
+                                      label.size = NA,
+                                      position=ggplot2::position_dodge(width=dodgewidth),
+                                      show.legend = FALSE)
+  }
+
 
   ###### do we have labels (typically MPEs or pvalues)
  #  if (!is.null(xlabs) & !is.null(xlabs$dv[1]) ){
@@ -470,6 +482,9 @@ if (!is.null(type)){
     }
 
   }
+
+
+
 
   return(p)
 }

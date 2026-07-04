@@ -63,6 +63,7 @@ pirateye(
   elementinc = NULL,
   type = NULL,
   saveoutdata = F,
+  display_values = F,
   ...
 )
 }
