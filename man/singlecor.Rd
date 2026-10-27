@@ -2,19 +2,32 @@
 % Please edit documentation in R/singlecor.R
 \name{singlecor}
 \alias{singlecor}
-\title{single correlation with r, p value and optionally a bayes factor}
+\title{Single correlation with r, p value and optionally a Bayes factor}
 \usage{
 singlecor(data, x, y, bayes_factor = F)
 }
 \arguments{
-\item{data}{data frame with two cols to be correlated}
+\item{data}{A data frame with the two columns to correlate.}
 
-\item{x}{name of x column}
+\item{x}{Name of the first column.}
 
-\item{y}{name of y column}
+\item{y}{Name of the second column.}
 
-\item{bayes_factor}{do you want bayes factor calculated, needs BayesFactor package}
+\item{bayes_factor}{Calculate a Bayes factor? Needs the BayesFactor package.}
+}
+\value{
+A list with \code{r}, \code{p} (both rounded to 3 places), \code{bf} (the Bayes factor
+for the correlation, rounded down to a whole number, or 0 if not requested)
+and \code{k.tau} (Kendall's tau).
 }
 \description{
-single correlation with r, p value and optionally a bayes factor
+Correlates two columns of a data frame, and returns Pearson's r with its p
+value, and Kendall's tau as a rank based alternative. Optionally, it adds a
+Bayes factor (using the BayesFactor package).
+}
+\examples{
+singlecor(mtcars, "mpg", "hp")
+}
+\seealso{
+\code{\link[=plotscat]{plotscat()}}, \code{\link[=exclorr]{exclorr()}}
 }

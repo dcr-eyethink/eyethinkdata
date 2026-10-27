@@ -1,10 +1,22 @@
-gorilla_eye_processing <-  function (data,td=NULL,link=c("pid","sid"),
+gorilla_eye_processing_old <-  function (data,td=NULL,link=c("pid","sid"),
                                      zone="gorilla",conf_threshold=0.5){
-  #' Takes all data from gorilla import,
-  #' filters for named displays and returns simplified data,
-  #' @param data   compiled  data from a gorilla import
-  #' @param td if trail data already generated, will add eye info to this
-  #' @return eye data with simplified data
+  #' Process gorilla eye tracking data (earlier gorilla format)
+  #'
+  #' The earlier version of [gorilla_eye_processing()], kept so that old scripts
+  #' still work. It works on the older gorilla eye tracking columns (`type`,
+  #' `x_pred_normalised`, `zone_name` etc.), and gives one row per file
+  #' (`filename`) rather than per trial. For current Task Builder 2 data use
+  #' [gorilla_eye_processing()].
+  #'
+  #' @param data The list of data from a gorilla import (or the continuous data
+  #'   table itself).
+  #' @param td Optional trial level data.table. If given, the eye measures are
+  #'   merged into it using the columns in `link`.
+  #' @param link The columns to merge `td` on, default `pid` and `sid`.
+  #' @param zone Not currently used.
+  #' @param conf_threshold Minimum face confidence (`face_conf`) for a sample to
+  #'   count towards the time spent in a zone.
+  #' @return A list with `trial_data`, `eye_data` and `zone_data`.
   #' @export
 
 

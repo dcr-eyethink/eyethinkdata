@@ -1,17 +1,36 @@
 gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat","path"),
                               outp="analysis",title="plot",contrast=NULL){
-  #' Takes one trial (or trial type) of data and optional image file an makes heat map
+  #' Plot eye movements for one trial (or trial type)
   #'
-  #' Generates plots from imported gorilla data that has been processed by gorilla_eye_processing
-  #' @param data  gorilla ET data
-  #' @param background for background
-  #' @return image
+  #' Takes eye tracking data that has been processed by [gorilla_eye_processing()]
+  #' and makes a heat map and/or a path plot of where people looked. You can add a
+  #' background image and mark the zones of interest. Gaze position is plotted in
+  #' normalised screen coordinates, from 0 to 1 in both directions.
+  #'
+  #' @param data The list returned by [gorilla_eye_processing()]; the gaze samples
+  #'   are taken from its `ed` item (columns `t`, `x` and `y`). You will usually
+  #'   want to filter this to a single trial or condition first.
+  #' @param background Optional file name of a .png image to draw behind the gaze
+  #'   data, eg a screenshot of the stimulus.
+  #' @param zones Optional data.table describing zones to draw as boxes, with
+  #'   columns `zone_name`, `left`, `right`, `bottom` and `top`. A zone called
+  #'   "screen" is ignored.
+  #' @param plot_types Which plots to make: "heat" for a heat map, "path" for the
+  #'   gaze path. Default is both.
+  #' @param outp Name of a folder to save the plots in, as pdfs (it is created if
+  #'   needed). Set to `NULL` or "" to not save.
+  #' @param title Start of the file name for the saved plots; the plot type is
+  #'   added to the end.
+  #' @param contrast Optional name of a column in `data$ed` used to colour the
+  #'   gaze path, eg to compare two conditions.
+  #' @return A named list of ggplot objects, one for each of `plot_types`.
   #' @export
+  #' @seealso [gorilla_eye_processing()]
 
   #  data <- eyedata$eye_data[pid==3998912 & sid==6.1 ]
   #  zones <- eyedata$zone_data[pid==3998912 & sid== 6.1]
 
-  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
+  if (is.character(outp) && nzchar(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
 
 
   if(is.null(contrast)){
@@ -24,7 +43,7 @@ gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat
   if (!is.null(background)){
     img <- png::readPNG(background)
 
-    p <- p + ggplot2::annotation_custom(grid::rasterGrob(img, width=unit(1,"npc"), height=unit(1,"npc")),
+    p <- p + ggplot2::annotation_custom(grid::rasterGrob(img, width=grid::unit(1,"npc"), height=grid::unit(1,"npc")),
                                0, 1, 0, 1)
 
   }
@@ -63,8 +82,8 @@ gorilla_eye_plot <-  function(data,background=NULL,zones=NULL,plot_types=c("heat
 
     plots[[pt]] <- pout
 
-    if (!is.null(outp)){
-      ggplot2::ggsave(filename = paste0(outp,"/",title,"_",pt,".pdf"))
+    if (is.character(outp) && nzchar(outp)){
+      ggplot2::ggsave(filename = paste0(outp,"/",title,"_",pt,".pdf"),plot = pout)
     }
 
   }

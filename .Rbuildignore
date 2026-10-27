@@ -6,3 +6,9 @@
 ^\.github$
 ^doc$
 ^Meta$
+^analysis$
+^dev$
+^\.RDataTmp$
+^Rplots\.pdf$
+^README\.Rmd$
+^README_files$

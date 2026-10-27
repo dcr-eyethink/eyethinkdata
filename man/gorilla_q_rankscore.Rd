@@ -2,17 +2,28 @@
 % Please edit documentation in R/gorilla_q_rankscore.R
 \name{gorilla_q_rankscore}
 \alias{gorilla_q_rankscore}
-\title{Scores ranked items}
+\title{Score ranked items}
 \usage{
 gorilla_q_rankscore(data, rankkey = "rankpredict", keepcols = F, respid = NULL)
 }
 \arguments{
-\item{data}{data list or just the data_q}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}).}
 
-\item{rankkey}{what key was used in QB1 for this item}
+\item{rankkey}{The key that was used for the ranking question in gorilla.
+Columns whose names contain this text are used, and their names should end
+with the rank number (eg \code{rankpredict_1}).}
 
-\item{respid}{word to append to column names}
+\item{keepcols}{If \code{TRUE}, merge the ranks into the full original data.}
+
+\item{respid}{Text to put at the start of the new column names, which are
+otherwise called \verb{rank_<item>}.}
+}
+\value{
+A data.table with the rank of each item.
 }
 \description{
-Takes output from a ranking questionniare (QB1) in gorilla and returns data in a wide format with one column per ranked item
+Takes the output from a ranking question in a gorilla questionnaire (QB1) and
+returns the data in wide format, with one column for each item that was
+ranked, containing the rank given to it by each participant.
 }

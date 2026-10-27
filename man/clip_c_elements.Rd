@@ -2,10 +2,27 @@
 % Please edit documentation in R/clip_c_elements.R
 \name{clip_c_elements}
 \alias{clip_c_elements}
-\title{takes a vector of values and puts them in a list with quotes and commas to put in code}
+\title{Copy a vector to the clipboard as R code}
 \usage{
 clip_c_elements(x, containing = NULL)
 }
+\arguments{
+\item{x}{A vector of values (they are converted to text and quoted).}
+
+\item{containing}{Optional text pattern (a regular expression). If given, only
+the elements of \code{x} that match it are copied.}
+}
+\value{
+Nothing is returned; called for its side effect of writing to the
+clipboard. Needs the clipr package to be installed.
+}
 \description{
-takes a vector of values and puts them in a list with quotes and commas to put in code
+Takes a vector of values and puts a string like \code{c("a", "b", "c")} on the
+clipboard, ready to paste into a script. Handy for turning column names or
+file names into a vector you can edit.
+}
+\examples{
+\dontrun{
+clip_c_elements(colnames(mtcars), containing = "^c")
+}
 }

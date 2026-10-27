@@ -2,15 +2,32 @@
 % Please edit documentation in R/gorilla_q_tipi.R
 \name{gorilla_q_tipi}
 \alias{gorilla_q_tipi}
-\title{TIPI ten item personality scale}
+\title{Score the TIPI ten item personality scale}
 \usage{
 gorilla_q_tipi(data, qname = c("Big 5 ten items", "Big 5 Personality", "TIPI"))
 }
 \arguments{
-\item{data}{data list or just the data_q}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}).}
 
-\item{q_name}{Name of the questionnaire}
+\item{qname}{The questionnaire name or names (Task.Name in gorilla) to look
+for. By default, "Big 5 ten items", "Big 5 Personality" and "TIPI".}
+}
+\value{
+A data.table with one row per participant (\code{pid}) and the five scores:
+\code{TIPI_O} (openness), \code{TIPI_C} (conscientiousness), \code{TIPI_E} (extroversion),
+\code{TIPI_A} (agreeableness) and \code{TIPI_N} (emotional stability).
 }
 \description{
-TIPI ten item personality scale
+Scores the Ten Item Personality Inventory (Gosling, Rentfrow & Swann, 2003)
+from long format gorilla questionnaire data.
+}
+\details{
+The questionnaire should have \verb{*_score} questions (agreeableness_score,
+conscientiousness_score, emotional_stability_score, extroversion_score,
+openness_score), as in the gorilla template. People who answered the
+questionnaire more than once are listed and left out of the results.
+}
+\seealso{
+\code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}}
 }

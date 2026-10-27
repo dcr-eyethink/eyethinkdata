@@ -2,19 +2,50 @@
 % Please edit documentation in R/gorilla_q_parse.R
 \name{gorilla_q_parse}
 \alias{gorilla_q_parse}
-\title{Get subject entered, unscored data like age and gender from gorilla. Will give you the qual or quantised versions}
+\title{Get unscored questionnaire answers from gorilla}
 \usage{
 gorilla_q_parse(data, qlist = NULL, preface = NULL, strip = NULL, pd = NULL)
 }
 \arguments{
-\item{data}{raw data packet from from gorilla import}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}). It has to be in long format.}
 
-\item{qlist}{list of Task.Name, ie questionnaire blob names, that you want to process}
+\item{qlist}{The names of the questionnaires (Task.Name in gorilla) to use.
+If \code{NULL}, all of the questionnaires are processed.}
 
-\item{preface}{add some text to all variables}
+\item{preface}{Text to add to the start of all the question names. Use "task"
+to add the name of the questionnaire.}
 
-\item{strip}{get rid of either the quant or qual}
+\item{strip}{Which version of the answers to drop. "quant" drops the numeric
+\verb{_quantised} columns, keeping the text answers. "qual" drops the text answers,
+and keeps the numeric ones (renamed to the plain question name). Default
+\code{NULL} keeps both.}
+
+\item{pd}{Optional data.table of participant data (with a \code{pid} column). If
+given, the questionnaire answers are merged into it with \code{\link[=pid_merge]{pid_merge()}}.}
+}
+\value{
+A data.table with one row per participant (\code{pid}).
 }
 \description{
-Get subject entered, unscored data like age and gender from gorilla. Will give you the qual or quantised versions
+Takes the answers from gorilla questionnaires built with Questionnaire Builder
+1 (long format data), and returns them with one row per participant and one
+column per question. Use this for answers such as age and gender that do not
+need to be scored. For scales that need scoring, see \code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}}.
+}
+\details{
+Gorilla gives you each answer as the text the person chose (or typed), and
+for many questions also as a number (the "quantised" version, with
+\verb{_quantised} on the end of the question name). Use \code{strip} to keep one or the
+other. If an answer is entirely numbers, it is returned as a number.
+If a person answered a question more than once, the later answer is used and
+the people affected are listed.
+}
+\examples{
+\dontrun{
+gorilla_q_parse(data, qlist = "basic demographics", strip = "quant")
+}
+}
+\seealso{
+\code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}}, \code{\link[=gorilla_q_parse_qb2]{gorilla_q_parse_qb2()}}
 }

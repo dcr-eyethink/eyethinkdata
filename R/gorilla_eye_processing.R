@@ -1,11 +1,32 @@
 gorilla_eye_processing <-  function (data,td=NULL,
                                      conf_threshold=0.5){
-  #' TASK BUILDER 2 version:  Takes all data from gorilla import,
-  #' gets eye movement data and labels with zone info
-  #' @param data   compiled  data from a gorilla import
-  #' @param td if trail data already generated, will add eye info to this
-  #' @return eye data with simplified data
+  #' Process gorilla eye tracking data and label it with zone information
+  #'
+  #' For gorilla Task Builder 2 data with eye tracking. Takes the data from a
+  #' gorilla import, picks out the gaze predictions and the zones that were defined
+  #' on each trial, and works out for each trial how long, how much and how soon
+  #' people looked at each zone.
+  #'
+  #' @details
+  #' The function needs `data$data_continuous` (see [data_collator_gorilla()]) to
+  #' contain the gorilla eye tracking columns. It adds three items to the list:
+  #'
+  #' * `ed` - the gaze samples (`pid`, `sid`, `tid`, time `t`, gaze position `x`
+  #'   and `y` and the `duration` of each sample) with a 0/1 column for each zone
+  #'   to say if the gaze was inside it.
+  #' * `zd` - the coordinates of each zone on each trial.
+  #' * `td` - one row per trial, with three columns for each zone: `<zone>_ftot`
+  #'   (total time looking at it), `<zone>_ftot_prop` (that as a proportion of the
+  #'   trial time) and `<zone>_fons` (time of the first look).
+  #'
+  #' @param data The list of data from a gorilla import.
+  #' @param td Optional trial level data.table (with `pid`, `sid` and `tid`
+  #'   columns). If given, the eye measures are merged into it.
+  #' @param conf_threshold Not currently used.
+  #' @return The list `data`, with `ed`, `zd` and `td` added.
   #' @export
+  #' @seealso [gorilla_eye_plot()], [gorilla_eye_processing_old()] for the earlier
+  #'   gorilla format
 
 ## ADD IN CALIBRATION INFO AND RETURN IN pd
 

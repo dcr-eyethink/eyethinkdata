@@ -2,7 +2,7 @@
 % Please edit documentation in R/gorilla_iatanalysis.R
 \name{gorilla_iatanalysis}
 \alias{gorilla_iatanalysis}
-\title{processes IAT data from gorilla}
+\title{Process and analyse IAT data from gorilla}
 \usage{
 gorilla_iatanalysis(
   data = NULL,
@@ -13,18 +13,52 @@ gorilla_iatanalysis(
 )
 }
 \arguments{
-\item{data}{data list from gorilla import, if missing, I'll ask fora folder of gorilla downloads}
+\item{data}{The list of data from a gorilla import. If missing, you will be
+asked to choose a folder of gorilla downloads.}
 
-\item{outp}{output foldername}
+\item{outp}{Name of the folder to save results in (it is created if needed).
+Set to \code{NULL} or "" to not save anything, and just return the results.}
 
-\item{exclude_pids}{get rid of these guys}
+\item{exclude_pids}{Vector of participant ids to leave out.}
 
-\item{exclude_items}{get rid of these guys in items column}
+\item{exclude_items}{Vector of items (stimuli) to leave out.}
 
-\item{...}{pass to mypirate for plotting}
+\item{...}{Further arguments passed to \code{\link[=plot_model]{plot_model()}}, and from there to
+\code{\link[=pirateye]{pirateye()}}, to change the plots.}
+}
+\value{
+A list. The first (unnamed) item is the output of \code{\link[=plot_model]{plot_model()}}, then
+\code{ParticipantMeans} (one row per person, with the IAT score) and \code{rawdata}
+(the selected trial data).
 }
 \description{
-Runs a full analysis on IAT data from a gorilla experiment
-that is based on standard template.
-You can pass arguments to mypirate that is drawing the main plot
+Runs a full analysis on data from an Implicit Association Test (IAT) that was
+run in gorilla using the standard template. It picks out the trial data,
+calculates each person's mean reaction time in the congruent and incongruent
+blocks, and tests the difference.
+}
+\details{
+The analysis follows these steps:
+\enumerate{
+\item Trials are selected where \code{metadata} is "congruent" or "incongruent", at the
+first attempt, in the display called "trials". Incorrect trials and those
+with reaction times over 3000 ms are removed.
+\item Mean reaction times are calculated for each person, and participants with a
+missing condition are dropped. The IAT score is incongruent minus congruent.
+\item A paired t-test is run and saved in \code{IAT_ttest.txt} in \code{outp}.
+\item A mixed ANOVA is run with block order (\code{firstblock}) between participants
+and condition within participants. It is plotted and printed using
+\code{\link[=plot_model]{plot_model()}}.
+\item The participant means are saved as \code{ParticipantMeans.csv} in \code{outp}.
+}
+}
+\examples{
+\dontrun{
+data <- data_collator_gorilla("gorilla_data")
+iat <- gorilla_iatanalysis(data, exclude_pids = c(1234567))
+iat$ParticipantMeans
+}
+}
+\seealso{
+\code{\link[=plot_model]{plot_model()}}, \code{\link[=data_collator_gorilla]{data_collator_gorilla()}}
 }

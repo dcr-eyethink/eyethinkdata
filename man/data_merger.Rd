@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_merger.R
 \name{data_merger}
 \alias{data_merger}
-\title{load in and merge data from multiple files into one data.table}
+\title{Load in and merge data from multiple files into one data.table}
 \usage{
 data_merger(
   ending = "txt",
@@ -16,22 +16,57 @@ data_merger(
 )
 }
 \arguments{
-\item{ending}{string at the end of the filename, ie filetype.}
+\item{ending}{The end of the file names, ie the file type. Default is "txt";
+use "csv", "xlsx" or "xls" as needed.}
 
-\item{contains}{string to identify datafile, eg 'task'}
+\item{contains}{Text that must appear in the file name, eg "task". Default is
+"" which accepts any name.}
 
-\item{d}{delimiter for data, default comma}
+\item{d}{The delimiter (separator) used in the data files. Default is a comma.}
 
-\item{h}{are there headers in data files?}
+\item{h}{Do the data files have a header row of column names? Default \code{TRUE}.}
 
-\item{datafile}{example file. if this is supplied then don't ask user}
+\item{datafile}{One example file from the folder you want to read. If supplied,
+you will not be asked to choose a file.}
 
-\item{datafolder}{give the file location of a folder instead of eg file}
+\item{gorilla_clean}{If \code{TRUE}, discard a set of gorilla columns that are
+rarely needed (timestamps, device information, etc.) to make the data more
+manageable.}
+
+\item{gorilla_checkwideq}{For gorilla questionnaire data. If \code{TRUE}, files that
+turn out to be wide format questionnaire data are merged side by side
+(matched on \code{Participant.Private.ID}) rather than stacked.}
+
+\item{datafolder}{The folder containing the files. If given, this is used
+instead of \code{datafile}.}
 }
 \value{
-A data table of all datafiles ending in \code{ending} containing \code{contains}.
+A data.table of all of the files. If the data has a \code{Reaction.Time}
+column, a numeric copy of it called \code{rt} is added.
 }
 \description{
-It asks for one of the files in the DATA folder and merges
-all the files in there strung together in one data table
+Reads all of the files of one type in a folder and stacks them into one
+data.table, adding a \code{filename} column to say where each row came from. It is
+a general function, but has some options for tidying up gorilla data.
+}
+\details{
+You can either name the folder (\code{datafolder}) or give an example file from that
+folder (\code{datafile}). If you give neither, you will be asked to choose an
+example file, and the function will use all of the matching files in the same
+folder.
+
+Files are picked out if their name contains the text in \code{contains} and ends
+with \code{ending} (upper and lower case are ignored; \code{contains} can be a regular
+expression). Empty files (4 bytes or less) and the temporary \verb{~$} files that
+Excel makes are skipped. For Excel files, only the first sheet is read.
+
+If files have different columns, the missing columns are filled with \code{NA}.
+}
+\examples{
+\dontrun{
+all_csvs <- data_merger(ending = "csv", contains = "task", datafolder = "my_folder")
+}
+}
+\seealso{
+\code{\link[=data_merger_gorilla]{data_merger_gorilla()}}, \code{\link[=data_collator_gorilla]{data_collator_gorilla()}}
 }

@@ -2,13 +2,31 @@
 % Please edit documentation in R/gorilla_q_bmis.R
 \name{gorilla_q_bmis}
 \alias{gorilla_q_bmis}
-\title{Processes BMIS mood survey}
+\title{Score the BMIS mood survey}
 \usage{
 gorilla_q_bmis(data, full = F)
 }
 \arguments{
-\item{data}{data list or just the data_q}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}).}
+
+\item{full}{If \code{TRUE}, also return the individual item scores (with names
+starting \code{BMIS_Q_}). Default is \code{FALSE}, which returns only the four scores.}
+}
+\value{
+A data.table with one row per participant (\code{pid}), and the scores.
 }
 \description{
-Processes BMIS mood survey
+Scores the Brief Mood Introspection Scale (BMIS, Mayer & Gaschke, 1988) from
+long format gorilla questionnaire data. It looks for questionnaires with
+"BMIS" in their name.
+}
+\details{
+Responses are converted to numbers from 1 to 4. The four scores are:
+\code{BMIS_pu} (pleasant-unpleasant), \code{BMIS_ac} (arousal-calm), \code{BMIS_pt}
+(positive-tired) and \code{BMIS_nr} (negative-relaxed). If someone answered an item
+more than once, their last answer is used.
+}
+\seealso{
+\code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}} for scoring other questionnaires.
 }

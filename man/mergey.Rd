@@ -2,10 +2,19 @@
 % Please edit documentation in R/pid_merge.R
 \name{mergey}
 \alias{mergey}
-\title{please use pid_merge}
+\title{Old name for \code{\link[=pid_merge]{pid_merge()}}}
 \usage{
 mergey(..., link = "pid")
 }
-\description{
-please use pid_merge
+\arguments{
+\item{...}{Data tables to merge.}
+
+\item{link}{The column(s) to match on.}
 }
+\value{
+See \code{\link[=pid_merge]{pid_merge()}}.
+}
+\description{
+Please use \code{\link[=pid_merge]{pid_merge()}} instead.
+}
+\keyword{internal}

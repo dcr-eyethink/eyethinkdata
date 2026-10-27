@@ -1,16 +1,26 @@
 gorilla_q_rankscore <- function(data,rankkey="rankpredict",keepcols=F,respid=NULL){
-  #' Scores ranked items
+  #' Score ranked items
   #'
-  #' Takes output from a ranking questionniare (QB1) in gorilla and returns data in a wide format with one column per ranked item
-  #' @param data data list or just the data_q
-  #' @param rankkey what key was used in QB1 for this item
-  #' @param respid word to append to column names
+  #' Takes the output from a ranking question in a gorilla questionnaire (QB1) and
+  #' returns the data in wide format, with one column for each item that was
+  #' ranked, containing the rank given to it by each participant.
+  #'
+  #' @param data The list of data from a gorilla import, or just the questionnaire
+  #'   data (`data_q`).
+  #' @param rankkey The key that was used for the ranking question in gorilla.
+  #'   Columns whose names contain this text are used, and their names should end
+  #'   with the rank number (eg `rankpredict_1`).
+  #' @param keepcols If `TRUE`, merge the ranks into the full original data.
+  #' @param respid Text to put at the start of the new column names, which are
+  #'   otherwise called `rank_<item>`.
+  #' @return A data.table with the rank of each item.
   #' @export
 
 
   if (inherits(data, "list")){
     qd <- data$data_q
   }else{qd <- data}
+  qdata <- qd   # original table, used if keepcols=TRUE
 
 
 

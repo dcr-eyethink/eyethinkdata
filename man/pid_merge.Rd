@@ -2,15 +2,46 @@
 % Please edit documentation in R/pid_merge.R
 \name{pid_merge}
 \alias{pid_merge}
-\title{takes all of the datatables passed to it, and merges on pid or whetever specified in link, getting rid of duplicates}
+\title{Merge data tables together on participant id}
 \usage{
 pid_merge(..., link = "pid")
 }
 \arguments{
-\item{...}{all the data tables}
+\item{...}{Two or more data.tables (or data frames) to join.}
 
-\item{link}{cols to link on}
+\item{link}{The name or names of the column(s) to match on. Default "pid".}
+}
+\value{
+A data.table, with the columns of the first table followed by the new
+columns of each later one.
 }
 \description{
-takes all of the datatables passed to it, and merges on pid or whetever specified in link, getting rid of duplicates
+Takes two or more data tables and joins them up, matching rows by \code{pid}
+(participant id) or whichever other column(s) you name in \code{link}. For
+example, you can add trial data to participant data, or add questionnaire
+scores to a table of reaction times.
+}
+\details{
+All of the rows of the \emph{first} table are kept. Rows in later tables that
+match no row in the first are dropped, and rows of the first table with no
+match get \code{NA}. Where there is more than one row in a later table for a
+participant, the first table's rows are repeated for each of them.
+
+If a later table has columns with the same name as those that already exist
+(other than the link columns), the later values replace the earlier ones, and
+the repeated names are printed.
+
+The link columns are converted to factors in the result (so that, for example,
+numeric and text versions of an id still match).
+
+\strong{Note} that data frames you pass in are converted to data.tables in place
+(by reference), as with \code{data.table::setDT}.
+}
+\examples{
+a <- data.table::data.table(pid = 1:3, age = c(20, 25, 30))
+b <- data.table::data.table(pid = c(1, 2, 4), meanRT = c(500, 450, 600))
+pid_merge(a, b)
+}
+\seealso{
+\code{\link[=data_collator_gorilla]{data_collator_gorilla()}}
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/mypirate.R
 \name{pirateye}
 \alias{pirateye}
-\title{Outputs a pirate plot (RDI)}
+\alias{mypirate}
+\title{Plot data as a pirate plot (RDI: raw data, descriptives, inferences)}
 \usage{
 pirateye(
   data,
@@ -68,60 +69,197 @@ pirateye(
 )
 }
 \arguments{
-\item{data}{data with one person per line, excluding rows with use=0}
+\item{data}{A data frame or data.table (converted to a data.table in place).}
 
-\item{colour_condition}{colour split}
+\item{colour_condition}{Name of the column to split by colour.}
 
-\item{x_condition}{x axis split (if not, specified colour condition used for x axis too)}
+\item{x_condition}{Name of the column for the x axis. If not given, the colour
+condition is used.}
 
-\item{facet_condition}{for faceting}
+\item{facet_condition}{Name of the column that makes separate panels.}
 
-\item{pid_average}{plot an average of each participant's dv over the named conditions}
+\item{facet_scales}{Scales for the panels: "fixed" (the same), "free" or
+"free_y" etc. (see \code{ggplot2::facet_wrap}).}
 
-\item{norm_pid, }{DEPRECATED use norm_by and norm_scale (normalise / z score for each participant, either "no","z" or "iq")}
+\item{facet_row}{Number of rows of panels.}
 
-\item{dv}{name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'}
+\item{pid_average}{Average each participant's dv over the conditions, before
+plotting?}
 
-\item{pid}{whats the name of col that identifies individuals}
+\item{dv}{Name of the column to plot, or a vector of names of columns.}
 
-\item{plot_condition}{instead of passing individually, you can give a vector of up to 3}
+\item{reorder}{"increasing" or "decreasing" to put the conditions in order of
+their means. Default "no".}
 
-\item{cols}{specify the colours to use, can be a set of colours, or of condition_level to colour}
+\item{pid}{Name of the column that identifies participants. Default "pid".}
 
-\item{error_bar_data}{error bar data}
+\item{dodgewidth}{How far apart to put the colour conditions within each x
+position.}
 
-\item{ypercent}{Convert y scale to %}
+\item{plot_condition}{A vector of up to three condition names, used instead of
+\code{colour_condition}, \code{x_condition} and \code{facet_condition} (in that order).}
 
-\item{x_axis}{titles}
+\item{cond, cond2, facetby}{Old names for \code{x_condition}, \code{colour_condition} and
+\code{facet_condition}.}
 
-\item{y_axis}{titles}
+\item{ylim}{Limits for the y axis, as a vector of two numbers.}
 
-\item{xlabs}{Do we have labels to go across x axis, such as post hoc pvalues or MPEs}
+\item{xlim}{Limits for the x axis.}
 
-\item{xlabpos}{How high vertically should they be, as proportion of plot height}
+\item{w}{Width of the saved plot in inches. By default this is chosen from the
+number of conditions.}
 
-\item{col_pc_change}{calculate the % change from 1st to 2nd colour conds, and put across x axis}
+\item{h}{Height of the saved plot in inches.}
 
-\item{error_data}{distribution for mean, eg from Bayes analysis, to replace SE}
+\item{title}{Title of the plot.}
 
-\item{cflip}{flip to horizontal plot}
+\item{outp}{Name of the folder for saving the plot as a pdf (it is created if
+needed). Set to \code{NULL} or "" to not save.}
 
-\item{norm}{DEPRECATED use norm_by and norm_scale (normalise / z-score values for comparison across scales when multiple dvs)}
+\item{cols}{The colours to use: a vector of colours, or a named vector
+matching condition levels to colours. If the condition levels are themselves
+colour names, those are used.}
 
-\item{norm_iq}{DEPRECATED use norm_by and norm_scale}
+\item{pred_line}{Draw \code{pred_means} as a line rather than as bars?}
 
-\item{norm_by}{normalise "pid" across each individual (to see within cond diffs) or across "dv" measures to compare, or "none"}
+\item{error_bar_data}{A table of ymin and ymax values to use for the error
+bars, instead of calculating standard errors from the data, with the same
+condition columns as the plot. Used by \code{\link[=plot_model]{plot_model()}}.}
 
-\item{norm_scale}{"z" score, default, or use "iq" scale}
+\item{ypercent}{Show the y axis as a percentage?}
 
-\item{useall}{ignore the use column and plot all rows}
+\item{x_axis}{Label for the x axis (default is the condition name).}
 
-\item{type}{shortcuts: m=just error bars, b=just bars}
+\item{y_axis}{Label for the y axis (default is the dv name).}
 
-\item{saveoutdata}{save the plot data to a csv file for sharing}
+\item{error_dim}{Fade out the data for the conditions whose mean (with SE)
+excludes \code{error_dim_value}.}
 
-\item{redorder}{can be "increasing" or "decreasing", default "no"}
+\item{error_dim_value}{The value used by \code{error_dim}.}
+
+\item{pred}{Optional table of predicted data (eg samples from a model), shown
+as violins.}
+
+\item{pred_means}{Optional table of predicted means, shown as bars or lines.}
+
+\item{pred_bar}{Draw \code{pred_means} as bars? Default \code{TRUE}.}
+
+\item{xlabs}{A table of labels to show above the x axis, such as post hoc
+p-values. It needs a column called \code{lab}, and the same x condition column
+as the plot.}
+
+\item{xlabpos}{How high up the labels in \code{xlabs} go, as a proportion of the
+height of the plot.}
+
+\item{col_pc_change}{Calculate the percentage change from the first to the
+second colour condition and show it along the x axis.}
+
+\item{error_data}{Not currently used.}
+
+\item{cflip}{Flip the plot so that the x axis is vertical?}
+
+\item{norm, norm_pid, norm_iq}{Old arguments for normalising. Use \code{norm_by} and
+\code{norm_scale} instead.}
+
+\item{norm_by}{Normalise by "pid" or by "dv", or "none" (the default).}
+
+\item{norm_scale}{"z" (the default) for z scores, or "iq" for a scale with a
+mean of 100 and an SD of 15.}
+
+\item{bars}{Show means as bars?}
+
+\item{violin}{Show violins of the distributions?}
+
+\item{dots}{Show a point for each data point?}
+
+\item{splitV}{Draw a split violin (half for each colour) when there are two
+colour conditions.}
+
+\item{svw}{Width of the split violins.}
+
+\item{dot_h_jitter}{Amount of vertical jitter for the dots.}
+
+\item{line}{Join the means with lines?}
+
+\item{error_bars}{Show error bars (standard errors)?}
+
+\item{useall}{Plot all rows, ignoring any \code{use} column.}
+
+\item{legend}{Show the legend? It is hidden when colour and x axis show the
+same condition.}
+
+\item{title_overide}{If \code{TRUE}, the file name is made from the title alone
+rather than also adding the dv and conditions.}
+
+\item{combine_plots}{A list of other plots to put together with this one
+(using cowplot).}
+
+\item{combine_position}{Where to put the combined plots: "right" or "under".}
+
+\item{elementinc}{An extra ggplot element (eg a theme) added to the plot early
+on.}
+
+\item{type}{Shortcut: "m" shows only the means and error bars, "b" shows just
+bars and error bars.}
+
+\item{saveoutdata}{Also save the data used for the plot, as a .csv file.}
+
+\item{display_values}{Write the mean values on the plot?}
+
+\item{...}{Not currently used.}
+}
+\value{
+A ggplot object (or a combined cowplot figure if \code{combine_plots} is
+used).
 }
 \description{
-Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off
+Makes a plot that shows the raw data points, a violin (the distribution), the
+mean, and error bars for the mean, for the conditions of an experiment. By
+default it draws all of those things, but you can turn on and off each element
+(\code{dots}, \code{violin}, \code{bars}, \code{line}, \code{error_bars}) and change the layout.
+Plots are saved as a pdf in \code{outp}, and returned as a ggplot that you can
+customise further. \code{mypirate} is an older name for the same function.
+}
+\details{
+\strong{Specifying the conditions}
+\itemize{
+\item \code{x_condition} is the column shown along the x axis, \code{colour_condition} splits
+by colour, and \code{facet_condition} makes a separate panel for each level.
+\code{plot_condition} is a shortcut where you give a vector of up to three
+names, in the order colour, x, facet.
+\item If you give only \code{colour_condition} it is also used for the x axis.
+\item \code{dv} is the column with the data to plot. If you give several columns, they
+are stacked into a column called \code{variable}, which you can use as a
+condition.
+\item Data should be in long format, with a row for each observation (for example
+each trial), and a column identifying participants (\code{pid}).
+Set \code{pid_average = TRUE} to average each participant's data within
+conditions before plotting.
+\item If the data has a column called \code{use}, only rows where \code{use} is 1 are
+plotted, unless you set \code{useall = TRUE}.
+}
+
+\strong{Normalising}: \code{norm_by = "dv"} converts values to z scores for each of the
+dvs, so that you can compare them on one axis. \code{norm_by = "pid"} does that for
+each participant. Use \code{norm_scale = "iq"} for a scale with mean 100 and
+standard deviation 15 instead.
+
+\strong{Saving}: the file name is made from the title, the dv and the names of the
+conditions. Set \code{outp = NULL} to avoid saving a file.
+
+\strong{Old arguments} \code{cond}, \code{cond2}, \code{facetby}, \code{norm}, \code{norm_iq}, \code{norm_pid} are
+kept so that old code still works. Use \code{x_condition}, \code{colour_condition},
+\code{facet_condition}, \code{norm_by} and \code{norm_scale} in new code.
+}
+\examples{
+\dontrun{
+pirateye(data = iat_data, colour_condition = "congruency",
+         x_condition = "firstblock", dv = "rt", outp = NULL)
+# average over participants, with bars rather than violins
+pirateye(iat_data, colour_condition = "congruency", x_condition = "firstblock",
+         dv = "rt", pid_average = TRUE, violin = FALSE, bars = TRUE, outp = NULL)
+}
+}
+\seealso{
+\code{\link[=plot_model]{plot_model()}}
 }

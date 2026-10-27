@@ -2,7 +2,7 @@
 % Please edit documentation in R/saveout_datalist.R
 \name{saveout_datalist}
 \alias{saveout_datalist}
-\title{saves out data tables in a list to a folder containing .csv files}
+\title{Save a list of data tables to a folder of .csv files}
 \usage{
 saveout_datalist(
   data,
@@ -12,14 +12,26 @@ saveout_datalist(
 )
 }
 \arguments{
-\item{data}{list of data.tables}
+\item{data}{A list of data.tables, with names.}
 
-\item{folder}{to save into}
+\item{folder}{The folder to save into (created if needed). Default is
+"processed".}
 
-\item{filter_col}{save out a subset of data, based on this column}
+\item{filter_col}{Optional column name. If you give this and \code{filter_value},
+only the rows with those values are saved (tables without that column are
+saved in full).}
 
-\item{filter_value}{using this value as filter}
+\item{filter_value}{The value (or values) of \code{filter_col} to keep.}
+}
+\value{
+Nothing is returned; the names of the items saved or skipped are
+printed.
 }
 \description{
-saves out data tables in a list to a folder containing .csv files
+Saves each data.table in a list as a .csv file in a folder, named after the
+item in the list. Items that are not data frames, or have no columns, are
+skipped. It reverses \code{\link[=readin_datalist]{readin_datalist()}}.
+}
+\seealso{
+\code{\link[=readin_datalist]{readin_datalist()}}, \code{\link[=filtered_datalist]{filtered_datalist()}}
 }

@@ -2,13 +2,22 @@
 % Please edit documentation in R/replacecondcols.R
 \name{replacecondcols}
 \alias{replacecondcols}
-\title{returns either a set of default colours, or if condition names are also colours, returns those}
+\title{Get colours for the levels of a condition}
 \usage{
 replacecondcols(condlevels)
 }
 \arguments{
-\item{condlevels}{the levels of a factor in a condition column}
+\item{condlevels}{The levels of a factor, eg \code{levels(data$condition)}.}
+}
+\value{
+A vector of colours, in the same order as \code{condlevels}.
 }
 \description{
-returns either a set of default colours, or if condition names are also colours, returns those
+Returns a set of default colours for a vector of condition names. If the names
+are themselves colours (eg "red", "blue" or "#FF0000"), those colours are used
+instead for those levels.
+}
+\examples{
+replacecondcols(c("red", "blue", "green"))
+replacecondcols(c("low", "high"))
 }

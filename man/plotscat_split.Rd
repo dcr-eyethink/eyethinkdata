@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotscat.R
 \name{plotscat_split}
 \alias{plotscat_split}
-\title{Plot scattergram for two variables, split by a group}
+\title{Plot a scatterplot of two variables, split by a group}
 \usage{
 plotscat_split(
   data,
@@ -18,20 +18,35 @@ plotscat_split(
 )
 }
 \arguments{
-\item{data}{data frame with two cols to be correlated}
+\item{data}{A data frame, one row per participant.}
 
-\item{x}{name of x column}
+\item{x}{Name of the x column.}
 
-\item{y}{name of y column}
+\item{y}{Name of the y column.}
 
-\item{z}{name of column, a factor splitting groups}
+\item{z}{Name of the column splitting the groups.}
 
-\item{cl}{=2 plots the sub groups, =1 plots just main.}
+\item{cl}{2 plots a line for each sub group, 1 plots just the main line.}
 
-\item{condcols}{colours for two groups}
+\item{condcols}{Colours for the groups. By default they are chosen by
+\code{\link[=replacecondcols]{replacecondcols()}}.}
+
+\item{results_title}{Show the statistics in the plot title?}
+
+\item{title_text}{Optional text for the title.}
+
+\item{outp}{Not used.}
+
+\item{bayes_factor}{Calculate the Bayes factor for the difference between
+groups?}
+}
+\value{
+A list with the plot (\code{p}) and the statistics. The results for the
+first and second group are \verb{sigyz1.*} and \verb{sigyz2.*}.
 }
 \description{
-this plots x against y, split by z
-and it will plot x y for the two groups
-and tests for slope differences
+This is called by \code{\link[=plotscat]{plotscat()}} when \code{z} is a grouping variable. It plots \code{x}
+against \code{y} for the first two levels of \code{z}, and tests whether the
+correlations differ (cocor, Fisher 1925).
 }
+\keyword{internal}

@@ -1,17 +1,44 @@
 plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,
                        plot_conditions=NULL,...){
-  #' Plots the output of an anova or mixed model
+  #' Plot the output of an ANOVA or mixed model
   #'
-  #' Plots the main effects and interactionsof an afex anova or mixed model
-  #' And shows posthocs contrasts for the effects of condition 1 across levels of condition 2
-  #' Will pass on arguments to pirateye
-  #' @param mod output from an afex model
-  #' @param outp folder for saving. Set blank if not required
-  #' @param error_type Error bars: none, SE or CL
-  #' @param posthocs do you want to show posthocs on plot?
-  #' @param plot_conditions a list of main effects and interactions eg list("cond1", "cond1:cond2")
-  #' @param ... plotting arguments to pass to pirateye
+  #' Plots the means for the main effects and interactions in a model made with
+  #' the afex package (`aov_ez`, `aov_car`, `aov_4` or `mixed`), and shows the
+  #' post hoc contrasts. It also prints the model summary, and the estimated
+  #' means and contrasts for each effect, and saves them to a text file.
+  #'
+  #' @details
+  #' For interactions of two factors, the first factor named is shown in colour and
+  #' the second along the x axis. The post hoc p-values (shown above the x axis)
+  #' compare the levels of the first factor at each level of the second.
+  #' The p-value of the effect from the model is shown in the title.
+  #'
+  #' The plots are drawn with [pirateye()], and you can pass any of its arguments
+  #' to change them.
+  #'
+  #' @param mod A model from the afex package.
+  #' @param outp Name of the folder in which to save the plots (pdf) and the results
+  #'   (a text file); it is created if it does not exist. Set to `NULL` or "" to save
+  #'   nothing.
+  #' @param error_type The error bars: "SE" for standard errors (the default), "CL"
+  #'   for confidence limits, or "none".
+  #' @param posthocs Not currently used. (The post hoc results are always shown.)
+  #' @param plot_conditions Which effects to plot, as a list or vector of text, eg
+  #'   `c("cond1", "cond1:cond2")`. By default all the main effects and the
+  #'   interaction (if there are two factors) are plotted.
+  #' @param ... Further arguments passed on to [pirateye()].
+  #' @return A list with the `model_summary`, and for each effect plotted, the
+  #'   estimated means (`means_<effect>`) and the plot (`plot_<effect>`).
   #' @export
+  #' @seealso [pirateye()]
+  #' @examples
+  #' \dontrun{
+  #' anv <- afex::aov_ez(data = iat_data, id = "pid", dv = "rt",
+  #'                     between = "firstblock", within = "congruency",
+  #'                     fun_aggregate = mean)
+  #' res <- plot_model(anv, outp = NULL)
+  #' res$plot_congruency
+  #' }
 
   #run model
   #mod <- afex::mixed(formula = formula,data=data)
@@ -34,7 +61,9 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,
   title <- paste(dvname,"by",paste(conditions,collapse = "+"))
 
   ## output analysis to text
-  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)
+  nsink <- sink.number()
+  on.exit(while (sink.number() > nsink) sink())   # never leave output diverted if there is an error
+  if (is.character(outp) && nzchar(outp)){dir.create(file.path(outp),showWarnings = FALSE)
   sink(paste0(outp,"/",title,"_RESULTS.txt"), append=FALSE, split=TRUE)}
 
   print(summary(mod))
@@ -136,7 +165,7 @@ plot_model <- function(mod,outp="analysis",error_type="SE",posthocs=T,
     results <-  append(results,r )
   }
 
-  if (is.character(outp)){sink()}
+  if (is.character(outp) && nzchar(outp)){sink()}
 
   return(results)
 

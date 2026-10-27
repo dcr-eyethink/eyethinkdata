@@ -2,17 +2,33 @@
 % Please edit documentation in R/filtered_datalist.R
 \name{filtered_datalist}
 \alias{filtered_datalist}
-\title{filters whole data set to values of specified column}
+\title{Filter a whole list of data tables on one column}
 \usage{
 filtered_datalist(data, filter_col = NULL, filter_value = NULL)
 }
 \arguments{
-\item{data}{list of data.tables}
+\item{data}{A list of data.tables.}
 
-\item{filter_col}{save out a subset of data, based on this column}
+\item{filter_col}{Name of the column to filter on, eg "pid".}
 
-\item{filter_value}{using this value as filter}
+\item{filter_value}{The value (or vector of values) to keep.}
+}
+\value{
+The list of data.tables, filtered.
 }
 \description{
-filters whole data set to values of specified column
+Goes through a list of data.tables (such as that returned by
+\code{\link[=data_collator_gorilla]{data_collator_gorilla()}}) and keeps only the rows where the column
+\code{filter_col} has one of the values in \code{filter_value}. Tables in the list that
+do not have a column with that name are left as they are.
+}
+\details{
+If either \code{filter_col} or \code{filter_value} is missing, the list is returned
+unchanged.
+}
+\examples{
+\dontrun{
+# keep only the data for two participants, in every table that has a pid column
+two_people <- filtered_datalist(data, filter_col = "pid", filter_value = c(101, 102))
+}
 }

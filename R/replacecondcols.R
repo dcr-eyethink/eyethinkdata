@@ -1,7 +1,16 @@
 replacecondcols <- function(condlevels){
-  #' returns either a set of default colours, or if condition names are also colours, returns those
-  #' @param condlevels the levels of a factor in a condition column
+  #' Get colours for the levels of a condition
+  #'
+  #' Returns a set of default colours for a vector of condition names. If the names
+  #' are themselves colours (eg "red", "blue" or "#FF0000"), those colours are used
+  #' instead for those levels.
+  #'
+  #' @param condlevels The levels of a factor, eg `levels(data$condition)`.
+  #' @return A vector of colours, in the same order as `condlevels`.
   #' @export
+  #' @examples
+  #' replacecondcols(c("red", "blue", "green"))
+  #' replacecondcols(c("low", "high"))
 
 
   ctest <- sapply(condlevels, function(X) {

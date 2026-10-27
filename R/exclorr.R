@@ -1,19 +1,41 @@
 exclorr  <- function(data,var1,var2,bayes_factor=F,
                      plim=0.05,cplot=F, cplot_title="Correlation Matrix", outp="analysis") {
-  #' Explore correlations between large numbers of DVs
+  #' Explore correlations between large numbers of variables
   #'
-  #' Takes a data set and two lists of DVs
-  #' looks at correlations between one set and another
-  #' r values, p values and bayes factors
-  #' @param data data
-  #' @param var1 list of DV names that will be rows
-  #' @param var2 list of DV names that will be cols
-  #' @param bayes_factor do you want bayes analysis? banal
-  #' @param plim cut off for p-value reporting
-  #' @param outp name of folder to save plot in, set to blank if no save needed
-  #' @param cplot generate a correlation matrix plot
-
+  #' Takes a data set and two lists of column names, and correlates every variable
+  #' in the first list with every variable in the second. It returns the r values,
+  #' the p values, and a table showing only the r values that are significant.
+  #' It can also draw a correlation matrix plot, and calculate Bayes factors.
+  #'
+  #' @details
+  #' Correlations are Pearson's r, calculated on all the pairs of values available
+  #' (`Hmisc::rcorr`). Spaces and hyphens in the variable names are converted to
+  #' full stops, as R does when it reads in column names.
+  #' If any of the names you give are not columns in `data`, the function prints a
+  #' message and returns the missing names instead of results.
+  #'
+  #' @param data A data frame or data.table with one row per participant.
+  #' @param var1 Vector of column names. These will be the rows of the output.
+  #' @param var2 Vector of column names. These will be the columns of the output.
+  #' @param bayes_factor Do you want Bayes factors for each correlation? Needs the
+  #'   BayesFactor package, and can be slow for large numbers of variables.
+  #' @param plim Cut off for which p-values count as significant. Default 0.05.
+  #' @param cplot Make a correlation matrix plot (circles for the significant
+  #'   correlations)? If `TRUE` it is saved as a pdf in `outp`.
+  #' @param cplot_title Title for the plot, which is also used as its file name.
+  #' @param outp Name of a folder in which to save the plot (it will be created if
+  #'   it does not exist). If `NULL` or "", the plot is drawn on the current device
+  #'   rather than saved.
+  #' @return A list with data frames `corrsig` (r values, rounded, with
+  #'   non-significant ones set to 0), `pvalues` and `rvalues`. Also `plot` if
+  #'   `cplot = TRUE`, and `bfs` (Bayes factors, rounded down to a whole number) if
+  #'   `bayes_factor = TRUE`.
   #' @export
+  #' @examples
+  #' \dontrun{
+  #' exclorr(mtcars, var1 = c("mpg", "disp"), var2 = c("hp", "wt", "qsec"))
+  #' }
+
 
 
 
@@ -53,11 +75,12 @@ exclorr  <- function(data,var1,var2,bayes_factor=F,
 
   res <- list(corrsig=data.frame(corrsig), pvalues=data.frame(subcorrP),rvalues=data.frame(subcorrR))
 
-  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
+  if (is.character(outp) && nzchar(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
 
   if (cplot){
 
-    pdf(file=paste0(outp,"/",cplot_title,".pdf"))
+    saving <- is.character(outp) && nzchar(outp)
+    if (saving){pdf(file=paste0(outp,"/",cplot_title,".pdf"))}
 
     plot_r <-  subcorrR
     plot_p <-  subcorrP
@@ -67,7 +90,7 @@ exclorr  <- function(data,var1,var2,bayes_factor=F,
     p <- plot_corr(r=plot_r,p=plot_p,title=cplot_title,plim=plim)
 
     p$plot()
-    dev.off()
+    if (saving){dev.off()}
 
     res$plot <- p$plot()
 

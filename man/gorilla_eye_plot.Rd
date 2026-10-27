@@ -2,7 +2,7 @@
 % Please edit documentation in R/gorilla_eye_plot.R
 \name{gorilla_eye_plot}
 \alias{gorilla_eye_plot}
-\title{Takes one trial (or trial type) of data and optional image file an makes heat map}
+\title{Plot eye movements for one trial (or trial type)}
 \usage{
 gorilla_eye_plot(
   data,
@@ -15,13 +15,38 @@ gorilla_eye_plot(
 )
 }
 \arguments{
-\item{data}{gorilla ET data}
+\item{data}{The list returned by \code{\link[=gorilla_eye_processing]{gorilla_eye_processing()}}; the gaze samples
+are taken from its \code{ed} item (columns \code{t}, \code{x} and \code{y}). You will usually
+want to filter this to a single trial or condition first.}
 
-\item{background}{for background}
+\item{background}{Optional file name of a .png image to draw behind the gaze
+data, eg a screenshot of the stimulus.}
+
+\item{zones}{Optional data.table describing zones to draw as boxes, with
+columns \code{zone_name}, \code{left}, \code{right}, \code{bottom} and \code{top}. A zone called
+"screen" is ignored.}
+
+\item{plot_types}{Which plots to make: "heat" for a heat map, "path" for the
+gaze path. Default is both.}
+
+\item{outp}{Name of a folder to save the plots in, as pdfs (it is created if
+needed). Set to \code{NULL} or "" to not save.}
+
+\item{title}{Start of the file name for the saved plots; the plot type is
+added to the end.}
+
+\item{contrast}{Optional name of a column in \code{data$ed} used to colour the
+gaze path, eg to compare two conditions.}
 }
 \value{
-image
+A named list of ggplot objects, one for each of \code{plot_types}.
 }
 \description{
-Generates plots from imported gorilla data that has been processed by gorilla_eye_processing
+Takes eye tracking data that has been processed by \code{\link[=gorilla_eye_processing]{gorilla_eye_processing()}}
+and makes a heat map and/or a path plot of where people looked. You can add a
+background image and mark the zones of interest. Gaze position is plotted in
+normalised screen coordinates, from 0 to 1 in both directions.
+}
+\seealso{
+\code{\link[=gorilla_eye_processing]{gorilla_eye_processing()}}
 }

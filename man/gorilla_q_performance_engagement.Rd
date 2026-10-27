@@ -2,15 +2,30 @@
 % Please edit documentation in R/gorilla_q_performance_engagement.R
 \name{gorilla_q_performance_engagement}
 \alias{gorilla_q_performance_engagement}
-\title{Processes narrative engagement questionnaire}
+\title{Score the performance engagement questionnaire}
 \usage{
 gorilla_q_performance_engagement(data, full = FALSE, taskname = "Engagement")
 }
 \arguments{
-\item{data}{data list or just the data_q}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}), in long format.}
+
+\item{full}{Not currently used.}
+
+\item{taskname}{Not currently used.}
+}
+\value{
+A data.table with one row per participant, the four scores and the
+item scores.
 }
 \description{
-From https://app.gorilla.sc/admin/task/352459/
- Brown & Novak (2007)
- https://wolfbrown.com/wp-content/uploads/Report-Assessing-The-Intrinsic-Impacts-of-a-Live-Performance.pdf
+Scores a questionnaire on engagement with a performance, based on Brown &
+Novak (2007), "Assessing the intrinsic impacts of a live performance".
+The questionnaire template is at \url{https://app.gorilla.sc/admin/task/352459/}.
+}
+\details{
+It looks for questionnaires with "PerformanceExperience" in their name. The 12
+items are averaged to make four scores: \code{pe_captive}, \code{pe_emotion},
+\code{pe_social} and \code{pe_spirit}. The individual items are also returned, as
+\code{pe_1_absorb} etc.
 }

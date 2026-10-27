@@ -2,7 +2,7 @@
 % Please edit documentation in R/gorilla_q_keyed.R
 \name{gorilla_q_keyed}
 \alias{gorilla_q_keyed}
-\title{Processes a gorilla QB1 questionnaire using a survey key}
+\title{Score a gorilla questionnaire using a survey key}
 \usage{
 gorilla_q_keyed(
   data,
@@ -13,31 +13,82 @@ gorilla_q_keyed(
 )
 }
 \arguments{
-\item{data}{data list or just the data_q}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}). It has to be in long format.}
 
-\item{keyout}{generate a new key from the data}
+\item{keyout}{Set to \code{TRUE} to write out a new blank key for each
+questionnaire, from the data. This replaces any existing key in
+\code{survey_key}.}
 
-\item{key_folder}{location of a central folder where you keep survey keys}
+\item{qlist}{The names of the questionnaires (Task.Name in gorilla) to score.
+If \code{NULL}, all of the questionnaires in the data.}
+
+\item{items}{If \code{TRUE}, also return the individual item scores (after
+reversing etc.), one column for each item.}
+
+\item{key_folder}{Folder where the survey keys are kept. If \code{NULL}, the folder
+\code{survey_key} in the working directory is used.}
+}
+\value{
+A data.table with one row per participant (\code{pid}) and a column for each
+scale (and subscale), and for any items that were left out of scoring. If
+nothing could be scored, there is no return value.
 }
 \description{
-The first time this is run, set keyout to TRUE to generate a key
-The key to the survey should either be in a central key_folder,
-or in the working directory in a folder called survey_key
+Processes questionnaires made with Questionnaire Builder 1 (long format data).
+A survey key is a .csv file that tells this function how to score each item,
+which items to reverse, and which items belong to which scale or subscale. The
+result has one row per participant.
 }
 \details{
-When you have a new key, edit it in excel or text editor,
-then save it as .csv file. There is one survey key for each blob in gorilla.
-There is a row for every different survey item in that blob.
-They are identified by what you wrote in the 'key' box when making the survey in gorilla.
-You can change the numbers in the columns sum, ScaleNam, Subscore and qual, to score/summarize your survey.
-You will get an output that has one row per person, and one column that scores all the answers,
-and additionally other columns for subscales or text answers.
-Here's what the columns mean:
-sum - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score
-rev - if it is to be reversed scored, then subtract the answer from this number. eg assuming a 7 point scale, I've set this to 8.
-adj - make adjustment to the scale (sometimes needed, eg if anchored at 0)
-ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
-Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
-qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but till also be reported in output in a column
-ignore - If the response matches this answer, then don't use it in the scale calculation. This is used, eg, for scales where 1-7 is the answer you want to code, but people can also enter 8 for 'not applicable'.
+\strong{How to use it}
+\enumerate{
+\item The first time, run with \code{keyout = TRUE}. This writes a blank key for each
+questionnaire in \code{qlist} to a folder called \code{survey_key} in your working
+directory.
+\item Edit the key in Excel or a text editor, and save it as a .csv file. There
+is one key per questionnaire in gorilla, named after the questionnaire.
+\item Run the function again (with \code{keyout = FALSE}). It looks for the key in
+\code{key_folder}, or if that is not given in the folder \code{survey_key}.
+}
+
+Each row of the key is one item, identified by the \code{Question.Key} (what you
+typed in the "key" box when you made the questionnaire in gorilla). The
+columns you can edit are:
+\itemize{
+\item \code{sum} - how the item is used in the score: 1 to add it, -1 to reverse score
+it, and 0 to leave it out of the scores (it is returned by itself in its own
+column).
+\item \code{rev} - for reverse scored items, the answer is subtracted from this number.
+eg for a 7 point scale, use 8 (the default).
+\item \code{adj} - a number added to the item, if the scale needs adjusting (eg it
+starts at 0 instead of 1). Optional: keys without this column are
+treated as 0.
+\item \code{scaleName} - the name of the scale that the item adds to. The output has a
+column with this name. One questionnaire can have many scales.
+\item \code{Subscore} - optional name of a subscale. It is returned as an extra column
+\verb{<scaleName>_<Subscore>}.
+\item \code{qual} - put 1 here if the item is a text (qualitative) answer. It is not
+scored but returned in its own column.
+\item \code{ignore} - an answer that should be ignored when scoring, eg 8 for "not
+applicable" on a scale of 1 to 7.
+}
+
+Scales are the \emph{sum} of the items (not the mean). People who did not answer all
+the items are listed.
+
+Questionnaires without a key are skipped, unless you make one with
+\code{keyout = TRUE}. If you only want to look at the data without scoring it, see
+\code{\link[=gorilla_q_parse]{gorilla_q_parse()}}.
+}
+\examples{
+\dontrun{
+# make a blank key
+gorilla_q_keyed(data, qlist = "Interpersonal Reactivity Index (Davies, 1983)", keyout = TRUE)
+# ... edit the key in survey_key, then score:
+gorilla_q_keyed(data, qlist = "Interpersonal Reactivity Index (Davies, 1983)")
+}
+}
+\seealso{
+\code{\link[=gorilla_q_keyed_qb2]{gorilla_q_keyed_qb2()}}, \code{\link[=gorilla_q_parse]{gorilla_q_parse()}}
 }

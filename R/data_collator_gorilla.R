@@ -1,14 +1,56 @@
 data_collator_gorilla <- function(datafolder=NULL,...){
   #' Merge and load in data from multiple gorilla downloads
   #'
-  #' Asks for a folder that can contain multiple data folders, zipped or un zipped, downloaded from gorilla.
-  #' It will try and figure out if your questionnaire data has been downloaded wide or long format,
-  #' and collate it accordingly
-  #' Note that the functions for processing questionnaire data in this package assume long
-
+  #' Reads in the raw data from one or more downloads from the gorilla experiment
+  #' platform and collates them into a single list of data.tables. This is usually
+  #' the first function to run in an analysis of gorilla data.
+  #'
+  #' @details
+  #' `datafolder` should be a folder that contains the downloads from gorilla.
+  #' Each download can either be a .zip file, or an already unzipped folder that
+  #' contains the gorilla .csv files. The data from all of the downloads are
+  #' stacked together.
+  #'
+  #' **Note:** any .zip files found in `datafolder` are unzipped into a folder with
+  #' the same name, and the .zip file is then deleted.
+  #'
+  #' Each download folder is processed by [data_merger_gorilla()], and `...` is
+  #' passed on to that function (and from there to [data_merger()]).
+  #'
+  #' The questionnaire data can be downloaded from gorilla in wide (one row per
+  #' participant) or long format. This function works out which you have and
+  #' reports it in `data_qtype`. The questionnaire functions in this package
+  #' (`gorilla_q_...`) need long format.
+  #'
+  #' The names of the tasks and questionnaires found are printed to the console,
+  #' so that you can copy them into later analysis code.
+  #'
+  #' @param datafolder The folder containing the gorilla downloads. If left as
+  #'   `NULL`, you will be asked to choose a folder.
+  #' @param ... Further arguments passed on to [data_merger_gorilla()], for
+  #'   example `gorilla_clean = TRUE` to drop some of the less useful gorilla
+  #'   columns.
+  #' @return A list with these items:
+  #' \describe{
+  #'   \item{data_task}{data.table of all the task (experiment) data, with added
+  #'   columns `pid` (anonymous participant id, a factor), `lid` (public id), and
+  #'   `rt` (numeric reaction time)}
+  #'   \item{data_q}{data.table of the questionnaire data}
+  #'   \item{data_qtype}{"long", "wide" or "none"}
+  #'   \item{data_continuous}{data.table of mouse or eye tracking data from the
+  #'   `uploads` folder, if there is any}
+  #'   \item{uploads}{table of the names and paths of any other uploaded files}
+  #'   \item{task_names}{the names of the tasks found}
+  #'   \item{q_names}{the names of the questionnaires found}
+  #' }
   #' @export
-  #' @return Returns a list of data.tables for each type (task, questionnaire, continuous)
-  #' @param datafolder the folder with a collection of gorilla downloads
+  #' @seealso [data_merger_gorilla()], [data_merger()], [pid_merge()]
+  #' @examples
+  #' \dontrun{
+  #' data <- data_collator_gorilla("gorilla_data")
+  #' head(data$data_task)
+  #' }
+
 
 
   if (is.null(datafolder)){

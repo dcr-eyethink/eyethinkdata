@@ -16,41 +16,143 @@ pirateye <- function(data,colour_condition=NULL,x_condition="variable",
                      combine_plots=list(),combine_position="right",elementinc=NULL,type=NULL,
                      saveoutdata=F,display_values=F,
                      ...){
-  #' Outputs a pirate plot (RDI)
+  #' Plot data as a pirate plot (RDI: raw data, descriptives, inferences)
   #'
-  #' Defaults to violin plot with error bars and dots, but elements such as dots, bars, violin, error_bars can be turned on or off
+  #' Makes a plot that shows the raw data points, a violin (the distribution), the
+  #' mean, and error bars for the mean, for the conditions of an experiment. By
+  #' default it draws all of those things, but you can turn on and off each element
+  #' (`dots`, `violin`, `bars`, `line`, `error_bars`) and change the layout.
+  #' Plots are saved as a pdf in `outp`, and returned as a ggplot that you can
+  #' customise further. `mypirate` is an older name for the same function.
   #'
-  #' @param data data with one person per line, excluding rows with use=0
-  #' @param colour_condition  colour split
-  #' @param x_condition x axis split (if not, specified colour condition used for x axis too)
-  #' @param facet_condition for faceting
-  #' @param pid_average plot an average of each participant's dv over the named conditions
-  #' @param plot_condition instead of passing individually, you can give a vector of up to 3
-  #' @param dv name of single dv column, or multiple columns, in which case they will be split by x_condition unless colour or facet condition set to 'variable'
-  #' @param pid whats the name of col that identifies individuals
-  #' @param cols specify the colours to use, can be a set of colours, or of condition_level to colour
-  #' @param error_data distribution for mean, eg from Bayes analysis, to replace SE
-  #' @param x_axis titles
-  #' @param y_axis titles
-  #' @param redorder can be "increasing" or "decreasing", default "no"
-  #' @param error_bar_data error bar data
-  #' @param col_pc_change calculate the % change from 1st to 2nd colour conds, and put across x axis
-  #' @param xlabs Do we have labels to go across x axis, such as post hoc pvalues or MPEs
-  #' @param xlabpos How high vertically should they be, as proportion of plot height
-  #' @param ypercent Convert y scale to %
-  #' @param cflip flip to horizontal plot
-  #' @param norm DEPRECATED use norm_by and norm_scale (normalise / z-score values for comparison across scales when multiple dvs)
-  #' @param norm_pid, DEPRECATED use norm_by and norm_scale (normalise / z score for each participant, either "no","z" or "iq")
-  #' @param norm_iq DEPRECATED use norm_by and norm_scale
-  #' @param norm_by normalise "pid" across each individual (to see within cond diffs) or across "dv" measures to compare, or "none"
-  #' @param norm_scale "z" score, default, or use "iq" scale
-  #' @param useall ignore the use column and plot all rows
-  #' @param type shortcuts: m=just error bars, b=just bars
-  #' @param saveoutdata save the plot data to a csv file for sharing
+  #' @details
+  #' **Specifying the conditions**
+  #'
+  #' * `x_condition` is the column shown along the x axis, `colour_condition` splits
+  #'   by colour, and `facet_condition` makes a separate panel for each level.
+  #'   `plot_condition` is a shortcut where you give a vector of up to three
+  #'   names, in the order colour, x, facet.
+  #' * If you give only `colour_condition` it is also used for the x axis.
+  #' * `dv` is the column with the data to plot. If you give several columns, they
+  #'   are stacked into a column called `variable`, which you can use as a
+  #'   condition.
+  #' * Data should be in long format, with a row for each observation (for example
+  #'   each trial), and a column identifying participants (`pid`).
+  #'   Set `pid_average = TRUE` to average each participant's data within
+  #'   conditions before plotting.
+  #' * If the data has a column called `use`, only rows where `use` is 1 are
+  #'   plotted, unless you set `useall = TRUE`.
+  #'
+  #' **Normalising**: `norm_by = "dv"` converts values to z scores for each of the
+  #' dvs, so that you can compare them on one axis. `norm_by = "pid"` does that for
+  #' each participant. Use `norm_scale = "iq"` for a scale with mean 100 and
+  #' standard deviation 15 instead.
+  #'
+  #' **Saving**: the file name is made from the title, the dv and the names of the
+  #' conditions. Set `outp = NULL` to avoid saving a file.
+  #'
+  #' **Old arguments** `cond`, `cond2`, `facetby`, `norm`, `norm_iq`, `norm_pid` are
+  #' kept so that old code still works. Use `x_condition`, `colour_condition`,
+  #' `facet_condition`, `norm_by` and `norm_scale` in new code.
+  #'
+  #' @param data A data frame or data.table (converted to a data.table in place).
+  #' @param colour_condition Name of the column to split by colour.
+  #' @param x_condition Name of the column for the x axis. If not given, the colour
+  #'   condition is used.
+  #' @param facet_condition Name of the column that makes separate panels.
+  #' @param facet_scales Scales for the panels: "fixed" (the same), "free" or
+  #'   "free_y" etc. (see `ggplot2::facet_wrap`).
+  #' @param facet_row Number of rows of panels.
+  #' @param pid_average Average each participant's dv over the conditions, before
+  #'   plotting?
+  #' @param dv Name of the column to plot, or a vector of names of columns.
+  #' @param pid Name of the column that identifies participants. Default "pid".
+  #' @param plot_condition A vector of up to three condition names, used instead of
+  #'   `colour_condition`, `x_condition` and `facet_condition` (in that order).
+  #' @param reorder "increasing" or "decreasing" to put the conditions in order of
+  #'   their means. Default "no".
+  #' @param dodgewidth How far apart to put the colour conditions within each x
+  #'   position.
+  #' @param ylim Limits for the y axis, as a vector of two numbers.
+  #' @param xlim Limits for the x axis.
+  #' @param w Width of the saved plot in inches. By default this is chosen from the
+  #'   number of conditions.
+  #' @param h Height of the saved plot in inches.
+  #' @param title Title of the plot.
+  #' @param title_overide If `TRUE`, the file name is made from the title alone
+  #'   rather than also adding the dv and conditions.
+  #' @param outp Name of the folder for saving the plot as a pdf (it is created if
+  #'   needed). Set to `NULL` or "" to not save.
+  #' @param saveoutdata Also save the data used for the plot, as a .csv file.
+  #' @param cols The colours to use: a vector of colours, or a named vector
+  #'   matching condition levels to colours. If the condition levels are themselves
+  #'   colour names, those are used.
+  #' @param bars Show means as bars?
+  #' @param violin Show violins of the distributions?
+  #' @param dots Show a point for each data point?
+  #' @param line Join the means with lines?
+  #' @param error_bars Show error bars (standard errors)?
+  #' @param splitV Draw a split violin (half for each colour) when there are two
+  #'   colour conditions.
+  #' @param svw Width of the split violins.
+  #' @param dot_h_jitter Amount of vertical jitter for the dots.
+  #' @param type Shortcut: "m" shows only the means and error bars, "b" shows just
+  #'   bars and error bars.
+  #' @param display_values Write the mean values on the plot?
+  #' @param ypercent Show the y axis as a percentage?
+  #' @param cflip Flip the plot so that the x axis is vertical?
+  #' @param legend Show the legend? It is hidden when colour and x axis show the
+  #'   same condition.
+  #' @param x_axis Label for the x axis (default is the condition name).
+  #' @param y_axis Label for the y axis (default is the dv name).
+  #' @param col_pc_change Calculate the percentage change from the first to the
+  #'   second colour condition and show it along the x axis.
+  #' @param xlabs A table of labels to show above the x axis, such as post hoc
+  #'   p-values. It needs a column called `lab`, and the same x condition column
+  #'   as the plot.
+  #' @param xlabpos How high up the labels in `xlabs` go, as a proportion of the
+  #'   height of the plot.
+  #' @param error_bar_data A table of ymin and ymax values to use for the error
+  #'   bars, instead of calculating standard errors from the data, with the same
+  #'   condition columns as the plot. Used by [plot_model()].
+  #' @param error_dim Fade out the data for the conditions whose mean (with SE)
+  #'   excludes `error_dim_value`.
+  #' @param error_dim_value The value used by `error_dim`.
+  #' @param pred Optional table of predicted data (eg samples from a model), shown
+  #'   as violins.
+  #' @param pred_means Optional table of predicted means, shown as bars or lines.
+  #' @param pred_line Draw `pred_means` as a line rather than as bars?
+  #' @param pred_bar Draw `pred_means` as bars? Default `TRUE`.
+  #' @param combine_plots A list of other plots to put together with this one
+  #'   (using cowplot).
+  #' @param combine_position Where to put the combined plots: "right" or "under".
+  #' @param elementinc An extra ggplot element (eg a theme) added to the plot early
+  #'   on.
+  #' @param cond,cond2,facetby Old names for `x_condition`, `colour_condition` and
+  #'   `facet_condition`.
+  #' @param norm_by Normalise by "pid" or by "dv", or "none" (the default).
+  #' @param norm_scale "z" (the default) for z scores, or "iq" for a scale with a
+  #'   mean of 100 and an SD of 15.
+  #' @param norm,norm_pid,norm_iq Old arguments for normalising. Use `norm_by` and
+  #'   `norm_scale` instead.
+  #' @param useall Plot all rows, ignoring any `use` column.
+  #' @param error_data Not currently used.
+  #' @param ... Not currently used.
+  #' @return A ggplot object (or a combined cowplot figure if `combine_plots` is
+  #'   used).
   #' @importFrom ggplot2 ggplot aes
-
   #' @export mypirate pirateye
-  #' @alias mypirate
+  #' @aliases mypirate
+  #' @seealso [plot_model()]
+  #' @examples
+  #' \dontrun{
+  #' pirateye(data = iat_data, colour_condition = "congruency",
+  #'          x_condition = "firstblock", dv = "rt", outp = NULL)
+  #' # average over participants, with bars rather than violins
+  #' pirateye(iat_data, colour_condition = "congruency", x_condition = "firstblock",
+  #'          dv = "rt", pid_average = TRUE, violin = FALSE, bars = TRUE, outp = NULL)
+  #' }
+
 
 
   setDT(data)
@@ -96,7 +198,7 @@ if (!is.null(type)){
   ## average over pids before plotting
   if (pid_average & length(dv)==1){
     data$v <- data[[dv]]
-    data <- data[,.(mean(v,na.rm=T)),by=c("pid",x_condition,colour_condition,facet_condition)]
+    data <- data[,.(mean(v,na.rm=T)),by=c(pid,x_condition,colour_condition,facet_condition)]
     data[[dv]] <- data$V1
   }
 
@@ -116,7 +218,7 @@ if (!is.null(type)){
   }
 
 
-  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
+  if (is.character(outp) && nzchar(outp)){dir.create(file.path(outp),showWarnings = FALSE)}
 
 
 
@@ -203,6 +305,9 @@ if (!is.null(type)){
               mean(.SD[condcol==ccomp[1]]$dv,na.rm=T))/mean(.SD[condcol==ccomp[1]]$dv,na.rm=T))),by=condx]
   }
   if(!is.null(xlabs)){
+    ## a character dv column in xlabs would turn the numeric dv column into text
+    xlabs <- data.table::as.data.table(xlabs)
+    if ("dv" %in% names(xlabs)){xlabs[,dv:=NULL]}
     data <-  rbind(data,data.table(data_type="xlabs",xlabs),fill=T)
   }
 
@@ -454,7 +559,7 @@ if (!is.null(type)){
 
   p <- p + guides(alpha = "none")
 
-  if (is.character(outp)){
+  if (is.character(outp) && nzchar(outp)){
 
 
 
@@ -465,7 +570,9 @@ if (!is.null(type)){
                         paste0(c(colour_condition,facet_condition),collapse = "-")),collapse = " ")
       }else{
       title <-paste(c(title,dv,paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ") }
-      }}
+      }
+      title <-paste(c(title,dv,paste0(c(colour_condition,x_condition,facet_condition),collapse = "-")),collapse = " ")
+      }
 
     if (error_dim){title <- paste(title," DIMMED")}
 

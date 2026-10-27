@@ -1,13 +1,26 @@
 readin_datalist <- function(folder="processed",flist=NULL, data=list(),drp=F,token=NULL){
-  #' reads in a set of data files and stores them in a list
-  #' @param folder where to find the data, defaults to 'processed'
-  #' @param flist what files do you want from folder? Defaults to all of them
-  #' @param data already existing list to add data to
-  #' @param drp is this to be downloaded from dropbox URL?
-  #' @param token dropbox token
+  #' Read in a set of data files and store them in a list
+  #'
+  #' Reads all of the .csv files in a folder (or chosen ones) into a list of
+  #' data.tables, named after the files. It reverses [saveout_datalist()].
+  #'
+  #' @details
+  #' If a list is given in `data` that already has an item with the same name as a
+  #' file, the new data is added to the bottom of the existing item. This is useful
+  #' for adding more participants.
+  #'
+  #' @param folder Folder (or vector of folders) to read from. Default is
+  #'   "processed". If it does not exist, you will be asked to choose one.
+  #' @param flist Names of the files to read (including .csv). Default is all of
+  #'   the files in the folder.
+  #' @param data An existing list to add the data to.
+  #' @param drp Read the files from a dropbox folder? This needs the rdrop2 package.
+  #' @param token The dropbox token, if using `drp`.
+  #' @return A list of data.tables, named after the files (without .csv).
   #' @export
+  #' @seealso [saveout_datalist()]
 
-    if (!file.exists(folder)){
+    if (any(!file.exists(folder))){
      cat("Show me a folder of processed data\n")
       folder <- rstudioapi::selectDirectory()
    }
@@ -16,14 +29,14 @@ readin_datalist <- function(folder="processed",flist=NULL, data=list(),drp=F,tok
 
 
 
-    if(length(flist)==0){flist <- list.files(fitem)}
+    if(length(flist)==0){fitem_files <- list.files(fitem)}else{fitem_files <- flist}
     #flist <- list.files(fitem)
 
 
-    for (f in flist){
+    for (f in fitem_files){
 
       if (drp){
-        nd <- data.table::data.table(drop_read_csv(file = paste0(fitem,"/",f) ,
+        nd <- data.table::data.table(rdrop2::drop_read_csv(file = paste0(fitem,"/",f) ,
                                        dtoken = token))
         # print(str(nd))
         data[[gsub(f,pattern=".csv",replacement="")]] <- rbind(data[[gsub(f,pattern=".csv",replacement="")]],

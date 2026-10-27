@@ -2,7 +2,7 @@
 % Please edit documentation in R/gorilla_q_parse_qb2.R
 \name{gorilla_q_parse_qb2}
 \alias{gorilla_q_parse_qb2}
-\title{Get subject entered, unscored data like age and gender from gorilla. Will give you the qual or quantised versions}
+\title{Get unscored questionnaire answers from gorilla (Questionnaire Builder 2)}
 \usage{
 gorilla_q_parse_qb2(
   data,
@@ -13,14 +13,35 @@ gorilla_q_parse_qb2(
 )
 }
 \arguments{
-\item{data}{raw data packet from from gorilla import}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}). It has to be in long format.}
 
-\item{qlist}{list of Task.Name, ie questionnaire blob names, that you want to process}
+\item{qlist}{The names of the questionnaires (Task.Name in gorilla) to use.
+If \code{NULL}, all of them.}
 
-\item{preface}{add some text to all variables}
+\item{preface}{Text to add to the start of all the question names. Use "task"
+to add the name of the questionnaire.}
 
-\item{strip}{get rid of either the quant or qual}
+\item{strip}{"quant" drops the numeric \code{-quantised} columns, "qual" drops the
+text answers and keeps the numeric ones. Default \code{NULL} keeps both.}
+
+\item{pd}{Optional data.table of participant data (with a \code{pid} column) to
+merge the answers into.}
+}
+\value{
+A data.table with one row per participant (\code{pid}).
 }
 \description{
-Get subject entered, unscored data like age and gender from gorilla. Will give you the qual or quantised versions
+Like \code{\link[=gorilla_q_parse]{gorilla_q_parse()}}, but for questionnaires made with Questionnaire
+Builder 2. It returns the answers with one row per participant and one column
+per question.
+}
+\details{
+In this version, if a person gave the same answer to a question more than
+once, the \emph{first} is kept (in \code{\link[=gorilla_q_parse]{gorilla_q_parse()}} it is the last), and the
+duplicates are printed. "other" response columns are dropped, and \verb{_value} is
+removed from the column names.
+}
+\seealso{
+\code{\link[=gorilla_q_parse]{gorilla_q_parse()}}, \code{\link[=gorilla_q_keyed_qb2]{gorilla_q_keyed_qb2()}}
 }

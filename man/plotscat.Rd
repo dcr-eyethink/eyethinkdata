@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotscat.R
 \name{plotscat}
 \alias{plotscat}
-\title{Plot scattergram for two or three variables, optionally split by group}
+\title{Plot a scatterplot of two or three variables, optionally split by group}
 \usage{
 plotscat(
   data,
@@ -22,25 +22,66 @@ plotscat(
 )
 }
 \arguments{
-\item{data}{data frame with two cols to be correlated}
+\item{data}{A data frame with the columns to be plotted, one row per
+participant.}
 
-\item{x}{name of x column}
+\item{x}{Name of the column for the x axis.}
 
-\item{y}{name of y column}
+\item{y}{Name of the column for the y axis.}
 
-\item{z}{name of column, either numeric DV or a factor for splitting groups}
+\item{z}{Optional name of a third column, either numeric or a grouping factor.}
 
-\item{results_title}{do you want all the stats in the title?}
+\item{cl}{For a grouping factor: 2 draws a regression line for each group, 1
+draws one line for everyone.}
 
-\item{title_text}{optional text for title}
+\item{condcols}{Colours for the groups when \code{z} is a grouping factor. By default
+they are chosen by \code{\link[=replacecondcols]{replacecondcols()}}.}
 
-\item{outp}{name of folder to save plot in, set to blank if no save needed}
+\item{cleand}{If \code{TRUE}, remove rows with missing values first.}
 
-\item{bayes_factor}{do you want bayes factor calculated, needs BayesFactor package}
+\item{results_title}{Show the statistics in the plot title?}
+
+\item{title_text}{Optional extra text for the top of the title.}
+
+\item{outp}{Name of the folder in which to save the plot as a pdf (it is
+created if needed). Set to \code{NULL} or "" to not save.}
+
+\item{w}{Width of the saved plot, in inches.}
+
+\item{h}{Height of the saved plot, in inches.}
+
+\item{label}{Optional name of a column to use to label each point.}
+
+\item{bayes_factor}{Calculate Bayes factors? This needs the BayesFactor
+package. The Bayes factors are shown in the plot title.}
+}
+\value{
+A list containing the plot (\code{p}) and the statistics: r, p value, Bayes
+factor and Kendall's tau for each correlation, the p value for the difference
+between the correlations (\code{cc}), and the interaction Bayes factor (\code{intbf}),
+when relevant.
 }
 \description{
-this plots x  against y if there are two;
-if z is given and is a number, plots x against z as well
-Or z can be is a between subjects factor, will plot x y for the groups given in z
-and tests for slope differences
+Plots \code{x} against \code{y}, with a regression line, and puts the correlation
+statistics in the plot title. What happens depends on \code{z}:
+}
+\details{
+\itemize{
+\item no \code{z}: just \code{y} against \code{x}.
+\item \code{z} is a number: \code{y} and \code{z} are both plotted against \code{x}, in different
+colours, and the two correlations are compared, using cocor (Hittner et al.,
+2003).
+\item \code{z} is a factor or text: \code{y} against \code{x} is plotted separately for each group
+in \code{z} (only the first two groups are used), and the two correlations are
+compared (see \code{plotscat_split}).
+}
+}
+\examples{
+\dontrun{
+plotscat(mtcars, x = "mpg", y = "hp", outp = NULL)
+plotscat(mtcars, x = "mpg", y = "hp", z = "am", outp = NULL)
+}
+}
+\seealso{
+\code{\link[=singlecor]{singlecor()}}, \code{\link[=exclorr]{exclorr()}}
 }

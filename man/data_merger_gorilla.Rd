@@ -2,22 +2,48 @@
 % Please edit documentation in R/data_merger_gorilla.R
 \name{data_merger_gorilla}
 \alias{data_merger_gorilla}
-\title{Merge and load in data from a gorilla download}
+\title{Load in and merge the data from one gorilla download}
 \usage{
 data_merger_gorilla(datafile = NULL, ending = "csv", ...)
 }
 \arguments{
-\item{datafile}{example file. if this is supplied then don't ask user}
+\item{datafile}{An example file from the unzipped download folder. If \code{NULL},
+you will be asked to choose one.}
 
-\item{ending}{string at the end of the filename, ie filetype.}
+\item{ending}{The file type to read, default "csv".}
+
+\item{...}{Further arguments passed on to \code{\link[=data_merger]{data_merger()}}, eg
+\code{gorilla_clean = TRUE}.}
 }
 \value{
-A list of two or three data tables of gorilla data.
+A list with items \code{data_task}, \code{data_q}, \code{data_qtype} ("long", "wide"
+or "none"), \code{data_continuous} (tracking data from the uploads folder) and
+\code{uploads} (a table of other uploaded files). See \code{\link[=data_collator_gorilla]{data_collator_gorilla()}}
+for details.
 }
 \description{
-It asks for one of the files in the un zipped DATA folder and
-loads in the task and the questionnaire data separately
-It will try and figure out if your questionnaire data is wide or long
-and collate it accordingly
-Note that the functions for processing questionnaire data in this package assume long
+Reads one unzipped gorilla download folder. The task data and questionnaire
+data are loaded and merged separately, and any uploaded files (for example
+mouse or eye tracking data) are loaded too. You will usually use
+\code{\link[=data_collator_gorilla]{data_collator_gorilla()}}, which calls this function on every download in a
+folder.
+}
+\details{
+You can give any file from the unzipped download folder as \code{datafile}, and the
+rest are found from that. If you give nothing, you will be asked to choose a
+file. All the files with "task" in their name are merged to make the task
+data, and all those with "quest" in their name make the questionnaire data.
+
+Adds a column \code{pid} (the anonymised participant id, as a factor, from
+\code{Participant.Private.ID}) and \code{lid} (from \code{Participant.Public.ID}). The
+questionnaire data is checked to see if it is in long or wide format.
+In the questionnaire data, hyphens in \code{Question.Key} are changed to underscores.
+}
+\examples{
+\dontrun{
+data <- data_merger_gorilla("gorilla_data/my_download/data_exp_1.csv")
+}
+}
+\seealso{
+\code{\link[=data_collator_gorilla]{data_collator_gorilla()}}, \code{\link[=data_merger]{data_merger()}}
 }

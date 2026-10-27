@@ -1,11 +1,24 @@
 gorilla_q_performance_engagement <- function(data,full=FALSE,taskname="Engagement"){
-  #' Processes narrative engagement questionnaire
+  #' Score the performance engagement questionnaire
   #'
-  #' From https://app.gorilla.sc/admin/task/352459/
-  #'  Brown & Novak (2007)
-  #'  https://wolfbrown.com/wp-content/uploads/Report-Assessing-The-Intrinsic-Impacts-of-a-Live-Performance.pdf
-  #' @param data data list or just the data_q
+  #' Scores a questionnaire on engagement with a performance, based on Brown &
+  #' Novak (2007), "Assessing the intrinsic impacts of a live performance".
+  #' The questionnaire template is at <https://app.gorilla.sc/admin/task/352459/>.
+  #'
+  #' @details
+  #' It looks for questionnaires with "PerformanceExperience" in their name. The 12
+  #' items are averaged to make four scores: `pe_captive`, `pe_emotion`,
+  #' `pe_social` and `pe_spirit`. The individual items are also returned, as
+  #' `pe_1_absorb` etc.
+  #'
+  #' @param data The list of data from a gorilla import, or just the questionnaire
+  #'   data (`data_q`), in long format.
+  #' @param full Not currently used.
+  #' @param taskname Not currently used.
+  #' @return A data.table with one row per participant, the four scores and the
+  #'   item scores.
   #' @export
+  if (inherits(data, "list")){qdata <- data$data_q}else{qdata <- data}
   q <- q_duplicate(qdata[grep(Task.Name,pattern = "PerformanceExperience")])
 
   key <- data.table(Question.Key=c("absorb","bond","connectedness","crossculture","emotion","empowered","heritage","inhabit","insight","spiritual","therapy","transcendent"),

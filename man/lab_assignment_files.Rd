@@ -2,10 +2,27 @@
 % Please edit documentation in R/lab_assignment_files.R
 \name{lab_assignment_files}
 \alias{lab_assignment_files}
-\title{Goes through assignment download from moodle, checks files and unzips}
+\title{Tidy up the files from a moodle assignment download}
 \usage{
 lab_assignment_files(assignmentfolder)
 }
+\arguments{
+\item{assignmentfolder}{The folder that was downloaded from moodle, containing
+folders called \code{..._assignsubmission_file_}.}
+}
+\value{
+Nothing is returned, but the folders of the submissions with a missing
+worksheet are printed.
+}
 \description{
-Goes through assignment download from moodle, checks files and unzips
+Goes through a folder of student submissions downloaded from moodle. It unzips
+submissions, brings the files up out of any sub folders, and checks that each
+submission has an Excel (.xlsx) worksheet. Submissions without one are moved
+to a folder called "missing worksheet", next to \code{assignmentfolder}.
+}
+\details{
+\strong{Take care:} this changes and deletes files. Zip files are deleted after they
+are unzipped, and submissions without a worksheet are moved with the system
+\code{rm -R} command, so it only works on Mac and Linux. Run it on a copy of the
+download. The fs package is needed.
 }

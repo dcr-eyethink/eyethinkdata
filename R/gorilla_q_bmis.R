@@ -1,9 +1,23 @@
 gorilla_q_bmis <- function(data,full=F){
-  #' Processes BMIS mood survey
+  #' Score the BMIS mood survey
   #'
-  #' @param data raw data from gorilla questionnaire
-  #' @param data data list or just the data_q
+  #' Scores the Brief Mood Introspection Scale (BMIS, Mayer & Gaschke, 1988) from
+  #' long format gorilla questionnaire data. It looks for questionnaires with
+  #' "BMIS" in their name.
+  #'
+  #' @details
+  #' Responses are converted to numbers from 1 to 4. The four scores are:
+  #' `BMIS_pu` (pleasant-unpleasant), `BMIS_ac` (arousal-calm), `BMIS_pt`
+  #' (positive-tired) and `BMIS_nr` (negative-relaxed). If someone answered an item
+  #' more than once, their last answer is used.
+  #'
+  #' @param data The list of data from a gorilla import, or just the questionnaire
+  #'   data (`data_q`).
+  #' @param full If `TRUE`, also return the individual item scores (with names
+  #'   starting `BMIS_Q_`). Default is `FALSE`, which returns only the four scores.
+  #' @return A data.table with one row per participant (`pid`), and the scores.
   #' @export
+  #' @seealso [gorilla_q_keyed()] for scoring other questionnaires.
 
   # Pleasant-Unpleasant
   # Aroused-Calm

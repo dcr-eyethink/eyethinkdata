@@ -2,7 +2,7 @@
 % Please edit documentation in R/exclorr.R
 \name{exclorr}
 \alias{exclorr}
-\title{Explore correlations between large numbers of DVs}
+\title{Explore correlations between large numbers of variables}
 \usage{
 exclorr(
   data,
@@ -16,22 +16,47 @@ exclorr(
 )
 }
 \arguments{
-\item{data}{data}
+\item{data}{A data frame or data.table with one row per participant.}
 
-\item{var1}{list of DV names that will be rows}
+\item{var1}{Vector of column names. These will be the rows of the output.}
 
-\item{var2}{list of DV names that will be cols}
+\item{var2}{Vector of column names. These will be the columns of the output.}
 
-\item{bayes_factor}{do you want bayes analysis? banal}
+\item{bayes_factor}{Do you want Bayes factors for each correlation? Needs the
+BayesFactor package, and can be slow for large numbers of variables.}
 
-\item{plim}{cut off for p-value reporting}
+\item{plim}{Cut off for which p-values count as significant. Default 0.05.}
 
-\item{cplot}{generate a correlation matrix plot}
+\item{cplot}{Make a correlation matrix plot (circles for the significant
+correlations)? If \code{TRUE} it is saved as a pdf in \code{outp}.}
 
-\item{outp}{name of folder to save plot in, set to blank if no save needed}
+\item{cplot_title}{Title for the plot, which is also used as its file name.}
+
+\item{outp}{Name of a folder in which to save the plot (it will be created if
+it does not exist). If \code{NULL} or "", the plot is drawn on the current device
+rather than saved.}
+}
+\value{
+A list with data frames \code{corrsig} (r values, rounded, with
+non-significant ones set to 0), \code{pvalues} and \code{rvalues}. Also \code{plot} if
+\code{cplot = TRUE}, and \code{bfs} (Bayes factors, rounded down to a whole number) if
+\code{bayes_factor = TRUE}.
 }
 \description{
-Takes a data set and two lists of DVs
-looks at correlations between one set and another
-r values, p values and bayes factors
+Takes a data set and two lists of column names, and correlates every variable
+in the first list with every variable in the second. It returns the r values,
+the p values, and a table showing only the r values that are significant.
+It can also draw a correlation matrix plot, and calculate Bayes factors.
+}
+\details{
+Correlations are Pearson's r, calculated on all the pairs of values available
+(\code{Hmisc::rcorr}). Spaces and hyphens in the variable names are converted to
+full stops, as R does when it reads in column names.
+If any of the names you give are not columns in \code{data}, the function prints a
+message and returns the missing names instead of results.
+}
+\examples{
+\dontrun{
+exclorr(mtcars, var1 = c("mpg", "disp"), var2 = c("hp", "wt", "qsec"))
+}
 }

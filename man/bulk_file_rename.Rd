@@ -2,9 +2,7 @@
 % Please edit documentation in R/bulk_file_rename.R
 \name{bulk_file_rename}
 \alias{bulk_file_rename}
-\title{Bulk search and replace in filenaames
-Can do a single replacement if p and r given, or pr, a datatable of p and rs
-Also can specify prefixes and suffixes to add}
+\title{Bulk search and replace in file names}
 \usage{
 bulk_file_rename(
   datafolder = NULL,
@@ -16,23 +14,46 @@ bulk_file_rename(
 )
 }
 \arguments{
-\item{datafolder}{the folder with files to rename}
+\item{datafolder}{Folder containing the files to rename. If left as \code{NULL},
+you will be asked to choose a folder.}
 
-\item{p}{pattern to search}
+\item{p}{Text to search for in each file name (literal match). Default is a
+single space.}
 
-\item{r}{replacement}
+\item{r}{Text to replace \code{p} with. Default is "" (i.e. delete \code{p}).}
 
-\item{suffix}{end of filename}
+\item{suffix}{Text to add to the end of each file name (after the file extension).}
 
-\item{prefix}{start of filename}
+\item{prefix}{Text to add to the start of each file name.}
 
-\item{pr}{a datatable of p and rs}
+\item{pr}{A data.table (or data.frame) with columns \code{p} and \code{r}, one row for
+each replacement to make. If given, \code{p} and \code{r} are ignored.}
 }
 \value{
-Returns a list of data.tables for each type (task, questionnaire, continuous)
+Nothing is returned; the function is called for its side effect of
+renaming files.
 }
 \description{
-Bulk search and replace in filenaames
-Can do a single replacement if p and r given, or pr, a datatable of p and rs
-Also can specify prefixes and suffixes to add
+Renames every file in a folder by replacing text in the file name, and
+optionally adding text to the start or end of the name. Give either a single
+pattern \code{p} and replacement \code{r}, or a table of several replacements in \code{pr}.
+}
+\details{
+With the default arguments it simply removes all spaces from the file names.
+\itemize{
+\item \code{p} is matched as a literal string (not a regular expression), and every
+occurrence in the name is replaced.
+\item This function renames files in place, so there is no undo. Try it on a copy
+of your folder first.
+\item If a file would be renamed to a name that already exists, it is left
+alone and a warning is given.
+}
+}
+\examples{
+\dontrun{
+# remove spaces from all the file names in a folder
+bulk_file_rename("my_data_folder")
+# swap "_v1" for "_final"
+bulk_file_rename("my_data_folder", p = "_v1", r = "_final")
+}
 }

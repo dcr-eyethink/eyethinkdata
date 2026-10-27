@@ -1,11 +1,22 @@
 singlecor <- function(data,x,y,bayes_factor=F){
-  #' single correlation with r, p value and optionally a bayes factor
-  #' @param data data frame with two cols to be correlated
-  #' @param x name of x column
-  #' @param y name of y column
-  #' @param bayes_factor do you want bayes factor calculated, needs BayesFactor package
-
+  #' Single correlation with r, p value and optionally a Bayes factor
+  #'
+  #' Correlates two columns of a data frame, and returns Pearson's r with its p
+  #' value, and Kendall's tau as a rank based alternative. Optionally, it adds a
+  #' Bayes factor (using the BayesFactor package).
+  #'
+  #' @param data A data frame with the two columns to correlate.
+  #' @param x Name of the first column.
+  #' @param y Name of the second column.
+  #' @param bayes_factor Calculate a Bayes factor? Needs the BayesFactor package.
+  #' @return A list with `r`, `p` (both rounded to 3 places), `bf` (the Bayes factor
+  #'   for the correlation, rounded down to a whole number, or 0 if not requested)
+  #'   and `k.tau` (Kendall's tau).
   #' @export
+  #' @seealso [plotscat()], [exclorr()]
+  #' @examples
+  #' singlecor(mtcars, "mpg", "hp")
+
 
 
   sigs <- cor.test(x=data[[x]],y=data[[y]])

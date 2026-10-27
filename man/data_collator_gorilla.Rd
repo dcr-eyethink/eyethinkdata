@@ -7,14 +7,59 @@
 data_collator_gorilla(datafolder = NULL, ...)
 }
 \arguments{
-\item{datafolder}{the folder with a collection of gorilla downloads}
+\item{datafolder}{The folder containing the gorilla downloads. If left as
+\code{NULL}, you will be asked to choose a folder.}
+
+\item{...}{Further arguments passed on to \code{\link[=data_merger_gorilla]{data_merger_gorilla()}}, for
+example \code{gorilla_clean = TRUE} to drop some of the less useful gorilla
+columns.}
 }
 \value{
-Returns a list of data.tables for each type (task, questionnaire, continuous)
+A list with these items:
+\describe{
+\item{data_task}{data.table of all the task (experiment) data, with added
+columns \code{pid} (anonymous participant id, a factor), \code{lid} (public id), and
+\code{rt} (numeric reaction time)}
+\item{data_q}{data.table of the questionnaire data}
+\item{data_qtype}{"long", "wide" or "none"}
+\item{data_continuous}{data.table of mouse or eye tracking data from the
+\code{uploads} folder, if there is any}
+\item{uploads}{table of the names and paths of any other uploaded files}
+\item{task_names}{the names of the tasks found}
+\item{q_names}{the names of the questionnaires found}
+}
 }
 \description{
-Asks for a folder that can contain multiple data folders, zipped or un zipped, downloaded from gorilla.
-It will try and figure out if your questionnaire data has been downloaded wide or long format,
-and collate it accordingly
-Note that the functions for processing questionnaire data in this package assume long
+Reads in the raw data from one or more downloads from the gorilla experiment
+platform and collates them into a single list of data.tables. This is usually
+the first function to run in an analysis of gorilla data.
+}
+\details{
+\code{datafolder} should be a folder that contains the downloads from gorilla.
+Each download can either be a .zip file, or an already unzipped folder that
+contains the gorilla .csv files. The data from all of the downloads are
+stacked together.
+
+\strong{Note:} any .zip files found in \code{datafolder} are unzipped into a folder with
+the same name, and the .zip file is then deleted.
+
+Each download folder is processed by \code{\link[=data_merger_gorilla]{data_merger_gorilla()}}, and \code{...} is
+passed on to that function (and from there to \code{\link[=data_merger]{data_merger()}}).
+
+The questionnaire data can be downloaded from gorilla in wide (one row per
+participant) or long format. This function works out which you have and
+reports it in \code{data_qtype}. The questionnaire functions in this package
+(\code{gorilla_q_...}) need long format.
+
+The names of the tasks and questionnaires found are printed to the console,
+so that you can copy them into later analysis code.
+}
+\examples{
+\dontrun{
+data <- data_collator_gorilla("gorilla_data")
+head(data$data_task)
+}
+}
+\seealso{
+\code{\link[=data_merger_gorilla]{data_merger_gorilla()}}, \code{\link[=data_merger]{data_merger()}}, \code{\link[=pid_merge]{pid_merge()}}
 }

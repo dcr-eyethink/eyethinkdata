@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_model.R
 \name{plot_model}
 \alias{plot_model}
-\title{Plots the output of an anova or mixed model}
+\title{Plot the output of an ANOVA or mixed model}
 \usage{
 plot_model(
   mod,
@@ -14,20 +14,51 @@ plot_model(
 )
 }
 \arguments{
-\item{mod}{output from an afex model}
+\item{mod}{A model from the afex package.}
 
-\item{outp}{folder for saving. Set blank if not required}
+\item{outp}{Name of the folder in which to save the plots (pdf) and the results
+(a text file); it is created if it does not exist. Set to \code{NULL} or "" to save
+nothing.}
 
-\item{error_type}{Error bars: none, SE or CL}
+\item{error_type}{The error bars: "SE" for standard errors (the default), "CL"
+for confidence limits, or "none".}
 
-\item{posthocs}{do you want to show posthocs on plot?}
+\item{posthocs}{Not currently used. (The post hoc results are always shown.)}
 
-\item{plot_conditions}{a list of main effects and interactions eg list("cond1", "cond1:cond2")}
+\item{plot_conditions}{Which effects to plot, as a list or vector of text, eg
+\code{c("cond1", "cond1:cond2")}. By default all the main effects and the
+interaction (if there are two factors) are plotted.}
 
-\item{...}{plotting arguments to pass to pirateye}
+\item{...}{Further arguments passed on to \code{\link[=pirateye]{pirateye()}}.}
+}
+\value{
+A list with the \code{model_summary}, and for each effect plotted, the
+estimated means (\verb{means_<effect>}) and the plot (\verb{plot_<effect>}).
 }
 \description{
-Plots the main effects and interactionsof an afex anova or mixed model
-And shows posthocs contrasts for the effects of condition 1 across levels of condition 2
-Will pass on arguments to pirateye
+Plots the means for the main effects and interactions in a model made with
+the afex package (\code{aov_ez}, \code{aov_car}, \code{aov_4} or \code{mixed}), and shows the
+post hoc contrasts. It also prints the model summary, and the estimated
+means and contrasts for each effect, and saves them to a text file.
+}
+\details{
+For interactions of two factors, the first factor named is shown in colour and
+the second along the x axis. The post hoc p-values (shown above the x axis)
+compare the levels of the first factor at each level of the second.
+The p-value of the effect from the model is shown in the title.
+
+The plots are drawn with \code{\link[=pirateye]{pirateye()}}, and you can pass any of its arguments
+to change them.
+}
+\examples{
+\dontrun{
+anv <- afex::aov_ez(data = iat_data, id = "pid", dv = "rt",
+                    between = "firstblock", within = "congruency",
+                    fun_aggregate = mean)
+res <- plot_model(anv, outp = NULL)
+res$plot_congruency
+}
+}
+\seealso{
+\code{\link[=pirateye]{pirateye()}}
 }

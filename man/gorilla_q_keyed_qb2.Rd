@@ -2,7 +2,7 @@
 % Please edit documentation in R/gorilla_q_keyed_qb2.R
 \name{gorilla_q_keyed_qb2}
 \alias{gorilla_q_keyed_qb2}
-\title{Processes a gorilla QB2 questionnaire using a survey key}
+\title{Score a gorilla Questionnaire Builder 2 questionnaire using a survey key}
 \usage{
 gorilla_q_keyed_qb2(
   data,
@@ -14,35 +14,39 @@ gorilla_q_keyed_qb2(
 )
 }
 \arguments{
-\item{data}{data list or just the data_q}
+\item{data}{The list of data from a gorilla import, or just the questionnaire
+data (\code{data_q}). It has to be in long format.}
 
-\item{keyout}{generate a new key from the data}
+\item{keyout}{Set to \code{TRUE} to write out a new blank key for each
+questionnaire, from the data.}
 
-\item{qlist}{the q task names to process}
+\item{qlist}{The names of the questionnaires (Task.Name in gorilla) to score.
+If \code{NULL}, all of them.}
 
-\item{keylist}{the list of keys to use (if not names in qlist)}
+\item{keylist}{Names of the key files to use, if they are not the same as the
+names in \code{qlist}. Should be the same length as \code{qlist}.}
 
-\item{key_folder}{location of a central folder where you keep survey keys}
+\item{items}{If \code{TRUE}, also return the individual item scores.}
+
+\item{key_folder}{Folder where the survey keys are kept. If \code{NULL}, the folder
+\code{survey_key} in the working directory is used.}
+}
+\value{
+A data.table with one row per participant (\code{pid}) and a column for each
+scale (and subscale).
 }
 \description{
-The first time this is run, set keyout to TRUE to generate a key
-The key to the survey should either be in a central key_folder,
-or in the working directory in a folder called survey_key
+Like \code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}}, but for questionnaires made with Questionnaire
+Builder 2. See that function for how survey keys work and what the columns of
+the key (\code{sum}, \code{rev}, \code{adj}, \code{scaleName}, \code{Subscore}, \code{qual} and \code{ignore})
+mean.
 }
 \details{
-When you have a new key, edit it in excel or text editor,
-then save it as .csv file. There is one survey key for each blob in gorilla.
-There is a row for every different survey item in that blob.
-They are identified by what you wrote in the 'key' box when making the survey in gorilla.
-You can change the numbers in the columns sum, ScaleNam, Subscore and qual, to score/summarize your survey.
-You will get an output that has one row per person, and one column that scores all the answers,
-and additionally other columns for subscales or text answers.
-Here's what the columns mean:
-sum - how this item contributes to scoring: set to 1 to add up, 0 to ignore and -1 for reverse score
-rev - if it is to be reversed scored, then subtract the answer from this number. eg assuming a 7 point scale, I've set this to 8.
-adj - make adjustment to the scale (sometimes needed, eg if anchored at 0)
-ScaleName - you will end up with one row per person and a variable with this name (eg IQ) summarizing all items. You can have one or many different scales in the same questionnaire and key
-Subscore  - you can break the scales down further into subscales. Name it here and it will also appear on output as a scored column (eg IQ_verbal)
-qual - If this item is a non numeric or qualitative response (eg a text box) then put a 1 here. It won't be summarized but will also be reported in output in a column
-ignore - If the response matches this answer, then don't use it in the scale calculation. This is used, eg, for scales where 1-7 is the answer you want to code, but people can also enter 8 for 'not applicable'.
+Differences from \code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}}: the items are identified by the \code{Key}
+column of the QB2 data, only rows with \code{Response.Type} "response" are used,
+duplicated answers are not removed, and items with \code{sum = 0} are not returned
+separately.
+}
+\seealso{
+\code{\link[=gorilla_q_keyed]{gorilla_q_keyed()}}, \code{\link[=gorilla_q_parse_qb2]{gorilla_q_parse_qb2()}}
 }

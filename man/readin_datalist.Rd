@@ -2,7 +2,7 @@
 % Please edit documentation in R/readin_datalist.R
 \name{readin_datalist}
 \alias{readin_datalist}
-\title{reads in a set of data files and stores them in a list}
+\title{Read in a set of data files and store them in a list}
 \usage{
 readin_datalist(
   folder = "processed",
@@ -13,16 +13,30 @@ readin_datalist(
 )
 }
 \arguments{
-\item{folder}{where to find the data, defaults to 'processed'}
+\item{folder}{Folder (or vector of folders) to read from. Default is
+"processed". If it does not exist, you will be asked to choose one.}
 
-\item{flist}{what files do you want from folder? Defaults to all of them}
+\item{flist}{Names of the files to read (including .csv). Default is all of
+the files in the folder.}
 
-\item{data}{already existing list to add data to}
+\item{data}{An existing list to add the data to.}
 
-\item{drp}{is this to be downloaded from dropbox URL?}
+\item{drp}{Read the files from a dropbox folder? This needs the rdrop2 package.}
 
-\item{token}{dropbox token}
+\item{token}{The dropbox token, if using \code{drp}.}
+}
+\value{
+A list of data.tables, named after the files (without .csv).
 }
 \description{
-reads in a set of data files and stores them in a list
+Reads all of the .csv files in a folder (or chosen ones) into a list of
+data.tables, named after the files. It reverses \code{\link[=saveout_datalist]{saveout_datalist()}}.
+}
+\details{
+If a list is given in \code{data} that already has an item with the same name as a
+file, the new data is added to the bottom of the existing item. This is useful
+for adding more participants.
+}
+\seealso{
+\code{\link[=saveout_datalist]{saveout_datalist()}}
 }

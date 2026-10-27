@@ -1,11 +1,22 @@
 saveout_datalist <- function(data,folder="processed",
                              filter_col=NULL,filter_value=NULL){
-  #' saves out data tables in a list to a folder containing .csv files
-  #' @param data list of data.tables
-  #' @param folder to save into
-  #' @param filter_col save out a subset of data, based on this column
-  #' @param filter_value using this value as filter
+  #' Save a list of data tables to a folder of .csv files
+  #'
+  #' Saves each data.table in a list as a .csv file in a folder, named after the
+  #' item in the list. Items that are not data frames, or have no columns, are
+  #' skipped. It reverses [readin_datalist()].
+  #'
+  #' @param data A list of data.tables, with names.
+  #' @param folder The folder to save into (created if needed). Default is
+  #'   "processed".
+  #' @param filter_col Optional column name. If you give this and `filter_value`,
+  #'   only the rows with those values are saved (tables without that column are
+  #'   saved in full).
+  #' @param filter_value The value (or values) of `filter_col` to keep.
+  #' @return Nothing is returned; the names of the items saved or skipped are
+  #'   printed.
   #' @export
+  #' @seealso [readin_datalist()], [filtered_datalist()]
   if (!file.exists(folder)){dir.create(folder)}
   for (i in 1:length(data)){
 

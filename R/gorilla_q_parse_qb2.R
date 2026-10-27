@@ -1,11 +1,29 @@
 gorilla_q_parse_qb2 <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL){
-  #' Get subject entered, unscored data like age and gender from gorilla. Will give you the qual or quantised versions
+  #' Get unscored questionnaire answers from gorilla (Questionnaire Builder 2)
   #'
-  #' @param data raw data packet from from gorilla import
-  #' @param qlist list of Task.Name, ie questionnaire blob names, that you want to process
-  #' @param strip get rid of either the quant or qual
-  #' @param preface add some text to all variables
+  #' Like [gorilla_q_parse()], but for questionnaires made with Questionnaire
+  #' Builder 2. It returns the answers with one row per participant and one column
+  #' per question.
+  #'
+  #' @details
+  #' In this version, if a person gave the same answer to a question more than
+  #' once, the *first* is kept (in [gorilla_q_parse()] it is the last), and the
+  #' duplicates are printed. "other" response columns are dropped, and `_value` is
+  #' removed from the column names.
+  #'
+  #' @param data The list of data from a gorilla import, or just the questionnaire
+  #'   data (`data_q`). It has to be in long format.
+  #' @param qlist The names of the questionnaires (Task.Name in gorilla) to use.
+  #'   If `NULL`, all of them.
+  #' @param preface Text to add to the start of all the question names. Use "task"
+  #'   to add the name of the questionnaire.
+  #' @param strip "quant" drops the numeric `-quantised` columns, "qual" drops the
+  #'   text answers and keeps the numeric ones. Default `NULL` keeps both.
+  #' @param pd Optional data.table of participant data (with a `pid` column) to
+  #'   merge the answers into.
+  #' @return A data.table with one row per participant (`pid`).
   #' @export
+  #' @seealso [gorilla_q_parse()], [gorilla_q_keyed_qb2()]
 
   if (inherits(data, "list")){
     qdata <- data$data_q
@@ -60,9 +78,9 @@ gorilla_q_parse_qb2 <- function(data,qlist=NULL,preface=NULL,strip=NULL,pd=NULL)
       q[,(cols):= lapply(.SD,function(x){Hmisc::all.is.numeric(x,what="vector")}),.SDcols=cols]
 
 
+      #q_return <-  q[q_return,on="pid"]
+      q_return <-  pid_merge(q_return,q)
     }
-    #q_return <-  q[q_return,on="pid"]
-    q_return <-  pid_merge(q_return,q)
   }
 
   if (!is.null(strip)){

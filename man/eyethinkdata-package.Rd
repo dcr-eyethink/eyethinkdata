@@ -17,4 +17,8 @@ Useful links:
 }
 
 }
+\author{
+\strong{Maintainer}: Daniel C. Richardson \email{dcr@eyethink.org} (\href{https://orcid.org/0000-0003-0039-9755}{ORCID})
+
+}
 \keyword{internal}

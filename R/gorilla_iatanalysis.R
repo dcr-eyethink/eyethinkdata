@@ -1,18 +1,46 @@
 gorilla_iatanalysis <- function(data=NULL, outp="analysis",
                                 exclude_pids=NULL,exclude_items=NULL, ...){
-  #' processes IAT data from gorilla
+  #' Process and analyse IAT data from gorilla
   #'
-  #' Runs a full analysis on IAT data from a gorilla experiment
-  #' that is based on standard template.
-  #' You can pass arguments to mypirate that is drawing the main plot
+  #' Runs a full analysis on data from an Implicit Association Test (IAT) that was
+  #' run in gorilla using the standard template. It picks out the trial data,
+  #' calculates each person's mean reaction time in the congruent and incongruent
+  #' blocks, and tests the difference.
   #'
-  #' @param data data list from gorilla import, if missing, I'll ask fora folder of gorilla downloads
-  #' @param outp output foldername
-  #' @param exclude_pids get rid of these guys
-  #' @param exclude_items get rid of these guys in items column
-  #' @param ... pass to mypirate for plotting
-
+  #' @details
+  #' The analysis follows these steps:
+  #'
+  #' 1. Trials are selected where `metadata` is "congruent" or "incongruent", at the
+  #'    first attempt, in the display called "trials". Incorrect trials and those
+  #'    with reaction times over 3000 ms are removed.
+  #' 2. Mean reaction times are calculated for each person, and participants with a
+  #'    missing condition are dropped. The IAT score is incongruent minus congruent.
+  #' 3. A paired t-test is run and saved in `IAT_ttest.txt` in `outp`.
+  #' 4. A mixed ANOVA is run with block order (`firstblock`) between participants
+  #'    and condition within participants. It is plotted and printed using
+  #'    [plot_model()].
+  #' 5. The participant means are saved as `ParticipantMeans.csv` in `outp`.
+  #'
+  #' @param data The list of data from a gorilla import. If missing, you will be
+  #'   asked to choose a folder of gorilla downloads.
+  #' @param outp Name of the folder to save results in (it is created if needed).
+  #'   Set to `NULL` or "" to not save anything, and just return the results.
+  #' @param exclude_pids Vector of participant ids to leave out.
+  #' @param exclude_items Vector of items (stimuli) to leave out.
+  #' @param ... Further arguments passed to [plot_model()], and from there to
+  #'   [pirateye()], to change the plots.
+  #' @return A list. The first (unnamed) item is the output of [plot_model()], then
+  #'   `ParticipantMeans` (one row per person, with the IAT score) and `rawdata`
+  #'   (the selected trial data).
   #' @export
+  #' @seealso [plot_model()], [data_collator_gorilla()]
+  #' @examples
+  #' \dontrun{
+  #' data <- data_collator_gorilla("gorilla_data")
+  #' iat <- gorilla_iatanalysis(data, exclude_pids = c(1234567))
+  #' iat$ParticipantMeans
+  #' }
+
 
 if (is.null(data)){
   cat("Give me a folder of gorilla downloads")
@@ -31,7 +59,7 @@ if (is.null(data)){
 
   ## exclude pids
   if(!is.null(exclude_pids)){
-    iat_data <-   iat_data[!p %in% exclude_pids]
+    iat_data <-   iat_data[!pid %in% exclude_pids]
 
   }
 
@@ -54,7 +82,10 @@ if (is.null(data)){
                                measure.vars = c("congruent","incongruent"),variable.name = "condition",value.name = "meanRT"))
 
   ## output analysis to text
-  if (is.character(outp)){dir.create(file.path(outp),showWarnings = FALSE)
+  saving <- is.character(outp) && nzchar(outp)
+  nsink <- sink.number()
+  on.exit(while (sink.number() > nsink) sink())   # never leave output diverted if there is an error
+  if (saving){dir.create(file.path(outp),showWarnings = FALSE)
     sink(paste0(outp,"/IAT_ttest.txt"), append=FALSE, split=TRUE)}
 
   n <- dim(ParticipantMeans)[1]
@@ -66,15 +97,16 @@ if (is.null(data)){
   tt <- t.test(data=subjmeans, meanRT~condition, paired=TRUE)
   print(tt)
 
-  sink()
+  if (saving){sink()}
 
   anv <- afex::aov_ez(id="pid",dv="meanRT",between="firstblock",within="condition", data = subjmeans)
   anv_res <- do.call(plot_model,resolve.args(mod=anv,outp=outp,...))
 
 
 
-  write.csv(x = ParticipantMeans ,
-            file = paste0(outp,"/ParticipantMeans.csv"))
+  if (saving){
+    write.csv(x = ParticipantMeans ,
+              file = paste0(outp,"/ParticipantMeans.csv"))}
 
     return(list(anv_res, ParticipantMeans=ParticipantMeans,rawdata=iat_data))
 
