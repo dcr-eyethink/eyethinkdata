@@ -1,7 +1,10 @@
-# Plot scattergram for two variables, split by a group
+# Plot a scatterplot of two variables, split by a group
 
-this plots x against y, split by z and it will plot x y for the two
-groups and tests for slope differences
+This is called by
+[`plotscat()`](https://dcr-eyethink.github.io/eyethinkdata/reference/plotscat.md)
+when `z` is a grouping variable. It plots `x` against `y` for the first
+two levels of `z`, and tests whether the correlations differ (cocor,
+Fisher 1925).
 
 ## Usage
 
@@ -24,24 +27,46 @@ plotscat_split(
 
 - data:
 
-  data frame with two cols to be correlated
+  A data frame, one row per participant.
 
 - x:
 
-  name of x column
+  Name of the x column.
 
 - y:
 
-  name of y column
+  Name of the y column.
 
 - z:
 
-  name of column, a factor splitting groups
+  Name of the column splitting the groups.
 
 - cl:
 
-  =2 plots the sub groups, =1 plots just main.
+  2 plots a line for each sub group, 1 plots just the main line.
 
 - condcols:
 
-  colours for two groups
+  Colours for the groups. By default they are chosen by
+  [`replacecondcols()`](https://dcr-eyethink.github.io/eyethinkdata/reference/replacecondcols.md).
+
+- results_title:
+
+  Show the statistics in the plot title?
+
+- title_text:
+
+  Optional text for the title.
+
+- outp:
+
+  Not used.
+
+- bayes_factor:
+
+  Calculate the Bayes factor for the difference between groups?
+
+## Value
+
+A list with the plot (`p`) and the statistics. The results for the first
+and second group are `sigyz1.*` and `sigyz2.*`.

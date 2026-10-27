@@ -14,3 +14,8 @@ Useful links:
 - <https://dcr-eyethink.github.io/eyethinkdata/>
 
 - Report bugs at <https://github.com/dcr-eyethink/eyethinkdata/issues>
+
+## Author
+
+**Maintainer**: Daniel C. Richardson <dcr@eyethink.org>
+([ORCID](https://orcid.org/0000-0003-0039-9755))

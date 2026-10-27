@@ -1,7 +1,8 @@
-# Scores checkbox items
+# Score checkbox items
 
-Takes output from a checkbox questionniare (QB1) in gorilla and returns
-data in a wide format with one column per ranked item
+Takes the output from a checkbox question in a gorilla questionnaire
+(QB1, long format) and converts it so that there is one column for each
+checkbox option, scored 1 if it was ticked and 0 if it was not.
 
 ## Usage
 
@@ -13,8 +14,21 @@ gorilla_q_checkbox(data, checkkey = "problem", newcolnames = NULL)
 
 - data:
 
-  data list or just the data_q
+  The list of data from a gorilla import, or just the questionnaire data
+  (`data_q`).
 
 - checkkey:
 
-  what key was used in QB1 for this item
+  The key that was used for this item in the gorilla questionnaire.
+  Columns whose names contain this text are used (but those with
+  "\_text" in the name are ignored).
+
+- newcolnames:
+
+  Optional vector of names for the new columns, one for each checkbox
+  option. If `NULL`, the names are made from the text of the option.
+
+## Value
+
+A data.table with the checkbox columns recoded as 1 or 0, and renamed
+starting with `checkkey`.

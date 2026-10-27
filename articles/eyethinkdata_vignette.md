@@ -8,6 +8,7 @@ plots), and correlations from raw data and ANOVAs and mixed models.
 Here’s how to get the latest version of the toolbox
 
 ``` r
+
 devtools::install_github("dcr-eyethink/eyethinkdata")
 ```
 
@@ -27,6 +28,7 @@ downloaded items, or leave it blank and your OS will ask you to choose
 the folder.
 
 ``` r
+
 library(eyethinkdata)
 ```
 
@@ -34,9 +36,24 @@ library(eyethinkdata)
 
     ## Loading required package: data.table
 
+    ## 
+    ## Attaching package: 'data.table'
+
+    ## The following object is masked from 'package:base':
+    ## 
+    ##     %notin%
+
 ``` r
+
 data <- data_collator_gorilla("gorilla_data")
 ```
+
+    ## 
+    ## Task names:
+    ##  "IAT_sex_topics",  "NA",  
+    ## 
+    ## Q names:
+    ##  "Generic consent form",  "NA",  "basic demographics",  "Exp 2_group and demographics",  "Interpersonal Reactivity Index (Davies, 1983)",  "Att_society",  "Att_personality",
 
 Remember to give this function a folder that contains other folders that
 have the raw data in them. So now you have a list called data that
@@ -49,17 +66,18 @@ is the participant identity (anonymized). **rt** is the reaction time
 column.
 
 ``` r
+
 knitr::kable( head(data$data_task),)
 ```
 
-| pid     | lid      | filename                        | Event.Index | UTC.Timestamp | UTC.Date.and.Time   | Local.Timestamp | Local.Timezone | Local.Date.and.Time | Experiment.ID | Experiment.Version | Tree.Node.Key | Repeat.Key | Schedule.ID | Participant.Public.ID | Participant.Private.ID | Participant.Starting.Group | Participant.Status | Participant.Completion.Code | Participant.External.Session.ID | Participant.Device.Type | Participant.Device | Participant.OS | Participant.Browser | Participant.Monitor.Size | Participant.Viewport.Size | Checkpoint | Room.ID | Room.Order | Task.Name      | Task.Version | Spreadsheet  | Trial.Number | Screen.Number | Screen.Name | Zone.Name | Zone.Type         | Reaction.Time | Response | Attempt | Correct | Incorrect | Dishonest | X.Coordinate | Y.Coordinate | Timed.Out | Spreadsheet.Name | randomise_blocks | display          | randomise_trials | ImageLeft | ImageRight | ImageCentre | TextLeft | TextRight | TextCentre | Answer | OrLeft | OrRight | TextLeft1 | TextRight1 | TextRight2 | TextLeft2 |   X | metadata       | metadata.1     |        rt | UTC.Date | Local.Date | randomiser.g1a6 | randomiser.62yd |
-|:--------|:---------|:--------------------------------|:------------|--------------:|:--------------------|----------------:|---------------:|:--------------------|--------------:|-------------------:|:--------------|:-----------|------------:|:----------------------|-----------------------:|:---------------------------|:-------------------|:----------------------------|:--------------------------------|:------------------------|:-------------------|:---------------|:--------------------|:-------------------------|:--------------------------|:-----------|:--------|:-----------|:---------------|-------------:|:-------------|:-------------|--------------:|:------------|:----------|:------------------|--------------:|:---------|--------:|--------:|----------:|----------:|:-------------|:-------------|:----------|:-----------------|-----------------:|:-----------------|-----------------:|:----------|:-----------|:------------|:---------|:----------|:-----------|:-------|:-------|:--------|:----------|:-----------|:-----------|:----------|----:|:---------------|:---------------|----------:|:---------|:-----------|:----------------|:----------------|
-| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 1           |  1.611753e+12 | 27/01/2021 13:06:09 |    1.611753e+12 |              0 | 27/01/2021 13:06:09 |         39476 |                  1 | task-3fjs     | NA         |     9432363 | 0dxt32ut              |                2874231 | NA                         | complete           | NA                          | NA                              | computer                | Desktop or Laptop  | Mac OS 11.1.0  | Chrome 88.0.4324.96 | 1440x900                 | 1434x638                  | NA         | NA      | NA         | IAT_sex_topics |            3 | Spreadsheet1 | BEGIN TASK   |            NA | NA          | NA        | NA                |            NA | NA       |      NA |       0 |         1 |         0 | NA           | NA           | NA        | NA               |               NA | NA               |               NA | NA        | NA         | NA          | NA       | NA        | NA         | NA     | NA     | NA      | NA        | NA         | NA         | NA        |  NA | NA             | NA             |        NA | NA       | NA         | NA              | NA              |
-| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 2           |  1.611753e+12 | 27/01/2021 13:06:18 |    1.611753e+12 |              0 | 27/01/2021 13:06:18 |         39476 |                  1 | task-3fjs     | NA         |     9432363 | 0dxt32ut              |                2874231 | NA                         | complete           | NA                          | NA                              | computer                | Desktop or Laptop  | Mac OS 11.1.0  | Chrome 88.0.4324.96 | 1440x900                 | 1434x638                  | NA         | NA      | NA         | IAT_sex_topics |            3 | Spreadsheet1 | 1            |             1 | Screen 1    | button    | continue_button   |      8867.000 | NA       |      NA |       0 |         1 |         0 | NA           | NA           | NA        | Spreadsheet1     |               NA | task description |               NA | NA        | NA         | NA          | NA       | NA        | NA         | NA     | NA     | NA      | NA        | NA         | NA         | NA        |   1 | NA             | NA             |  8867.000 | NA       | NA         | NA              | NA              |
-| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 3           |  1.611753e+12 | 27/01/2021 13:06:34 |    1.611753e+12 |              0 | 27/01/2021 13:06:34 |         39476 |                  1 | task-3fjs     | NA         |     9432363 | 0dxt32ut              |                2874231 | NA                         | complete           | NA                          | NA                              | computer                | Desktop or Laptop  | Mac OS 11.1.0  | Chrome 88.0.4324.96 | 1440x900                 | 1434x638                  | NA         | NA      | NA         | IAT_sex_topics |            3 | Spreadsheet1 | 1            |             1 | Screen 1    | button    | continue_keyboard |     16378.165 | NA       |      NA |       0 |         1 |         0 | NA           | NA           | NA        | Spreadsheet1     |               NA | instructions     |               NA | NA        | NA         | NA          | NA       | NA        | NA         | NA     | NA     | NA      | NA        | NA         | NA         | NA        |   2 | NA             | NA             | 16378.165 | NA       | NA         | NA              | NA              |
-| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 4           |  1.611753e+12 | 27/01/2021 13:06:42 |    1.611753e+12 |              0 | 27/01/2021 13:06:42 |         39476 |                  1 | task-3fjs     | NA         |     9432363 | 0dxt32ut              |                2874231 | NA                         | complete           | NA                          | NA                              | computer                | Desktop or Laptop  | Mac OS 11.1.0  | Chrome 88.0.4324.96 | 1440x900                 | 1434x638                  | NA         | NA      | NA         | IAT_sex_topics |            3 | Spreadsheet1 | 1            |             1 | Screen 1    | Zone9     | continue_keyboard |      7291.585 | NA       |      NA |       0 |         1 |         0 | NA           | NA           | NA        | Spreadsheet1     |               NA | prepare1         |               NA | NA        | NA         | NA          | NA       | NA        | NA         | NA     | NA     | NA      | female    | male       | NA         | NA        |   3 | practice_words | practice_words |  7291.585 | NA       | NA         | NA              | NA              |
-| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 5           |  1.611753e+12 | 27/01/2021 13:06:43 |    1.611753e+12 |              0 | 27/01/2021 13:06:43 |         39476 |                  1 | task-3fjs     | NA         |     9432363 | 0dxt32ut              |                2874231 | NA                         | complete           | NA                          | NA                              | computer                | Desktop or Laptop  | Mac OS 11.1.0  | Chrome 88.0.4324.96 | 1440x900                 | 1434x638                  | NA         | NA      | NA         | IAT_sex_topics |            3 | Spreadsheet1 | 1            |             1 | Screen 1    | Zone9     | response_keyboard |      1059.960 | right    |       1 |       1 |         0 |         0 | NA           | NA           | NA        | Spreadsheet1     |               NA | trials           |                1 | NA        | NA         | NA          | NA       | NA        | Jeffrey    | right  | NA     | NA      | female    | male       | NA         | NA        |  14 | practice_words | practice_words |  1059.960 | NA       | NA         | NA              | NA              |
-| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 6           |  1.611753e+12 | 27/01/2021 13:06:44 |    1.611753e+12 |              0 | 27/01/2021 13:06:43 |         39476 |                  1 | task-3fjs     | NA         |     9432363 | 0dxt32ut              |                2874231 | NA                         | complete           | NA                          | NA                              | computer                | Desktop or Laptop  | Mac OS 11.1.0  | Chrome 88.0.4324.96 | 1440x900                 | 1434x638                  | NA         | NA      | NA         | IAT_sex_topics |            3 | Spreadsheet1 | 1            |             2 | Screen 2    | fixation  | fixation          |       699.972 | NA       |      NA |       0 |         1 |         0 | NA           | NA           | NA        | Spreadsheet1     |               NA | trials           |                1 | NA        | NA         | NA          | NA       | NA        | Jeffrey    | right  | NA     | NA      | female    | male       | NA         | NA        |  14 | practice_words | practice_words |   699.972 | NA       | NA         | NA              | NA              |
+| pid | lid | filename | Event.Index | UTC.Timestamp | UTC.Date.and.Time | Local.Timestamp | Local.Timezone | Local.Date.and.Time | Experiment.ID | Experiment.Version | Tree.Node.Key | Repeat.Key | Schedule.ID | Participant.Public.ID | Participant.Private.ID | Participant.Starting.Group | Participant.Status | Participant.Completion.Code | Participant.External.Session.ID | Participant.Device.Type | Participant.Device | Participant.OS | Participant.Browser | Participant.Monitor.Size | Participant.Viewport.Size | Checkpoint | Room.ID | Room.Order | Task.Name | Task.Version | Spreadsheet | Trial.Number | Screen.Number | Screen.Name | Zone.Name | Zone.Type | Reaction.Time | Response | Attempt | Correct | Incorrect | Dishonest | X.Coordinate | Y.Coordinate | Timed.Out | Spreadsheet.Name | randomise_blocks | display | randomise_trials | ImageLeft | ImageRight | ImageCentre | TextLeft | TextRight | TextCentre | Answer | OrLeft | OrRight | TextLeft1 | TextRight1 | TextRight2 | TextLeft2 | X | metadata | metadata.1 | rt | UTC.Date | Local.Date | randomiser.g1a6 | randomiser.62yd |
+|:---|:---|:---|:---|---:|:---|---:|---:|:---|---:|---:|:---|:---|---:|:---|---:|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|---:|:---|:---|---:|:---|:---|:---|---:|:---|---:|---:|---:|---:|:---|:---|:---|:---|---:|:---|---:|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|---:|:---|:---|---:|:---|:---|:---|:---|
+| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 1 | 1.611753e+12 | 27/01/2021 13:06:09 | 1.611753e+12 | 0 | 27/01/2021 13:06:09 | 39476 | 1 | task-3fjs | NA | 9432363 | 0dxt32ut | 2874231 | NA | complete | NA | NA | computer | Desktop or Laptop | Mac OS 11.1.0 | Chrome 88.0.4324.96 | 1440x900 | 1434x638 | NA | NA | NA | IAT_sex_topics | 3 | Spreadsheet1 | BEGIN TASK | NA | NA | NA | NA | NA | NA | NA | 0 | 1 | 0 | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA |
+| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 2 | 1.611753e+12 | 27/01/2021 13:06:18 | 1.611753e+12 | 0 | 27/01/2021 13:06:18 | 39476 | 1 | task-3fjs | NA | 9432363 | 0dxt32ut | 2874231 | NA | complete | NA | NA | computer | Desktop or Laptop | Mac OS 11.1.0 | Chrome 88.0.4324.96 | 1440x900 | 1434x638 | NA | NA | NA | IAT_sex_topics | 3 | Spreadsheet1 | 1 | 1 | Screen 1 | button | continue_button | 8867.000 | NA | NA | 0 | 1 | 0 | NA | NA | NA | Spreadsheet1 | NA | task description | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | 1 | NA | NA | 8867.000 | NA | NA | NA | NA |
+| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 3 | 1.611753e+12 | 27/01/2021 13:06:34 | 1.611753e+12 | 0 | 27/01/2021 13:06:34 | 39476 | 1 | task-3fjs | NA | 9432363 | 0dxt32ut | 2874231 | NA | complete | NA | NA | computer | Desktop or Laptop | Mac OS 11.1.0 | Chrome 88.0.4324.96 | 1440x900 | 1434x638 | NA | NA | NA | IAT_sex_topics | 3 | Spreadsheet1 | 1 | 1 | Screen 1 | button | continue_keyboard | 16378.165 | NA | NA | 0 | 1 | 0 | NA | NA | NA | Spreadsheet1 | NA | instructions | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | 2 | NA | NA | 16378.165 | NA | NA | NA | NA |
+| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 4 | 1.611753e+12 | 27/01/2021 13:06:42 | 1.611753e+12 | 0 | 27/01/2021 13:06:42 | 39476 | 1 | task-3fjs | NA | 9432363 | 0dxt32ut | 2874231 | NA | complete | NA | NA | computer | Desktop or Laptop | Mac OS 11.1.0 | Chrome 88.0.4324.96 | 1440x900 | 1434x638 | NA | NA | NA | IAT_sex_topics | 3 | Spreadsheet1 | 1 | 1 | Screen 1 | Zone9 | continue_keyboard | 7291.585 | NA | NA | 0 | 1 | 0 | NA | NA | NA | Spreadsheet1 | NA | prepare1 | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | female | male | NA | NA | 3 | practice_words | practice_words | 7291.585 | NA | NA | NA | NA |
+| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 5 | 1.611753e+12 | 27/01/2021 13:06:43 | 1.611753e+12 | 0 | 27/01/2021 13:06:43 | 39476 | 1 | task-3fjs | NA | 9432363 | 0dxt32ut | 2874231 | NA | complete | NA | NA | computer | Desktop or Laptop | Mac OS 11.1.0 | Chrome 88.0.4324.96 | 1440x900 | 1434x638 | NA | NA | NA | IAT_sex_topics | 3 | Spreadsheet1 | 1 | 1 | Screen 1 | Zone9 | response_keyboard | 1059.960 | right | 1 | 1 | 0 | 0 | NA | NA | NA | Spreadsheet1 | NA | trials | 1 | NA | NA | NA | NA | NA | Jeffrey | right | NA | NA | female | male | NA | NA | 14 | practice_words | practice_words | 1059.960 | NA | NA | NA | NA |
+| 2874231 | 0dxt32ut | data_exp_39476-v1_task-3fjs.csv | 6 | 1.611753e+12 | 27/01/2021 13:06:44 | 1.611753e+12 | 0 | 27/01/2021 13:06:43 | 39476 | 1 | task-3fjs | NA | 9432363 | 0dxt32ut | 2874231 | NA | complete | NA | NA | computer | Desktop or Laptop | Mac OS 11.1.0 | Chrome 88.0.4324.96 | 1440x900 | 1434x638 | NA | NA | NA | IAT_sex_topics | 3 | Spreadsheet1 | 1 | 2 | Screen 2 | fixation | fixation | 699.972 | NA | NA | 0 | 1 | 0 | NA | NA | NA | Spreadsheet1 | NA | trials | 1 | NA | NA | NA | NA | NA | Jeffrey | right | NA | NA | female | male | NA | NA | 14 | practice_words | practice_words | 699.972 | NA | NA | NA | NA |
 
 There is another data.table called **data\$data_q** which has all the
 info from your experiment questionnaires. we will deal with that in the
@@ -87,6 +105,7 @@ the key events, then we pick the columns that have the important
 information. Here’s how I would filter the IAT data
 
 ``` r
+
 iat_data <-  data$data_task[metadata %in% c("congruent","incongruent") & # row selection
                               Attempt==1 & display=="trials",  # row selection
                              .(pid, trial=Trial.Number, # columns  
@@ -113,6 +132,7 @@ You name the columns/conditions that you want to plot on the x axis, and
 as a colour contrast.
 
 ``` r
+
 pirateye(data=iat_data[accuracy==1 & rt<2000], # trim incorrect trials and outliers
          colour_condition = "congruency",x_condition = "firstblock",dv = "rt")
 ```
@@ -124,6 +144,7 @@ average over people, and also turn elements on and off in pirateye, and
 set options such as flipping the coordinates
 
 ``` r
+
 pirateye(data=iat_data[accuracy==1 & rt<2000],
          colour_condition = "congruency",x_condition = "firstblock",dv = "rt",
          pid_average = T,  # average over participants' conditions
@@ -135,6 +156,7 @@ pirateye(data=iat_data[accuracy==1 & rt<2000],
 Or we could connect conditions with lines
 
 ``` r
+
 pirateye(data=iat_data[accuracy==1 & rt<2000],
          colour_condition = "congruency",x_condition = "firstblock",dv = "rt",
          dots=F,line=T,violin=F)  # no dots but draw some bars
@@ -151,6 +173,7 @@ comparing the effects of the first named condition over levels of the
 second.
 
 ``` r
+
 anv <- afex::aov_ez(data=iat_data[accuracy==1 & rt<2000],fun_aggregate = mean,
                     id="pid",between="firstblock",within="congruency",dv="rt")
  plot_model(anv,outp = NULL,bars=F) # you can pass pirateye parameters to this function 
@@ -295,6 +318,7 @@ blank, it will run this through all the task.names in your gorilla
 data_q, or you can specifc one questionnaire only.
 
 ``` r
+
 gorilla_q_parse(data,qlist = "basic demographics",strip="quant" )
 ```
 
@@ -327,6 +351,7 @@ qlist. This will generate a blank survey key and save it in the working
 directory in a folder called ‘survey_key’. This is what it looks like.
 
 ``` r
+
 gorilla_q_keyed(data,qlist= "Interpersonal Reactivity Index (Davies, 1983)",keyout = T)
 ```
 
@@ -348,22 +373,22 @@ gorilla_q_keyed(data,qlist= "Interpersonal Reactivity Index (Davies, 1983)",keyo
     ## 12: Interpersonal Reactivity Index (Davies, 1983)    12         EC_7     1
     ## 13: Interpersonal Reactivity Index (Davies, 1983)    13         PT_6     1
     ## 14: Interpersonal Reactivity Index (Davies, 1983)    14         PT_7     1
-    ##       rev scaleName Subscore  qual ignore
-    ##     <num>    <char>   <char> <num> <lgcl>
-    ##  1:     8      IRID              0     NA
-    ##  2:     8      IRID              0     NA
-    ##  3:     8      IRID              0     NA
-    ##  4:     8      IRID              0     NA
-    ##  5:     8      IRID              0     NA
-    ##  6:     8      IRID              0     NA
-    ##  7:     8      IRID              0     NA
-    ##  8:     8      IRID              0     NA
-    ##  9:     8      IRID              0     NA
-    ## 10:     8      IRID              0     NA
-    ## 11:     8      IRID              0     NA
-    ## 12:     8      IRID              0     NA
-    ## 13:     8      IRID              0     NA
-    ## 14:     8      IRID              0     NA
+    ##       rev   adj scaleName Subscore  qual ignore
+    ##     <num> <num>    <char>   <char> <num> <lgcl>
+    ##  1:     8     0      IRID              0     NA
+    ##  2:     8     0      IRID              0     NA
+    ##  3:     8     0      IRID              0     NA
+    ##  4:     8     0      IRID              0     NA
+    ##  5:     8     0      IRID              0     NA
+    ##  6:     8     0      IRID              0     NA
+    ##  7:     8     0      IRID              0     NA
+    ##  8:     8     0      IRID              0     NA
+    ##  9:     8     0      IRID              0     NA
+    ## 10:     8     0      IRID              0     NA
+    ## 11:     8     0      IRID              0     NA
+    ## 12:     8     0      IRID              0     NA
+    ## 13:     8     0      IRID              0     NA
+    ## 14:     8     0      IRID              0     NA
 
 You can then edit it in excel or any text editor, and save it as .csv
 file.There is a row for every different survey item in the gorilla
@@ -393,6 +418,7 @@ but people can also enter 8 for ‘not applicable’.
 Here’s a filled out version for our Interpersonal Reactivity Scale key
 
 ``` r
+
 read.csv("survey_key complete/Interpersonal Reactivity Index (Davies, 1983).csv")
 ```
 
@@ -430,6 +456,7 @@ read.csv("survey_key complete/Interpersonal Reactivity Index (Davies, 1983).csv"
 Now you can parse and score the questionnaire using the same function.
 
 ``` r
+
 gorilla_q_keyed(data,qlist= "Interpersonal Reactivity Index (Davies, 1983)",key_folder = "survey_key complete")
 ```
 
@@ -462,6 +489,7 @@ from the IAT, and added to it mean reaction times per condition for each
 participant.
 
 ``` r
+
 pid_merge(  gorilla_q_parse(data,qlist = "basic demographics",strip = "quant" ),
             dcast(iat_data[accuracy==1],pid~congruency,value.var = "rt",fun.aggregate = mean))
 ```

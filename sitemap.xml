@@ -4,6 +4,8 @@
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/articles/index.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/authors.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/index.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/news/index.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/bulk_file_rename.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/clip_c_elements.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_collator_gorilla.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/data_merger.html</loc></url>
@@ -14,6 +16,7 @@
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/filtered_datalist.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_plot.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_processing.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_eye_processing_old.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_iatanalysis.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_bmis.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/gorilla_q_checkbox.html</loc></url>
@@ -34,6 +37,7 @@
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/plotscat_split.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/readin_datalist.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/replacecondcols.html</loc></url>
+<url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/resolve.args.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/saveout_datalist.html</loc></url>
 <url><loc>https://dcr-eyethink.github.io/eyethinkdata/reference/singlecor.html</loc></url>
 </urlset>

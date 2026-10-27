@@ -1,6 +1,8 @@
-# reads in a set of data files and stores them in a list
+# Read in a set of data files and store them in a list
 
-reads in a set of data files and stores them in a list
+Reads all of the .csv files in a folder (or chosen ones) into a list of
+data.tables, named after the files. It reverses
+[`saveout_datalist()`](https://dcr-eyethink.github.io/eyethinkdata/reference/saveout_datalist.md).
 
 ## Usage
 
@@ -18,20 +20,36 @@ readin_datalist(
 
 - folder:
 
-  where to find the data, defaults to 'processed'
+  Folder (or vector of folders) to read from. Default is "processed". If
+  it does not exist, you will be asked to choose one.
 
 - flist:
 
-  what files do you want from folder? Defaults to all of them
+  Names of the files to read (including .csv). Default is all of the
+  files in the folder.
 
 - data:
 
-  already existing list to add data to
+  An existing list to add the data to.
 
 - drp:
 
-  is this to be downloaded from dropbox URL?
+  Read the files from a dropbox folder? This needs the rdrop2 package.
 
 - token:
 
-  dropbox token
+  The dropbox token, if using `drp`.
+
+## Value
+
+A list of data.tables, named after the files (without .csv).
+
+## Details
+
+If a list is given in `data` that already has an item with the same name
+as a file, the new data is added to the bottom of the existing item.
+This is useful for adding more participants.
+
+## See also
+
+[`saveout_datalist()`](https://dcr-eyethink.github.io/eyethinkdata/reference/saveout_datalist.md)
