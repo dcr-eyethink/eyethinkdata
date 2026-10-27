@@ -40,3 +40,5 @@ Suggests:
 Depends: 
     ggplot2,
     data.table
+Remotes:
+    karthik/rdrop2
